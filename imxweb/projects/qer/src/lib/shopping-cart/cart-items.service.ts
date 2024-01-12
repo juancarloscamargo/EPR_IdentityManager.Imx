@@ -120,6 +120,7 @@ export class CartItemsService {
         : cartItemsWithoutParams.push(cartItemCollection.Data[0]);
     }
 
+
     return cartitemReferences.length > 0
       ? await this.editItems(cartitemReferences, cartItemsWithoutParams)
       : requestableServiceItemsForPersons.length;
@@ -262,7 +263,7 @@ export class CartItemsService {
       setTimeout(() => this.busyIndicator.hide());
     }
 
-
+    console.log("Tras editar el elemento del carrito");
     return result;
   }
 }

@@ -35,6 +35,8 @@ import {
   RequestableProductForPerson
 } from 'imx-api-qer';
 
+import { QerApiService } from '../qer-api-client.service';
+
 import { SnackBarService } from 'qbm';
 import { ProjectConfigurationService } from '../project-configuration/project-configuration.service';
 import { DependencyService } from '../product-selection/optional-items-sidesheet/dependency.service';
@@ -74,6 +76,7 @@ export class NewRequestAddToCartService {
     private readonly snackbar: SnackBarService,
     private readonly sidesheetService: EuiSidesheetService,
     private readonly translate: TranslateService,
+    private readonly localAPI: QerApiService
   ) {}
 
   public async addItemsToCart(): Promise<void> {
@@ -87,12 +90,18 @@ export class NewRequestAddToCartService {
 
     const serviceItemsForPersons = await this.createRequestableProductsFromServiceItems(recipients);
     const templateItemsForPersons = await this.createRequestableProductsFromBundleItems(recipients);
+    
+    
+    
 
     // merge both lists to a combined list and create the PortalCartItems
+    
     const requestableProductForPerson = serviceItemsForPersons.concat(...templateItemsForPersons);
     await this.addRequestablesToCart(requestableProductForPerson);
-
+    
     await this.addOrgsToCart();
+
+
 
     // show snackbar
     if (this.savedItems !== this.possibleItems) {
@@ -112,6 +121,8 @@ export class NewRequestAddToCartService {
     this.selectionService.clearProducts();
   }
 
+
+
   private getRecipients(): ValueStruct<string>[] {
     const recipientsUids = MultiValue.FromString(this.orchestration.recipients.value).GetValues();
     const recipientsDisplays = MultiValue.FromString(this.orchestration.recipients.Column.GetDisplayValue()).GetValues();
@@ -125,6 +136,8 @@ export class NewRequestAddToCartService {
   private async addRequestablesToCart(requestableProductForPerson: RequestableProductForPerson[]): Promise<void> {
     if (requestableProductForPerson && requestableProductForPerson.length > 0) {
       const hasItems = await this.shelfService.setShops(requestableProductForPerson);
+      
+
       if (hasItems) {
         setTimeout(() => this.busyIndicator.show());
         try {
@@ -132,13 +145,25 @@ export class NewRequestAddToCartService {
           const items = requestableProductForPerson.filter((item) => item.UidITShopOrg?.length > 0);
           this.possibleItems = items.length;
           this.savedItems = await this.cartItemsProvider.addItems(items);
+          
         } finally {
           setTimeout(() => this.busyIndicator.hide());
         }
       }
     }
+    console.log("productos añadidos al carrito");
+    await this.gestionproductosMulti(requestableProductForPerson);
+    //Ahora es cuando tenemos que analizar el carrito y expandir
   }
 
+  private async gestionproductosMulti(requestableProductForPerson: RequestableProductForPerson[]): Promise<void> {
+    //Haz una query de requestableProductForPerson in QERReuse para ver si hay entradas y que sean del tipo "Aplicaciones Multicliente"
+    //Si la query devuelve datos, muestra mensaje indicando que tenemos producto que hay que dividir en varios.
+    const listadoMultis = this.localAPI.typedClient.PortalAdminResourcesQerreuse.Get();
+
+    console.log("Verificando el carrito para ver si hay productos multicliente para el producto ");
+  }
+  
   private async addOrgsToCart(): Promise<void> {
     const roles = this.selectionService.selectedProducts
       .filter(x => x.source === SelectedProductSource.PeerGroupOrgs || x.source === SelectedProductSource.ReferenceUserOrgs);
@@ -246,5 +271,6 @@ export class NewRequestAddToCartService {
     });
     return;
   }
+
 }
 
