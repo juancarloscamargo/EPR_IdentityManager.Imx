@@ -241,6 +241,9 @@ export class CartItemsService {
           if (item.status === BulkItemStatus.saved) {
             await this.save(found);
             this.logger.debug(this, `${found.typedEntity.GetEntity().GetDisplay} saved`);
+            console.log("Añado : " + item.entity.GetEntity().GetKeys()[0]);
+            console.log("Parámetro cumplimentado y salvado");
+            
           } else {
             await this.removeItems([found.typedEntity]);
             result = result - 1;
@@ -263,7 +266,8 @@ export class CartItemsService {
       setTimeout(() => this.busyIndicator.hide());
     }
 
-    console.log("Tras editar el elemento del carrito");
+    console.log("Carrito completado");
+    
     return result;
   }
 }
