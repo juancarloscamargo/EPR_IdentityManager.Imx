@@ -35,7 +35,7 @@ import {
   RequestableProductForPerson,
   CartItemDataRead,
 } from 'imx-api-qer';
-import { BulkItemStatus, ClassloggerService } from 'qbm';
+import { BulkItem, BulkItemStatus, ClassloggerService } from 'qbm';
 import { QerApiService } from '../qer-api-client.service';
 import { ItemEditService } from '../product-selection/service-item-edit/item-edit.service';
 import { ParameterDataService } from '../parameter-data/parameter-data.service';
@@ -232,17 +232,19 @@ export class CartItemsService {
     setTimeout(() => this.busyIndicator.hide());
 
     const results = await this.itemEditService.openEditor(cartItems);
-
+    console.log("Edición de artículo terminada, procedo a grabar");
+    
+    //Inserto aquí la búsqueda en results.bulkitems editando cada uno si es multi y borrando las bases.
+    await this.gestionproductosMulti(results);
+    
     try {
       setTimeout(() => this.busyIndicator.show());
       for (const item of results.bulkItems) {
         try {
           const found = cartItems.find((x) => x.typedEntity.GetEntity().GetKeys()[0] === item.entity.GetEntity().GetKeys()[0]);
-          if (item.status === BulkItemStatus.saved) {
+          if (item.status === BulkItemStatus.saved && results.submit) {
             await this.save(found);
             this.logger.debug(this, `${found.typedEntity.GetEntity().GetDisplay} saved`);
-            console.log("Añado : " + item.entity.GetEntity().GetKeys()[0]);
-            console.log("Parámetro cumplimentado y salvado");
             
           } else {
             await this.removeItems([found.typedEntity]);
@@ -266,8 +268,33 @@ export class CartItemsService {
       setTimeout(() => this.busyIndicator.hide());
     }
 
-    console.log("Carrito completado");
+    
     
     return result;
+  }
+
+  private async gestionproductosMulti(carrito: {submit: boolean, bulkItems: BulkItem[] }): Promise<void> {
+    //Haz una query de requestableProductForPerson in QERReuse para ver si hay entradas y que sean del tipo "Aplicaciones Multicliente"
+    //Si la query devuelve datos, muestra mensaje indicando que tenemos producto que hay que dividir en varios.
+    
+      for (var item of carrito.bulkItems){
+        
+        
+      
+        const producto = item.entity.GetEntity().GetColumn("UID_AccProduct").GetDisplayValue();          
+        const uidprodbasequery = await this.qerClient.typedClient.PortalAdminResourcesQerreuseus.Get({
+            filter: [{'ColumnName':'Ident_QERReuseUS','Type':FilterType.Compare,'Value1':producto},
+                 {'ColumnName':'UID_QERResourceType','Type':FilterType.Compare,'Value2':'44ddcbce-e85b-459e-8ccc-c25135a1a0db'}
+                ]
+        });
+      
+        if (uidprodbasequery.totalCount > 0) {
+          item.entity.GetEntity().GetColumn("CustomProperty10").PutValue("GestionMultiCliente");
+        
+        }
+      
+  }
+
+
   }
 }

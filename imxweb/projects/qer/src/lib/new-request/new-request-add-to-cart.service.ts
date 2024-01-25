@@ -26,7 +26,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { MultiValue, ValueStruct } from 'imx-qbm-dbts';
+import { MultiValue, ValueStruct,FilterType } from 'imx-qbm-dbts';
 import {
   PortalItshopPatternRequestable,
   PortalItshopPeergroupMemberships,
@@ -151,18 +151,11 @@ export class NewRequestAddToCartService {
         }
       }
     }
-    console.log("productos añadidos al carrito");
-    await this.gestionproductosMulti(requestableProductForPerson);
-    //Ahora es cuando tenemos que analizar el carrito y expandir
+    
+
   }
 
-  private async gestionproductosMulti(requestableProductForPerson: RequestableProductForPerson[]): Promise<void> {
-    //Haz una query de requestableProductForPerson in QERReuse para ver si hay entradas y que sean del tipo "Aplicaciones Multicliente"
-    //Si la query devuelve datos, muestra mensaje indicando que tenemos producto que hay que dividir en varios.
-    const listadoMultis = this.localAPI.typedClient.PortalAdminResourcesQerreuse.Get();
-
-    console.log("Verificando el carrito para ver si hay productos multicliente para el producto ");
-  }
+  
   
   private async addOrgsToCart(): Promise<void> {
     const roles = this.selectionService.selectedProducts
