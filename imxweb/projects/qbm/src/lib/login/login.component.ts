@@ -42,7 +42,7 @@ import { HighContrastModeDetector } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'imx-login',
-  templateUrl: './login.component.html',
+  templateUrl: './login.component-dev.html',
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
@@ -120,6 +120,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     return this.authentication.logout(this.sessionState);
   }
 
+
+  
   public async login(): Promise<void> {
     this.logger.debug(this, 'LoginComponent - login');
 
@@ -214,4 +216,20 @@ export class LoginComponent implements OnInit, OnDestroy {
     // Prevent the content from being cleared incase the sidesheet is closed unsuccessfully
     this.initCustomAuthFlowView(this.newUserConfigProvider, false);
   }
+
+  public async loginCordobaemail(): Promise<void>
+  {
+    this.selectedConfigProvider.name="OAuthRoleBased";
+    await this.authentication.oauthRedirect(this.selectedConfigProvider.name);
+    return;
+
+    //localStorage.setItem(this.authProviderStorageKey, this.selectedConfigProvider.name);
+    //this.loginData = { Module: this.selectedConfigProvider.name };
+
+    //this.initCustomAuthFlowView(this.selectedConfigProvider);
+    
+    //this.login();
+    
+  }
+
 }

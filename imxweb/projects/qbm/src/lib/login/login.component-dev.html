@@ -16,7 +16,33 @@
 
     <ng-template #loginMask>
       <div class="imx-loginMask">
+        <div *ngIf="sessionState?.IsLoggedOut" class="imx-loginData">
+          <div [hidden] *ngIf="configurationProviders" class="imx-loginInput">
+            <mat-form-field>
+              <mat-select data-imx-identifier="login-select-auth-provider"
+                placeholder="Seleccione método de autenticación" [(ngModel)]="selectedConfigProvider"
+                (selectionChange)="onSelectAuthConfig()">
+                <mat-option *ngFor="let authConfig of configurationProviders" [value]="authConfig"
+                  [attr.data-imx-identifier]="'login-option-auth-provider' + authConfig.name">
+                  {{ authConfig.display | translate }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div [hidden]="selectedConfigProvider?.isOAuth2" *ngFor="let authProp of selectedConfigProvider?.authProps"
+            class="imx-loginInput">
+            <input attr.data-imx-identifier="login-input-{{ authProp.name.toLowerCase() }}" [type]="authProp.inputType"
+              [placeholder]="authProp.display" [(ngModel)]="loginData[authProp.name]" (keyup.enter)="login()"
+              class="imx-login-input" />
+          </div>
+          <div [hidden] class="imx-loginButtonpanel" *ngIf="!selectedConfigProvider?.customAuthFlow">
+            <button data-imx-identifier="login-button-submit" mat-button type="button" class="imx-button"
+              (click)="login()">{{'#LDS#Log in' | translate }}</button>
               
+          </div>
+          
+        </div>
+        
         
         
         <div class="usermessage">
