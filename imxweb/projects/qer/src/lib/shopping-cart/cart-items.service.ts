@@ -287,7 +287,7 @@ export class CartItemsService {
                  {'ColumnName':'UID_QERResourceType','Type':FilterType.Compare,'Value2':'44ddcbce-e85b-459e-8ccc-c25135a1a0db'}
                 ]
         });
-      
+        
         if (uidprodbasequery.totalCount > 0) {
           item.entity.GetEntity().GetColumn("CustomProperty10").PutValue("GestionMultiCliente");
         
