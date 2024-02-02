@@ -11,6 +11,7 @@
 
   .imx-masthead-space {
     flex: 1 1 auto;
+    background-color: $color-blue-90;
   }
 
   .imx-masthead--controls {
@@ -49,11 +50,14 @@
     eui-masthead {
       .mat-toolbar {
         .mat-toolbar-row {
+          background-color: $color-blue-90;
           width: unset !important;
           justify-content: center;
         }
 
-        .imx-masthead-space,
+        .imx-masthead-space {
+          background-color: $color-blue-90;
+        }
         .imx-masthead--controls {
           display: none;
         }
@@ -79,7 +83,16 @@
 .eui-dark-theme {
   :host {
     .mat-toolbar.mat-primary {
-      background-color: $color-blue-80;
+      background-color: $color-blue-90;
+      color: $color-gray-5;
+    }
+  }
+}
+
+.eui-light-theme {
+  :host {
+    .mat-toolbar.mat-primary {
+      background-color: $color-blue-90;
       color: $color-gray-5;
     }
   }
@@ -88,11 +101,11 @@
 .eui-contrast-theme {
   :host {
     ::ng-deep .eui-masthead {
-      background-color: $color-blue-80;
+      background-color: $color-blue-90;
     }
 
     .mat-toolbar.mat-primary {
-      background-color: $color-blue-80;
+      background-color: $color-blue-90;
       color: $color-gray-0;
     }
   }

@@ -19,37 +19,14 @@
 <!-- List-Tile -->
   <imx-tile *ngIf="viewReady && qerPermissions.isPersonManager && allReportsCount > 0"
   data-imx-identifier="businessowner-chartsummary-tile-my-direct-reports" [identifier]="'my-direct-reports'"
-  [size]="'Dashboard'" [contentType]="'Container'" (actionClick)="openIdentitiesOverview()">
-  <ng-template #CaptionTemplate>
-    <div class="imx-flex-header">
-      <div data-imx-identifier="tile-div-caption-container" class="imx-generic-tile-caption">
-        <h1 data-imx-identifier="tile-h1-caption">
-          <span>Usuarios</span>
-          <span>({{reports.length }}) </span>
-        </h1>
-        <h4 data-imx-identifier="tile-h4-caption">
-          Gestión de usuarios administrados
-        </h4>
-      </div>
-      <div class="imx-mobile-mobileonly">
-        <button mat-icon-button color="primary" [attr.data-imx-identifier]="'tile-button-explore-mobile-reports'"
-          type="button" (click)="openIdentitiesOverview()">
-          <eui-icon icon="chevronright"></eui-icon>
-        </button>
-      </div>
-      <div class="imx-mobile-nomobile">
-        <button mat-button color="primary" [attr.data-imx-identifier]="'tile-button-explore-nomobile-reports'"
-          (click)="openIdentitiesOverview()">{{'#LDS#View' | translate}}</button>
-      </div>
-    </div>
-  </ng-template>
-  <div class="imx-tile-content">
-    <ul class="imx-valuelist">
-      <li *ngFor="let identity of reports">
-        <a (click)="openIdentitySidesheet(identity)" tabindex="0">{{identity.GetEntity().GetDisplay()}}</a>
-      </li>
-    </ul>
-  </div>
+  [caption]="'Usuarios'" [size]="'Dashboard'" [contentType]="'Container'" (actionClick)="openIdentitiesOverview()"
+  [subtitle]="'Gestión de usuarios bajo su administración'"  >
+   <mat-card-actions align="start">
+    <button mat-button color="primary" data-imx-identifier="businessowner-chartsummary-tile-button-create-new-identity" 
+      (click)="openCreateNewIdentitySidesheet()">
+      <span>Crear nuevo usuario</span>
+    </button>
+   </mat-card-actions>
 </imx-tile>
 
 <!-- Show Create identities button if the user has no direct and indirect reports -->
