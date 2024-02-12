@@ -27,8 +27,6 @@
 import { CollectionLoadParameters } from 'imx-qbm-dbts';
 
 export interface DuplicateCheckParameter {
-  firstName?: string;
-  lastName?: string;
   defaultEmailAddress?: string;
   centralAccount?: string;
 }

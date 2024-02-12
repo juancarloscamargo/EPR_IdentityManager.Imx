@@ -107,7 +107,7 @@ export class CreateNewIdentityComponent implements OnDestroy {
     }
   }
 
-  public async showDuplicates(type: 'account' | 'mail' | 'name'): Promise<void> {
+  public async showDuplicates(type: 'account' | 'mail'): Promise<void> {
     let duplicateParameter: DuplicateCheckParameter;
 
     switch (type) {
@@ -116,12 +116,6 @@ export class CreateNewIdentityComponent implements OnDestroy {
         break;
       case 'mail':
         duplicateParameter = { defaultEmailAddress: this.data.selectedIdentity.GetEntity().GetColumn('DefaultEmailAddress').GetValue() };
-        break;
-      default:
-        duplicateParameter = {
-          firstName: this.data.selectedIdentity.GetEntity().GetColumn('FirstName').GetValue(),
-          lastName: this.data.selectedIdentity.GetEntity().GetColumn('LastName').GetValue()
-        };
         break;
     }
 
@@ -142,27 +136,20 @@ export class CreateNewIdentityComponent implements OnDestroy {
   }
 
   public update(cdr: ColumnDependentReference, list: ColumnDependentReference[]): void {
+    console.log("Actualizando : " +cdr.column.ColumnName);
     const index = list.findIndex(elem => elem.column.ColumnName === cdr.column.ColumnName);
     if (index === -1) { return; }
-
+    
     this.identityForm.removeControl(cdr.column.ColumnName);
+    
     list.splice(index, 1, new BaseCdr(cdr.column));
   }
 
   public async checkValues(name: string): Promise<void> {
     switch (name) {
-      case 'FirstName':
-      case 'LastName':
-        this.nameIsOff = (await this.identityService.getDuplicates(
-          {
-            filter: this.identityService.buildFilterForduplicates(
-              {
-                firstName: this.data.selectedIdentity.GetEntity().GetColumn('FirstName').GetValue(),
-                lastName: this.data.selectedIdentity.GetEntity().GetColumn('LastName').GetValue(),
-              }
-            ), PageSize: -1
-          }
-        )).totalCount;
+      case 'FirstName'||'CCC_Apellido1'||'CCC_Apellido2':
+        this.data.selectedIdentity.GetEntity().GetColumn('CentralAccount').PutValue('');
+        this.accountIsOff=0;
         break;
       case 'CentralAccount':
         this.accountIsOff = (await this.identityService.getDuplicates(
@@ -202,11 +189,11 @@ export class CreateNewIdentityComponent implements OnDestroy {
       }
     }));
 
-    const identifierColumns = ['FirstName', 'LastName', 'CentralAccount', 'DefaultEmailAddress'];
+    const identifierColumns = ['CCC_Apellido1','CCC_Apellido2','FirstName', 'CCC_NIF', 'CentralAccount'];
     this.cdrListIdentifier = this.cdrFactoryService.buildCdrFromColumnList(this.data.selectedIdentity.GetEntity(),identifierColumns);
 
-    const personalColumns = this.data.projectConfig.PersonConfig.VI_Employee_MasterData_Attributes
-      .filter(personal => !identifierColumns.includes(personal));
+    const personalColumns = this.data.projectConfig.PersonConfig.VI_Employee_MasterData_Attributes;
+      //.filter(personal => !identifierColumns.includes(personal));
     this.cdrListPersonal = this.cdrFactoryService.buildCdrFromColumnList(this.data.selectedIdentity.GetEntity(),personalColumns);
 
     const organizationalColumns = this.data.projectConfig.PersonConfig.VI_Employee_MasterData_OrganizationalAttributes;

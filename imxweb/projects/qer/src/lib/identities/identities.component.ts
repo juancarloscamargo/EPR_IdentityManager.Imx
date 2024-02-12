@@ -277,7 +277,7 @@ export class DataExplorerIdentitiesComponent implements OnInit, OnDestroy, SideN
   public async createNewIdentity(): Promise<void> {
     await this.sideSheet
       .open(CreateNewIdentityComponent, {
-        title: await this.translate.get('#LDS#Heading Create Identity').toPromise(),
+        title: 'Creación de nuevo usuario',
         padding: '0px',
         width: 'max(650px, 65%)',
         disableClose: true,

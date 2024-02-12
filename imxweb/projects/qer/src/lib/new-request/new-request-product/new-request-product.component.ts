@@ -85,7 +85,7 @@ export class NewRequestProductComponent implements OnInit, OnDestroy {
       // We only expect a single root node
       const userParams = {
         UID_Person: this.orchestration.recipients ? MultiValue.FromString(this.orchestration.recipients.value).GetValues().join(',') : undefined,
-        ParentKey: '',
+        ParentKey: ''
       };
       const servicecategories = await this.categoryApi.get(userParams);
       this.serviceCategoriesTotalCount = servicecategories?.totalCount;

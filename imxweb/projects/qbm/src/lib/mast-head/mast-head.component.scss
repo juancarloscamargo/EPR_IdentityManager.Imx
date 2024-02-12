@@ -1,5 +1,6 @@
 @import "@elemental-ui/core/src/styles/_palette.scss";
 @import '@elemental-ui/core/src/styles/_eui_palette.scss';
+@import '../../../../qer-app-portal/src/assets/estiloeprinsa.scss';
 
 :host {
   .imx-masthead-app-name {
@@ -11,7 +12,7 @@
 
   .imx-masthead-space {
     flex: 1 1 auto;
-    background-color: $color-blue-90;
+    background-color: $azul-eprinsa-1;
   }
 
   .imx-masthead--controls {
@@ -50,14 +51,11 @@
     eui-masthead {
       .mat-toolbar {
         .mat-toolbar-row {
-          background-color: $color-blue-90;
           width: unset !important;
           justify-content: center;
         }
 
-        .imx-masthead-space {
-          background-color: $color-blue-90;
-        }
+        .imx-masthead-space,
         .imx-masthead--controls {
           display: none;
         }
@@ -91,8 +89,11 @@
 
 .eui-light-theme {
   :host {
+    ::ng-deep .eui-masthead {
+      background-color: $azul-eprinsa-1;
+    }
     .mat-toolbar.mat-primary {
-      background-color: $color-blue-90;
+      background-color: $azul-eprinsa-1;
       color: $color-gray-5;
     }
   }

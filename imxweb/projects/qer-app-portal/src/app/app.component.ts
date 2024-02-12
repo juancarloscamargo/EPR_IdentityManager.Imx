@@ -201,5 +201,7 @@ export class AppComponent implements OnInit, OnDestroy {
     catch (error) {
       this.errorHandler.handleError(error);
     }
+    //Ponemos el tema por defecto porque no vamos a darle opción al usuario para que lo cambie.
+    this.themeService.setTheme(<EuiTheme>'eui-light-theme')
   }
 }

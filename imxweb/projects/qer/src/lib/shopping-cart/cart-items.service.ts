@@ -27,7 +27,7 @@
 import { Injectable, ErrorHandler } from '@angular/core';
 import { EuiLoadingService } from '@elemental-ui/core';
 
-import { FilterData, ExtendedTypedEntityCollection, CompareOperator, FilterType, EntitySchema, TypedEntity } from 'imx-qbm-dbts';
+import { FilterData, ExtendedTypedEntityCollection, CompareOperator, FilterType, EntitySchema, TypedEntity, SqlColumnTypes, SqlExpression } from 'imx-qbm-dbts';
 import {
   CartCheckResult,
   CheckMode,
@@ -276,7 +276,7 @@ export class CartItemsService {
   private async gestionproductosMulti(carrito: {submit: boolean, bulkItems: BulkItem[] }): Promise<void> {
     //Haz una query de requestableProductForPerson in QERReuse para ver si hay entradas y que sean del tipo "Aplicaciones Multicliente"
     //Si la query devuelve datos, muestra mensaje indicando que tenemos producto que hay que dividir en varios.
-    
+      
       for (var item of carrito.bulkItems){
         
         

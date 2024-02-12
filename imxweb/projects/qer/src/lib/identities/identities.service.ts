@@ -230,12 +230,7 @@ export class IdentitiesService {
 
   public buildFilterForduplicates(parameter: DuplicateCheckParameter): FilterData[] {
     const filter = [];
-    if (parameter.firstName != null && parameter.firstName !== ''
-      && parameter.lastName != null && parameter.lastName !== '') {
-      filter.push(this.buildFilter('FirstName', parameter.firstName));
-      filter.push(this.buildFilter('LastName', parameter.lastName));
-    }
-
+    
     if (parameter.centralAccount != null && parameter.centralAccount !== '') {
       filter.push(this.buildFilter('CentralAccount', parameter.centralAccount));
     }
