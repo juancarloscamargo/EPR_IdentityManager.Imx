@@ -52,6 +52,7 @@ export class CreateNewIdentityComponent implements OnDestroy {
   public nameIsOff = 0;
   public accountIsOff = 0;
   public mailIsOff = 0;
+  public externoIsOff = 0;
 
   private subscriptions: Subscription[] = [];
 
@@ -175,7 +176,22 @@ export class CreateNewIdentityComponent implements OnDestroy {
         )).totalCount;
         break;
       case 'IsExternal':
-//        this.data.selectedIdentity.GetEntity().GetColumn('UID_Department').GetMetadata().CanEdit().valueOf=0
+        if (this.identityForm.controls.IsExternal.value == 1) {
+        this.data.selectedIdentity.GetEntity().GetColumn('UID_Department').PutValue('');
+        //this.data.selectedIdentity.GetEntity().GetSchema().Columns.UID_Department.IsReadOnly=true;
+        this.identityForm.controls['UID_Department'].disable();
+        this.externoIsOff=1;
+        
+        }
+        else
+        {
+          this.data.selectedIdentity.GetEntity().GetSchema().Columns.UID_Department.IsReadOnly=false;
+          this.identityForm.controls['UID_Department'].enable();
+          this.externoIsOff=0;
+        }
+       
+        break;  
+          
       
     }
   }
@@ -197,9 +213,10 @@ export class CreateNewIdentityComponent implements OnDestroy {
     this.cdrListusuario = this.cdrFactoryService.buildCdrFromColumnList(this.data.selectedIdentity.GetEntity(),identificacionusuario);
     
     
-    const personalColumns = ['CCC_NIF','DefaultEmailAddress','IsExternal','UID_Department','UID_FirmPartner'];
+    const personalColumns = ['CCC_NIF','DefaultEmailAddress','CCC_SecondaryEmailAddress','Phone','PhoneMobile','IsExternal','UID_Department','UID_FirmPartner','EntryDate','ExitDate'];
     //const personalColumns = this.data.projectConfig.PersonConfig.VI_Employee_MasterData_Attributes;
     this.cdrListPersonal = this.cdrFactoryService.buildCdrFromColumnList(this.data.selectedIdentity.GetEntity(),personalColumns);
+    
     console.log("aqui");
   }
 }

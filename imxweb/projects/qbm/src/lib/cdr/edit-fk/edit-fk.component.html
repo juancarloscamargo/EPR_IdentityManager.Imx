@@ -50,7 +50,7 @@
     ></eui-icon>
     <div class="imx-spacer"></div>
     <button
-      *ngIf="columnContainer?.canEdit && (isHierarchical || columnContainer?.fkRelations?.length > 1)"
+      *ngIf="columnContainer?.canEdit && (isHierarchical || columnContainer?.fkRelations?.length > 1) && !control.disabled"
       mat-button
       color="primary"
       type="button"

@@ -31,8 +31,8 @@
 export const environment = {
   production: false,
   //clientUrl: 'http://localhost:8182',
-  clientUrl: 'https://iam-desarrollo.eprinsa.org/Apiserver',
-  //clientUrl: 'https://iam-wportal4.eprinsa.org/Apiserver',
+  //clientUrl: 'https://iam-desarrollo.eprinsa.org/Apiserver',
+  clientUrl: 'https://iam-wportal4.eprinsa.org/Apiserver',
   appName: 'qer-app-portal',
   appVersion: '1.0.0'
 };

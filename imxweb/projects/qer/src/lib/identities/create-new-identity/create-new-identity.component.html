@@ -32,11 +32,10 @@
           </mat-expansion-panel-header>
           <imx-cdr-editor *ngFor="let cdr of cdrListPersonal" [cdr]="cdr" (readOnlyChanged)=update(cdr,cdrListPersonal)
           (valueChange)="checkValues(cdr.column.ColumnName)" (controlCreated)="identityForm.addControl(cdr.column.ColumnName, $event)"> </imx-cdr-editor>
-          <eui-alert class="imx-info" *ngIf="mailIsOff>0" type="warning" condensed="true" [colored]="true">
+          <eui-alert class="imx-info" *ngIf="externoIsOff" type="warning" condensed="true" [colored]="true">
             <div class="imx-flex-alert">
               <div>
-                <p translate>#LDS#There is at least one identity with the same email address.</p>
-                <p translate>#LDS#You can view these identities, change the email address, or proceed.</p>
+                <p>Al marcar un usuario como externo, no se admite departamento primario.</p>
               </div>
               <button mat-button color="primary" data-imx-identifier="create-new-identity-button-duplicated-mail" class="imx-alert-button" (click)="showDuplicates('mail')">
                 {{'#LDS#View identities' |translate}}
