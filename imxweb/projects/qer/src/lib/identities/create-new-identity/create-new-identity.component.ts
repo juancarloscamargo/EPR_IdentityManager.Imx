@@ -48,7 +48,7 @@ export class CreateNewIdentityComponent implements OnDestroy {
   public cdrListPersonal: ColumnDependentReference[] = [];
   public cdrListOrganizational: ColumnDependentReference[] = [];
   public cdrListLocality: ColumnDependentReference[] = [];
-  public cdrListIdentifier: ColumnDependentReference[] = [];
+  public cdrListusuario: ColumnDependentReference[] = [];
   public nameIsOff = 0;
   public accountIsOff = 0;
   public mailIsOff = 0;
@@ -149,6 +149,7 @@ export class CreateNewIdentityComponent implements OnDestroy {
     switch (name) {
       case 'FirstName'||'CCC_Apellido1'||'CCC_Apellido2':
         this.data.selectedIdentity.GetEntity().GetColumn('CentralAccount').PutValue('');
+        this.identityForm.controls.CentralAccount.reset();
         this.accountIsOff=0;
         break;
       case 'CentralAccount':
@@ -173,6 +174,9 @@ export class CreateNewIdentityComponent implements OnDestroy {
           }
         )).totalCount;
         break;
+      case 'IsExternal':
+//        this.data.selectedIdentity.GetEntity().GetColumn('UID_Department').GetMetadata().CanEdit().valueOf=0
+      
     }
   }
 
@@ -189,17 +193,13 @@ export class CreateNewIdentityComponent implements OnDestroy {
       }
     }));
 
-    const identifierColumns = ['CCC_Apellido1','CCC_Apellido2','FirstName', 'CCC_NIF', 'CentralAccount'];
-    this.cdrListIdentifier = this.cdrFactoryService.buildCdrFromColumnList(this.data.selectedIdentity.GetEntity(),identifierColumns);
-
-    const personalColumns = this.data.projectConfig.PersonConfig.VI_Employee_MasterData_Attributes;
-      //.filter(personal => !identifierColumns.includes(personal));
+    const identificacionusuario = ['CCC_Apellido1','CCC_Apellido2','FirstName',  'CentralAccount'];
+    this.cdrListusuario = this.cdrFactoryService.buildCdrFromColumnList(this.data.selectedIdentity.GetEntity(),identificacionusuario);
+    
+    
+    const personalColumns = ['CCC_NIF','DefaultEmailAddress','IsExternal','UID_Department','UID_FirmPartner'];
+    //const personalColumns = this.data.projectConfig.PersonConfig.VI_Employee_MasterData_Attributes;
     this.cdrListPersonal = this.cdrFactoryService.buildCdrFromColumnList(this.data.selectedIdentity.GetEntity(),personalColumns);
-
-    const organizationalColumns = this.data.projectConfig.PersonConfig.VI_Employee_MasterData_OrganizationalAttributes;
-    this.cdrListOrganizational = this.cdrFactoryService.buildCdrFromColumnList(this.data.selectedIdentity.GetEntity(),organizationalColumns);
-
-    const localityColumns = this.data.projectConfig.PersonConfig.VI_Employee_MasterData_LocalityAttributes;
-    this.cdrListLocality = this.cdrFactoryService.buildCdrFromColumnList(this.data.selectedIdentity.GetEntity(),localityColumns);
+    console.log("aqui");
   }
 }
