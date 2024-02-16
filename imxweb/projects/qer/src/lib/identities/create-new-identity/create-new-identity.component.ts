@@ -217,6 +217,6 @@ export class CreateNewIdentityComponent implements OnDestroy {
     //const personalColumns = this.data.projectConfig.PersonConfig.VI_Employee_MasterData_Attributes;
     this.cdrListPersonal = this.cdrFactoryService.buildCdrFromColumnList(this.data.selectedIdentity.GetEntity(),personalColumns);
     
-    console.log("aqui");
+    
   }
 }
