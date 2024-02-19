@@ -216,7 +216,7 @@ export class CreateNewIdentityComponent implements OnDestroy {
     const personalColumns = ['CCC_NIF','DefaultEmailAddress','CCC_SecondaryEmailAddress','Phone','PhoneMobile','IsExternal','UID_Department','UID_FirmPartner','EntryDate','ExitDate'];
     //const personalColumns = this.data.projectConfig.PersonConfig.VI_Employee_MasterData_Attributes;
     this.cdrListPersonal = this.cdrFactoryService.buildCdrFromColumnList(this.data.selectedIdentity.GetEntity(),personalColumns);
-    
+    console.log("cargadas columnas");
     
   }
 }
