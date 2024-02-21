@@ -177,16 +177,16 @@ export class CreateNewIdentityComponent implements OnDestroy {
         break;
       case 'IsExternal':
         if (this.identityForm.controls.IsExternal.value == 1) {
-        this.data.selectedIdentity.GetEntity().GetColumn('UID_Department').PutValue('');
-        //this.data.selectedIdentity.GetEntity().GetSchema().Columns.UID_Department.IsReadOnly=true;
-        this.identityForm.controls['UID_Department'].disable();
+        //this.data.selectedIdentity.GetEntity().GetColumn('UID_Department').PutValue('');
+        
+        //this.identityForm.controls['UID_Department'].disable();
         this.externoIsOff=1;
         
         }
         else
         {
-          this.data.selectedIdentity.GetEntity().GetSchema().Columns.UID_Department.IsReadOnly=false;
-          this.identityForm.controls['UID_Department'].enable();
+          //this.data.selectedIdentity.GetEntity().GetSchema().Columns.UID_Department.IsReadOnly=false;
+          //this.identityForm.controls['UID_Department'].enable();
           this.externoIsOff=0;
         }
        

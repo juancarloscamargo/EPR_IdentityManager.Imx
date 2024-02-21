@@ -107,8 +107,9 @@ export class AppService {
 
   private async setTitle(): Promise<void> {
     const imxConfig = await this.systemInfoService.getImxConfig();
-    const name = imxConfig.ProductName || Globals.QIM_ProductNameFull;
-    this.config.Config.Title = await this.translateService.get('#LDS#Heading Web Portal').toPromise();
+    //const name = imxConfig.ProductName || Globals.QIM_ProductNameFull;
+    const name = "Gestión de Identidades";
+    this.config.Config.Title = "Portal de gestión de Identidades";
     const title = `${name} ${this.config.Config.Title}`;
     this.title.setTitle(title);
 
