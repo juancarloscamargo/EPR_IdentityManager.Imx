@@ -162,6 +162,7 @@ export class BusinessOwnerChartSummaryComponent implements OnInit {
     }
   }
 
+  // Estos dos loads sólo cargan identidades de las que el operador es responsable.
   private async loadDirectReports(): Promise<void> {
     if (await this.qerPermissions.isPersonManager()) {
       this.reports = (

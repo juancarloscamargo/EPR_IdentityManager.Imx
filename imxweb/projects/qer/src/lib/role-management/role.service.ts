@@ -69,6 +69,8 @@ export const RoleManagementLocalityTag = 'Locality';
 export const RoleManagementProfitCenterTag = 'ProfitCenter';
 export const RoleManagementDepartmentTag = 'Department';
 export const RoleManagementAERoleTag = 'AERole';
+export const RoleManagementGAPTag = 'GAPUser';
+
 @Injectable({
   providedIn: 'root',
 })

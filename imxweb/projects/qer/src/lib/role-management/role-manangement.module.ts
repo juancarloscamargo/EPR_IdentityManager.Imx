@@ -60,7 +60,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { isAuditor, isRoleAdmin, isRoleStatistics, isStructAdmin, isStructStatistics } from '../admin/qer-permissions-helper';
+import { isAuditor, isGAPAdmin, isRoleAdmin, isRoleStatistics, isStructAdmin, isStructStatistics } from '../admin/qer-permissions-helper';
 import { DataExplorerRegistryService } from '../data-explorer-view/data-explorer-registry.service';
 import { MyResponsibilitiesRegistryService } from '../my-responsibilities-view/my-responsibilities-registry.service';
 import { CompareItemComponent } from './compare/compare-item.component';
@@ -76,7 +76,7 @@ import { RoleEntitlementsComponent } from './role-entitlements/role-entitlements
 import { RoleRecommendationsComponent } from './role-entitlements/role-recommendations/role-recommendations.component';
 import { RoleMainDataComponent } from './role-main-data/role-main-data.component';
 import { RoleMembershipsModule } from './role-memberships/role-memberships.module';
-import { RoleManagementAERoleTag, RoleManagementDepartmentTag, RoleManagementLocalityTag, RoleManagementProfitCenterTag, RoleService } from './role.service';
+import { RoleManagementAERoleTag, RoleManagementDepartmentTag, RoleManagementGAPTag, RoleManagementLocalityTag, RoleManagementProfitCenterTag, RoleService } from './role.service';
 import { RolesOverviewComponent } from './roles-overview/roles-overview.component';
 import { RollbackComponent } from './rollback/rollback.component';
 import { SplitComponent } from './split/split.component';
@@ -286,6 +286,17 @@ export class RoleManangementModule {
         caption: '#LDS#Cost centers',
         data: {
           TableName: RoleManagementProfitCenterTag,
+          Count: 0,
+        },
+        contextId: HELP_CONTEXTUAL.MyResponsibilitiesProfitCenter
+      }),
+      (preProps: string[], features: string[]) => ({
+        instance: RolesOverviewComponent,
+        sortOrder: 7,
+        name: RoleManagementGAPTag,
+        caption: 'Gestión del correo-e',
+        data: {
+          TableName: RoleManagementGAPTag,
           Count: 0,
         },
         contextId: HELP_CONTEXTUAL.MyResponsibilitiesProfitCenter
