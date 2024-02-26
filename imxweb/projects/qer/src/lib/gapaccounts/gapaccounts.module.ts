@@ -8,14 +8,15 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProjectConfig } from 'imx-api-qbm';
 import { MyResponsibilitiesRegistryService } from '../my-responsibilities-view/my-responsibilities-registry.service';
-import { GapaccountsSidesheetsComponent } from './gapaccounts-sidesheet/gapaccounts/gapaccounts-sidesheets/gapaccounts-sidesheets.component';
+import { GapaccountsSidesheetsComponent } from './gapaccounts-sidesheets/gapaccounts-sidesheets.component';
+
 
 
 
 @NgModule({
   declarations: [
     GapaccountsComponent,
-    GapaccountsSidesheetsComponent
+    GapaccountsSidesheetsComponent,
   ],
   imports: [
     CommonModule,
@@ -30,8 +31,7 @@ import { GapaccountsSidesheetsComponent } from './gapaccounts-sidesheet/gapaccou
     HelpContextualModule,
   ],
   exports: [
-    GapaccountsComponent,
-    GapaccountsSidesheetsComponent
+    GapaccountsComponent
   ]
 })
 export class GapaccountsModule { 
