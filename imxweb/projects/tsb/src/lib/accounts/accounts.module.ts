@@ -45,13 +45,15 @@ import { GroupsModule } from '../groups/groups.module';
 import { AccountsExtComponent } from './account-ext/accounts-ext.component';
 import { TargetSystemReportComponent } from './target-system-report/target-system-report.component';
 import { ObjectHyperviewModule } from 'qer';
+import { GapaccountsComponent } from './gapaccounts/gapaccounts.component';
 
 @NgModule({
   declarations: [
     DataExplorerAccountsComponent,
     AccountSidesheetComponent,
     AccountsExtComponent,
-    TargetSystemReportComponent
+    TargetSystemReportComponent,
+    GapaccountsComponent
   ],
   imports: [
     DataFiltersModule,
