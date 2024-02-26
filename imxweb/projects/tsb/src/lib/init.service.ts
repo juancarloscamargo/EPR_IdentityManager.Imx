@@ -158,8 +158,16 @@ export class InitService {
       instance: DataExplorerGroupsComponent,
       sortOrder: 3,
       name: 'UNSGroup',
-      caption: '#LDS#System entitlements',
+      caption: 'Grupos UNS',
       icon: 'usergroup',
+      contextId: HELP_CONTEXTUAL.MyResponsibilitiesGroups
+    }));
+    this.myResponsibilitiesRegistryService.registerFactory((preProps: string[], features: string[]) => ({
+      instance: DataExplorerAccountsComponent,
+      sortOrder: 99,
+      name: 'GAPUser',
+      caption: 'Cuentas de correo',
+      icon: 'google',
       contextId: HELP_CONTEXTUAL.MyResponsibilitiesGroups
     }));
   }

@@ -289,17 +289,6 @@ export class RoleManangementModule {
           Count: 0,
         },
         contextId: HELP_CONTEXTUAL.MyResponsibilitiesProfitCenter
-      }),
-      (preProps: string[], features: string[]) => ({
-        instance: RolesOverviewComponent,
-        sortOrder: 7,
-        name: RoleManagementGAPTag,
-        caption: 'Gestión del correo-e',
-        data: {
-          TableName: RoleManagementGAPTag,
-          Count: 0,
-        },
-        contextId: HELP_CONTEXTUAL.MyResponsibilitiesProfitCenter
       })
     );
   }

@@ -59,10 +59,12 @@ export class MyResponsibilitiesViewComponent implements OnInit {
     const systemInfo = await this.systemInfoService.get();
     const features = (await this.userModelService.getFeatures()).Features || [];
     const userConfig = await this.userModelService.getUserConfig();
+    
+    
     const config: QerProjectConfig & ProjectConfig = await this.projectConfig.getConfig();
     this.navItems = this.myResponsibilitiesRegistryService
       .getNavItems(systemInfo.PreProps, features, config)
-      .filter((elem) => elem.name === 'identities' || elem.name === 'devices' || userConfig.Ownerships.find(own => own.TableName === elem.name)?.Count > 0);
+      .filter((elem) => elem.name === 'identities' || elem.name === 'devices'  || elem.name === 'GAPUser' || userConfig.Ownerships.find(own => own.TableName === elem.name)?.Count > 0);
     this.cdref.detectChanges();
   }
 }

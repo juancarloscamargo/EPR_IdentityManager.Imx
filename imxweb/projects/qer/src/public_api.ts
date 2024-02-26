@@ -203,6 +203,4 @@ export { ViewDevicesModule } from './lib/view-devices/view-devices.module';
 export { ViewDevicesComponent } from './lib/view-devices/view-devices-home/view-devices.component';
 export { ViewDevicesSidesheetComponent } from './lib/view-devices/view-devices-sidesheet/view-devices-sidesheet.component';
 export { AuthenticationFactors } from './lib/admin/authentication-factors.interface';
-export {GapaccountsModule} from './lib/gapaccounts/gapaccounts.module';
-export {GapaccountsComponent} from './lib/gapaccounts/gapaccounts.component';
 
