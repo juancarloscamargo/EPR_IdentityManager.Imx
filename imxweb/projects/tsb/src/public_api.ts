@@ -32,7 +32,9 @@ export { ClaimGroupModule } from './lib/claim-group/claim-group.module';
 export { TsbApiService } from './lib/tsb-api-client.service';
 export { TsbConfigModule } from './lib/tsb-config.module';
 export { AccountsModule } from './lib/accounts/accounts.module';
+export { GapaccountsModule } from './lib/accounts/gapaccounts/gapaccounts.module'
 export { DataExplorerAccountsComponent } from './lib/accounts/accounts.component';
+export { DataExplorerGapaccountsComponent } from './lib/accounts/gapaccounts/gapaccounts.component';
 export { DataFiltersModule } from './lib/data-filters/data-filters.module';
 export { DataExplorerFiltersComponent } from './lib/data-filters/data-explorer-filters.component';
 export { AccountsService } from './lib/accounts/accounts.service';

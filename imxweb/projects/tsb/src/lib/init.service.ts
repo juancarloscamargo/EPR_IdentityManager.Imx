@@ -56,6 +56,7 @@ import { ReportButtonExtComponent } from './report-button-ext/report-button-ext.
 import { TsbApiService } from './tsb-api-client.service';
 import { GroupMembershipsExtComponent } from './groups/group-memberships-ext/group-memberships-ext.component';
 import { ProjectConfig } from 'imx-api-qbm';
+import { DataExplorerGapaccountsComponent } from './accounts/gapaccounts/gapaccounts.component';
 
 @Injectable({ providedIn: 'root' })
 export class InitService {
@@ -163,7 +164,7 @@ export class InitService {
       contextId: HELP_CONTEXTUAL.MyResponsibilitiesGroups
     }));
     this.myResponsibilitiesRegistryService.registerFactory((preProps: string[], features: string[]) => ({
-      instance: DataExplorerAccountsComponent,
+      instance: DataExplorerGapaccountsComponent,
       sortOrder: 99,
       name: 'GAPUser',
       caption: 'Cuentas de correo',

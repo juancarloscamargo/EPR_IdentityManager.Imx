@@ -37,23 +37,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
 import { DataSourceToolbarModule, DataTableModule, CdrModule, LdsReplaceModule, DataTreeModule, ExtModule, DynamicTabsModule, BusyIndicatorModule, HelpContextualModule } from 'qbm';
-import { DataExplorerAccountsComponent } from '../accounts/accounts.component';
-import { AccountSidesheetComponent } from '../accounts/account-sidesheet/account-sidesheet.component';
-import { DataFiltersModule } from '../data-filters/data-filters.module';
-import { NoDataModule } from '../no-data/no-data.module';
-import { GroupsModule } from '../groups/groups.module';
-import { AccountsExtComponent } from './account-ext/accounts-ext.component';
-import { TargetSystemReportComponent } from './target-system-report/target-system-report.component';
+import { DataExplorerGapaccountsComponent } from './gapaccounts.component';
+import { AccountSidesheetComponent } from '../../accounts/account-sidesheet/account-sidesheet.component';
+import { DataFiltersModule } from '../../data-filters/data-filters.module';
+import { NoDataModule } from '../../no-data/no-data.module';
+import { GroupsModule } from '../../groups/groups.module';
+import { AccountsExtComponent } from '.././account-ext/accounts-ext.component';
+import { TargetSystemReportComponent } from '.././target-system-report/target-system-report.component';
 import { ObjectHyperviewModule } from 'qer';
-import { DataExplorerGapaccountsComponent } from './gapaccounts/gapaccounts.component';
+
 
 @NgModule({
   declarations: [
-    DataExplorerAccountsComponent,
-    AccountSidesheetComponent,
-    AccountsExtComponent,
-    TargetSystemReportComponent,
-    DataExplorerAccountsComponent
+    DataExplorerGapaccountsComponent,
+    
+    
   ],
   imports: [
     DataFiltersModule,
@@ -83,8 +81,7 @@ import { DataExplorerGapaccountsComponent } from './gapaccounts/gapaccounts.comp
     HelpContextualModule
   ],
   exports: [
-    DataExplorerAccountsComponent,
-    AccountsExtComponent
+    DataExplorerGapaccountsComponent
   ],
 })
-export class AccountsModule {}
+export class GapaccountsModule {}

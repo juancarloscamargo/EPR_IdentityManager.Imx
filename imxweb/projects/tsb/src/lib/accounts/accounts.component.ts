@@ -233,12 +233,15 @@ export class DataExplorerAccountsComponent implements OnInit, OnDestroy, SideNav
     try {
       this.logger.debug(this, `Retrieving accounts list`);
       this.logger.trace('Navigation settings', this.navigationState);
-      const tsUid = this.dataExplorerFilters.selectedTargetSystemUid;
+      //const tsUid = this.dataExplorerFilters.selectedTargetSystemUid;
+      const tsUid = "f40c77ba-3566-484b-8671-edc2288e15cc";
       const cUid = this.dataExplorerFilters.selectedContainerUid;
       getParams.system = tsUid ? tsUid : undefined;
       getParams.container = cUid ? cUid : undefined;
 
+      const datosmios = await this.accountsService.gapgetdomains(this.navigationState);
       const data = await this.accountsService.getAccounts(getParams);
+      
       const exportMethod: DataSourceToolbarExportMethod = this.accountsService.exportAccounts(this.navigationState);
       exportMethod.initialColumns = this.displayedColumns.map(col => col.ColumnName);
       this.dstSettings = {

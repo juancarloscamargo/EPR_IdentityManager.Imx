@@ -37,19 +37,19 @@ import {
   MethodDescriptor,
   MethodDefinition
 } from 'imx-qbm-dbts';
-import { TsbApiService } from '../tsb-api-client.service';
+import { TsbApiService } from '../../tsb-api-client.service';
 
 import { PortalTargetsystemUnsAccount, V2ApiClientMethodFactory } from 'imx-api-tsb';
 import { QerApiService } from 'qer';
 
-import { TargetSystemDynamicMethodService } from '../target-system/target-system-dynamic-method.service';
-import { AccountTypedEntity } from './account-typed-entity';
-import { DbObjectKeyBase } from '../target-system/db-object-key-wrapper.interface';
-import { AcountsFilterTreeParameters as AccountsFilterTreeParameters } from './accounts.models';
+import { TargetSystemDynamicMethodService } from '../../target-system/target-system-dynamic-method.service';
+import { AccountTypedEntity } from '.././account-typed-entity';
+import { DbObjectKeyBase } from '../../target-system/db-object-key-wrapper.interface';
+import { AcountsFilterTreeParameters as AccountsFilterTreeParameters } from '.././accounts.models';
 import { DataSourceToolbarExportMethod } from 'qbm';
 
 @Injectable({ providedIn: 'root' })
-export class AccountsService {
+export class GapaccountsService {
   constructor(
     private readonly tsbClient: TsbApiService,
     private readonly qerClient : QerApiService,
@@ -112,8 +112,9 @@ export class AccountsService {
   }
 
   public async gapgetdomains(navigationState: CollectionLoadParameters):Promise<String[]>{    
-    const departamentos = this.qerClient.typedClient.PortalCandidatesDepartment.Get();
-    console.log("lista de departamentos obtenida , obtenidos : " + (await departamentos).totalCount);
+    const departamentos = await this.qerClient.typedClient.PortalCandidatesDepartment.Get({withProperties:'-CustomProperty01'});
+    let dominios = Array.from(new Set(departamentos.Data[0].GetEntity('Cuso')))
+    console.log("lista de departamentos obtenida , obtenidos : " + departamentos.totalCount);
     return null;
 
   }
