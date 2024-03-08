@@ -124,6 +124,7 @@
     "imx-api-tsb": "file:imx-modules/imx-api-tsb.tgz",
     "imx-api-uci": "file:imx-modules/imx-api-uci.tgz",
     "imx-api-ccc": "file:imx-modules/imx-api.ccc.tgz",
+    "imx-api-gap": "file:imx-modules/imx-api-gap.tgz",
     "imx-qbm-dbts": "file:imx-modules/imx-qbm-dbts.tgz"
   },
   "overrides": {

@@ -16,6 +16,7 @@
 		<!-- only run if any of these files have changed -->
 		<InputFiles Include="$(Workspace)\imx-modules\imx-api-tsb.tgz" />
 		<InputFiles Include="$(Workspace)\imx-modules\imx-api-qer.tgz" />
+		<InputFiles Include="$(Workspace)\imx-modules\imx-api-gap.tgz" />
 	</ItemGroup>
 	
 </Project>

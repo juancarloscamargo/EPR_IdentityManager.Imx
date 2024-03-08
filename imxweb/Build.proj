@@ -17,6 +17,7 @@
 		<!-- only run if any of these files have changed -->
 		<InputFiles Include="$(Workspace)\imx-modules\imx-api-qbm.tgz" />
 		<InputFiles Include="$(Workspace)\imx-modules\imx-qbm-dbts.tgz" />
+		<InputFiles Include="$(Workspace)\imx-modules\imx-api-gap.tgz" />
 		<InputFiles Include="$(Workspace)\projects\**\*.*" />
 		<InputFiles Include="$(Workspace)\*.json" />
 	</ItemGroup>

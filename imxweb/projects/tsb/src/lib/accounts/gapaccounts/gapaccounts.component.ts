@@ -179,14 +179,16 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   private async navigate(): Promise<void> {
     const isBusy = this.busyService.beginBusy();
     const getParams: GetAccountsOptionalParameters = this.navigationState;
-
+    
     try {
       this.logger.debug(this, `Retrieving accounts list`);
-      this.logger.trace('Navigation settings', this.navigationState);
+      this.logger.debug('Navigation settings', this.navigationState);
 
       const datosmios = await this.accountsService.gapgetdomains(this.navigationState);
+      this.accountsService.getgapuser();
       const data = await this.accountsService.getAccounts(getParams);
       
+
       this.tableName = data.tableName;
       this.logger.debug(this, `Head at ${data.Data.length + this.navigationState.StartIndex} of ${data.totalCount} item(s)`);
     } finally {

@@ -54,6 +54,7 @@ import { isTsbNameSpaceAdminBase } from './admin/tsb-permissions-helper';
 import { DataExplorerGroupsComponent } from './groups/groups.component';
 import { ReportButtonExtComponent } from './report-button-ext/report-button-ext.component';
 import { TsbApiService } from './tsb-api-client.service';
+import { GAPApiService } from './gap-api-client.service';
 import { GroupMembershipsExtComponent } from './groups/group-memberships-ext/group-memberships-ext.component';
 import { ProjectConfig } from 'imx-api-qbm';
 import { DataExplorerGapaccountsComponent } from './accounts/gapaccounts/gapaccounts.component';

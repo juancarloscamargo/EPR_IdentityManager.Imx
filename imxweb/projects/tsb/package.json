@@ -3,6 +3,7 @@
   "version": "9.2.0",
   "private": true,
   "bundledDependencies": [
-    "imx-api-tsb"
+    "imx-api-tsb",
+    "imx-api-gap"
   ]
 }

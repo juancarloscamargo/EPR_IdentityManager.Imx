@@ -24,7 +24,8 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, Type } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 import {
   CollectionLoadParameters,
@@ -39,6 +40,7 @@ import {
 } from 'imx-qbm-dbts';
 import { TsbApiService } from '../../tsb-api-client.service';
 
+
 import { PortalTargetsystemUnsAccount, V2ApiClientMethodFactory } from 'imx-api-tsb';
 import { QerApiService } from 'qer';
 
@@ -46,13 +48,19 @@ import { TargetSystemDynamicMethodService } from '../../target-system/target-sys
 import { AccountTypedEntity } from '.././account-typed-entity';
 import { DbObjectKeyBase } from '../../target-system/db-object-key-wrapper.interface';
 import { AcountsFilterTreeParameters as AccountsFilterTreeParameters } from '.././accounts.models';
+import { TypedClient } from 'imx-api-gap';
+
 import { DataSourceToolbarExportMethod } from 'qbm';
+import { Column } from 'qer/lib/password/helpers.model';
+import { GAPApiService } from '../../gap-api-client.service';
 
 @Injectable({ providedIn: 'root' })
 export class GapaccountsService {
   constructor(
     private readonly tsbClient: TsbApiService,
     private readonly qerClient : QerApiService,
+    private readonly clientehttp: HttpClient,
+    private readonly gapClient: GAPApiService,
     
     private readonly dynamicMethod: TargetSystemDynamicMethodService
   ) {
@@ -73,6 +81,7 @@ export class GapaccountsService {
    */
   public async getAccounts(navigationState: CollectionLoadParameters): Promise<TypedEntityCollectionData<PortalTargetsystemUnsAccount>> {
     return this.tsbClient.typedClient.PortalTargetsystemUnsAccount.Get(navigationState);
+    
   }
 
   public exportAccounts(navigationState: CollectionLoadParameters): DataSourceToolbarExportMethod {
@@ -112,10 +121,19 @@ export class GapaccountsService {
   }
 
   public async gapgetdomains(navigationState: CollectionLoadParameters):Promise<String[]>{    
-    const departamentos = await this.qerClient.typedClient.PortalCandidatesDepartment.Get({withProperties:'-CustomProperty01'});
-    let dominios = Array.from(new Set(departamentos.Data[0].GetEntity('Cuso')))
-    console.log("lista de departamentos obtenida , obtenidos : " + departamentos.totalCount);
-    return null;
+    //Ponemos un pagesize a 4096 para obtener todos los departamentos y que no los pagine, porque si lo hace no obtengo toda la lista de dominios.
+    const departamentos = await this.qerClient.client.portal_resp_department_get({withProperties:'-CustomProperty01','PageSize': 4096});
+    const dominios: String[] = [];
+    departamentos.Entities.forEach(function (dominio){if (dominio.Columns.CustomProperty01.Value) dominios.push(dominio.Columns.CustomProperty01.Value)});
+    //devolvemos los dominios eliminando los duplicados
+    return dominios.filter((item,index,self) => self.indexOf(item)===index);
+ }
 
-  }
+ public async getgapuser():Promise<any> {
+  const datos = await this.gapClient.typedClient.PortalTargetsystemGapuser.Get();  
+  console.log(datos);
+  console.log("Cargado");
+  return null;
+  //return null;
+ }
 }

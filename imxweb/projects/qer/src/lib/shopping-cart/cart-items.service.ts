@@ -239,6 +239,7 @@ export class CartItemsService {
     
     try {
       setTimeout(() => this.busyIndicator.show());
+      console.log("Conteo de objetos en el carrito. Tener en cuenta los borrados del multicliente");
       for (const item of results.bulkItems) {
         try {
           const found = cartItems.find((x) => x.typedEntity.GetEntity().GetKeys()[0] === item.entity.GetEntity().GetKeys()[0]);
@@ -287,9 +288,9 @@ export class CartItemsService {
                  {'ColumnName':'UID_QERResourceType','Type':FilterType.Compare,'Value2':'44ddcbce-e85b-459e-8ccc-c25135a1a0db'}
                 ]
         });
-        
+        console.log("le casco el multicliente");
         if (uidprodbasequery.totalCount > 0) {
-          item.entity.GetEntity().GetColumn("CustomProperty10").PutValue("GestionMultiCliente");
+          item.entity.GetEntity().GetColumn("CustomProperty10").PutValue("INIT_MULTICLIENTE");
         
         }
       
