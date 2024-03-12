@@ -36,7 +36,10 @@ import {
   DataModel,
   EntityCollectionData,
   MethodDescriptor,
-  MethodDefinition
+  MethodDefinition,
+  SqlExpression,
+  FilterType,
+  LogOp
 } from 'imx-qbm-dbts';
 import { TsbApiService } from '../../tsb-api-client.service';
 
@@ -61,6 +64,7 @@ export class GapaccountsService {
     private readonly qerClient : QerApiService,
     private readonly clientehttp: HttpClient,
     private readonly gapClient: GAPApiService,
+    private readonly querySQL: SqlExpression,
     
     private readonly dynamicMethod: TargetSystemDynamicMethodService
   ) {
@@ -130,8 +134,11 @@ export class GapaccountsService {
  }
 
  public async getgapuser():Promise<any> {
+    
+
+  
   const datos = await this.gapClient.typedClient.PortalTargetsystemGapuser.Get();  
-  console.log(datos);
+  
   console.log("Cargado");
   return null;
   //return null;

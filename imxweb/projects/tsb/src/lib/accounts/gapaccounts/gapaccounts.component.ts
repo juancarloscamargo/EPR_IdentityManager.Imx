@@ -183,8 +183,12 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     try {
       this.logger.debug(this, `Retrieving accounts list`);
       this.logger.debug('Navigation settings', this.navigationState);
+      //Obtiene lista de los dominios gestionados.
 
       const datosmios = await this.accountsService.gapgetdomains(this.navigationState);
+
+      //Construye filtro para gapuser.
+      
       this.accountsService.getgapuser();
       const data = await this.accountsService.getAccounts(getParams);
       

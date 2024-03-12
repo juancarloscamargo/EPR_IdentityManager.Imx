@@ -75,7 +75,7 @@ export class MyResponsibilitiesViewModule {
         {
           id: 'QER_My_Responsibilities',
           navigationCommands: { commands: ['myresponsibilities'] },
-          title: '#LDS#Menu Entry My responsibilities',
+          title: 'Mis responsabilidades',
           sorting: '30-20',
         },
       ],

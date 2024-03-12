@@ -43,14 +43,17 @@
           
         </div>
         
-        
-        
         <div class="usermessage">
           <br>Por su seguridad, el acceso a esta web sólo está permitido a cuentas protegidas del dominio Eprinsa. Haga click en el icono para acceder
           <br>
           <br>
           <img class="centrado" src="assets/cordoba-email.png" height="50" size="75"  (click)="loginCordobaemail()"> 
         </div>
+        <div *ngIf="sessionState?.IsAwaitingSecondaryAuth">
+          <imx-2fahost></imx-2fahost>
+        </div>
+        
+        
         <div *ngIf="sessionState?.IsAwaitingSecondaryAuth">
           <imx-2fahost></imx-2fahost>
         </div>

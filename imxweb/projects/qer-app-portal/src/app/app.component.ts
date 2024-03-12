@@ -99,7 +99,13 @@ export class AppComponent implements OnInit, OnDestroy {
             const browserCulture = this.translateService.getBrowserCultureLang();
             await this.translationProvider.init(browserCulture);
           }
-
+          if (sessionState.isOAuth) 
+            {
+              console.log("conectado por oauth");
+            }
+            else
+              {console.log("conectado por rolebased")}
+            
           this.menuItems = await menuService.getMenuItems(
             systemInfo.PreProps,
             features,
