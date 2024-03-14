@@ -17,19 +17,7 @@
     <ng-template #loginMask>
       <div class="imx-loginMask">
               
-        <div *ngIf="sessionState?.IsLoggedOut" class="imx-loginData">
-          <div [hidden]="selectedConfigProvider?.isOAuth2" *ngFor="let authProp of selectedConfigProvider?.authProps"
-            class="imx-loginInput">
-            <input attr.data-imx-identifier="login-input-{{ authProp.name.toLowerCase() }}" [type]="authProp.inputType"
-              [placeholder]="authProp.display" [(ngModel)]="loginData[authProp.name]" (keyup.enter)="login_role()"
-              class="imx-login-input" />
-          </div>
-          <div [hidden] class="imx-loginButtonpanel" *ngIf="!selectedConfigProvider?.customAuthFlow">
-            <button data-imx-identifier="login-button-submit" mat-button type="button" class="imx-button"
-              (click)="login_role()">{{'#LDS#Log in' | translate }}</button>
-              
-          </div>
-        </div>
+        
         <div  class="usermessage">
           <br>Por su seguridad, el acceso a esta web sólo está permitido a cuentas protegidas del dominio Eprinsa. Haga click en el icono para acceder
           <br>

@@ -82,6 +82,7 @@ export class AppComponent implements OnInit, OnDestroy {
         }
 
         this.isLoggedIn = sessionState.IsLoggedIn;
+        
         if (this.isLoggedIn) {
           // Close the splash screen that opened in app service initialisation
           // Needs to close here when running in containers (auth skipped)
@@ -99,12 +100,6 @@ export class AppComponent implements OnInit, OnDestroy {
             const browserCulture = this.translateService.getBrowserCultureLang();
             await this.translationProvider.init(browserCulture);
           }
-          if (sessionState.isOAuth) 
-            {
-              console.log("conectado por oauth");
-            }
-            else
-              {console.log("conectado por rolebased")}
             
           this.menuItems = await menuService.getMenuItems(
             systemInfo.PreProps,

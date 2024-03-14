@@ -214,8 +214,8 @@ export class MastHeadComponent implements OnDestroy {
    */
   public async logout(): Promise<void> {
     if (await this.confirmationService.confirm({
-      Title: '#LDS#Heading Log Out',
-      Message: '#LDS#Are you sure you want to log out?',
+      Title: 'Desconexión',
+      Message: '¿Desea continuar con la desconexión?',
       identifier: 'confirm-logout-'
     })) {
       let overlayRef: OverlayRef;

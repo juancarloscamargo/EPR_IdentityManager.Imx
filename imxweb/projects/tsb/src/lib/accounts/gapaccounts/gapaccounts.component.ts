@@ -22,8 +22,8 @@ import { ContainerTreeDatabaseWrapper } from '../../container-list/container-tre
 import { DataExplorerFiltersComponent } from '../../data-filters/data-explorer-filters.component';
 import { DeHelperService } from '../../de-helper.service';
 import { AccountSidesheetComponent } from '.././account-sidesheet/account-sidesheet.component';
-import { AccountSidesheetData, GetAccountsOptionalParameters } from '.././accounts.models';
-import { GapaccountsService	 } from './gapaccounts.service';
+import { AccountSidesheetData, GetAccountsOptionalParameters } from '.././accounts.models'; 
+import { AccountsService } from '../accounts.service';
 import { TargetSystemReportComponent } from '.././target-system-report/target-system-report.component';
 
 
@@ -69,7 +69,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     public translateProvider: TranslateService,
     private readonly sideSheet: EuiSidesheetService,
     private readonly logger: ClassloggerService,
-    private readonly accountsService: GapaccountsService,
+    private readonly accountsService: AccountsService,
     private readonly dataHelper: DeHelperService,
     private viewConfigService: ViewConfigService,
     readonly settingsService: SettingsService

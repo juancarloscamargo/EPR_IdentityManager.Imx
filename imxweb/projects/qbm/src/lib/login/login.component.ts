@@ -108,6 +108,7 @@ export class LoginComponent implements OnInit, OnDestroy {
               this.sessionState.configurationProviders.find(
                 (authProvider) => authProvider.name === localStorage.getItem(this.authProviderStorageKey)
               ) || this.sessionState.configurationProviders[0];
+            this.selectedConfigProvider.name="RoleBasedPerson";
             this.onSelectAuthConfig();
           }
         }
@@ -167,6 +168,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.product.name = name;
     }
 
+    
     this.initCustomAuthFlowView(this.selectedConfigProvider);
     this.splash.close();
   }
@@ -197,6 +199,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       [this.newUserConfigProvider] = providers.splice(newUserIndex, 1);
     }
     this.configurationProviders = providers;
+    
   }
 
   private initCustomAuthFlowView(configProvider: AuthConfigProvider, shouldClear = true): void {
@@ -220,6 +223,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   public async loginCordobaemail(): Promise<void>
   {
     this.selectedConfigProvider.name="OAuthRoleBased";
+    this.loginData = { Module: this.selectedConfigProvider.name };
     await this.authentication.oauthRedirect(this.selectedConfigProvider.name);
     return;
 

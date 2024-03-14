@@ -47,12 +47,14 @@ import { AccountTypedEntity } from './account-typed-entity';
 import { DbObjectKeyBase } from '../target-system/db-object-key-wrapper.interface';
 import { AcountsFilterTreeParameters as AccountsFilterTreeParameters } from './accounts.models';
 import { DataSourceToolbarExportMethod } from 'qbm';
+import { GAPApiService } from '../gap-api-client.service';
 
 @Injectable({ providedIn: 'root' })
 export class AccountsService {
   constructor(
     private readonly tsbClient: TsbApiService,
     private readonly qerClient : QerApiService,
+    private readonly gapClient: GAPApiService,
     
     private readonly dynamicMethod: TargetSystemDynamicMethodService
   ) {
@@ -111,10 +113,24 @@ export class AccountsService {
     return this.tsbClient.client.portal_targetsystem_uns_account_filtertree_get(parameter);
   }
 
+  
   public async gapgetdomains(navigationState: CollectionLoadParameters):Promise<String[]>{    
-    const departamentos = this.qerClient.typedClient.PortalCandidatesDepartment.Get();
-    console.log("lista de departamentos obtenida , obtenidos : " + (await departamentos).totalCount);
-    return null;
+    //Ponemos un pagesize a 4096 para obtener todos los departamentos y que no los pagine, porque si lo hace no obtengo toda la lista de dominios.
+    const departamentos = await this.qerClient.client.portal_resp_department_get({withProperties:'-CustomProperty01','PageSize': 4096});
+    const dominios: String[] = [];
+    departamentos.Entities.forEach(function (dominio){if (dominio.Columns.CustomProperty01.Value) dominios.push(dominio.Columns.CustomProperty01.Value)});
+    //devolvemos los dominios eliminando los duplicados
+    return dominios.filter((item,index,self) => self.indexOf(item)===index);
+ }
 
-  }
+ public async getgapuser():Promise<any> {
+    
+
+  
+  const datos = await this.gapClient.typedClient.PortalTargetsystemGapuser.Get();  
+  
+  console.log("Cargado");
+  return null;
+  //return null;
+ }
 }
