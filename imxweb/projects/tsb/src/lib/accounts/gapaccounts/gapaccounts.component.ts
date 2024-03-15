@@ -228,12 +228,24 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
         Type:FilterType.Expression,
         Expression: {
            LogOperator:LogOp.OR,
-           Operator: 'LIKE',
-           PropertyId: 'PrimaryEmail',
-           Value: ['@eprinsa.es']
+           Expressions: [{
+              LogOperator:0,
+              Operator:'LIKE',
+              PropertyId:'PrimaryEmail',
+              Value:'@eprinsa.es'
+           },{
+              LogOperator:0,
+              Operator:'LIKE',
+              PropertyId:'PrimaryEmail',
+              Value:'@dipucordoba.es'
+           }
+              ]
+           
         }
       },
       ];
+
+      
       this.navigationState.filter = this.filtrocuentas;
       const datosmios = await this.accountsService.gapgetdomains(this.navigationState);
       const data = await this.accountsService.getGAPAccounts(this.navigationState);
