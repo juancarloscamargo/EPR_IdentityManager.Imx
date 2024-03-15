@@ -78,6 +78,7 @@ export class DataExplorerAccountsComponent implements OnInit, OnDestroy, SideNav
   public treeDbWrapper: ContainerTreeDatabaseWrapper;
 
   public readonly entitySchemaUnsAccount: EntitySchema;
+  
   public readonly DisplayColumns = DisplayColumns;
   public data: any;
   public busyService = new BusyService();
@@ -101,6 +102,7 @@ export class DataExplorerAccountsComponent implements OnInit, OnDestroy, SideNav
   ) {
     this.navigationState = { PageSize: settingsService.DefaultPageSize, StartIndex: 0 };
     this.entitySchemaUnsAccount = accountsService.accountSchema;
+    
     this.authorityDataDeleted$ = this.dataHelper.authorityDataDeleted.subscribe(() => this.navigate());
     this.treeDbWrapper = new ContainerTreeDatabaseWrapper(this.busyService, dataHelper);
   }

@@ -40,6 +40,7 @@ import {
 import { TsbApiService } from '../tsb-api-client.service';
 
 import { PortalTargetsystemUnsAccount, V2ApiClientMethodFactory } from 'imx-api-tsb';
+import { PortalTargetsystemGapuser } from 'imx-api-gap';
 import { QerApiService } from 'qer';
 
 import { TargetSystemDynamicMethodService } from '../target-system/target-system-dynamic-method.service';
@@ -66,6 +67,9 @@ export class AccountsService {
     return this.tsbClient.typedClient.PortalTargetsystemUnsAccount.GetSchema();
   }
 
+  public get gapaccountSchema(): EntitySchema {
+    return this.gapClient.typedClient.PortalTargetsystemGapuser.GetSchema();
+  }
   /**
    * Gets a list of accounts.
    *
@@ -76,6 +80,11 @@ export class AccountsService {
   public async getAccounts(navigationState: CollectionLoadParameters): Promise<TypedEntityCollectionData<PortalTargetsystemUnsAccount>> {
     return this.tsbClient.typedClient.PortalTargetsystemUnsAccount.Get(navigationState);
   }
+
+  public async getGAPAccounts(navigationState: CollectionLoadParameters): Promise<TypedEntityCollectionData<PortalTargetsystemGapuser>> {
+    return this.gapClient.typedClient.PortalTargetsystemGapuser.Get(navigationState);
+  }
+
 
   public exportAccounts(navigationState: CollectionLoadParameters): DataSourceToolbarExportMethod {
     const factory = new V2ApiClientMethodFactory();
@@ -108,8 +117,16 @@ export class AccountsService {
     return this.tsbClient.client.portal_targetsystem_uns_account_datamodel_get(undefined);
   }
 
+  public async getGAPDataModel(): Promise<DataModel>{
+    return this.gapClient.client.portal_targetsystem_gapuser_datamodel_get(undefined);
+  }
+
 
   public async getFilterTree(parameter: AccountsFilterTreeParameters):Promise<FilterTreeData>{
+    return this.tsbClient.client.portal_targetsystem_uns_account_filtertree_get(parameter);
+  }
+
+  public async getGAPFilterTree(parameter: AccountsFilterTreeParameters):Promise<FilterTreeData>{
     return this.tsbClient.client.portal_targetsystem_uns_account_filtertree_get(parameter);
   }
 

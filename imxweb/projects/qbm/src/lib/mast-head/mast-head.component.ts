@@ -215,7 +215,7 @@ export class MastHeadComponent implements OnDestroy {
   public async logout(): Promise<void> {
     if (await this.confirmationService.confirm({
       Title: 'Desconexión',
-      Message: '¿Desea continuar con la desconexión?',
+      Message: 'Por favor, confirme la desconexión del portal.',
       identifier: 'confirm-logout-'
     })) {
       let overlayRef: OverlayRef;

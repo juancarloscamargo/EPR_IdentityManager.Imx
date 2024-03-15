@@ -12,10 +12,11 @@ import {
   SideNavigationComponent,
   DataSourceToolbarViewConfig,
   DataSourceToolbarExportMethod,
-  HELP_CONTEXTUAL
+  HELP_CONTEXTUAL,
+  FilterTreeEntityWrapperService
 } from 'qbm';
 import { ViewConfigService } from 'qer';
-import { CollectionLoadParameters, IClientProperty, DisplayColumns, DbObjectKey, EntitySchema, DataModel, FilterData } from 'imx-qbm-dbts';
+import { CollectionLoadParameters, IClientProperty, DisplayColumns, DbObjectKey, EntitySchema, DataModel, FilterData, FilterType, CompareOperator, LogOp } from 'imx-qbm-dbts';
 import { ViewConfigData } from 'imx-api-qer';
 import { PortalTargetsystemUnsSystem, PortalTargetsystemUnsAccount } from 'imx-api-tsb';
 import { ContainerTreeDatabaseWrapper } from '../../container-list/container-tree-database-wrapper';
@@ -53,6 +54,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   public treeDbWrapper: ContainerTreeDatabaseWrapper;
 
   public readonly entitySchemaUnsAccount: EntitySchema;
+  public readonly entitySchemaGAPAccount: EntitySchema;
   public readonly DisplayColumns = DisplayColumns;
   public data: any;
   public busyService = new BusyService();
@@ -64,6 +66,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   private dataModel: DataModel;
   private viewConfigPath = 'targetsystem/uns/account';
   private viewConfig: DataSourceToolbarViewConfig;
+  private filtrocuentas: FilterData[];
 
   constructor(
     public translateProvider: TranslateService,
@@ -74,24 +77,58 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     private viewConfigService: ViewConfigService,
     readonly settingsService: SettingsService
   ) {
+    
     this.navigationState = { PageSize: settingsService.DefaultPageSize, StartIndex: 0 };
     this.entitySchemaUnsAccount = accountsService.accountSchema;
+    this.entitySchemaGAPAccount = accountsService.gapaccountSchema;
     this.authorityDataDeleted$ = this.dataHelper.authorityDataDeleted.subscribe(() => this.navigate());
     this.treeDbWrapper = new ContainerTreeDatabaseWrapper(this.busyService, dataHelper);
   }
 
   public async ngOnInit(): Promise<void> {
     /** if you like to add columns, please check {@link AccountsExtComponent | Account Extension Component} as well */
-    this.displayedColumns = [
+    /**     this.displayedColumns = [
       this.entitySchemaUnsAccount.Columns[DisplayColumns.DISPLAY_PROPERTYNAME],
       this.entitySchemaUnsAccount.Columns.UID_Person,
       this.entitySchemaUnsAccount.Columns.UID_UNSRoot,
       this.entitySchemaUnsAccount.Columns.AccountDisabled,
       this.entitySchemaUnsAccount.Columns.XMarkedForDeletion,
+    ]; */
+
+    this.displayedColumns = [
+      this.entitySchemaGAPAccount.Columns.PrimaryEmail,
+      this.entitySchemaGAPAccount.Columns.UID_Person,     
     ];
 
-    //const isBusy = this.busyService.beginBusy();
 
+    const isBusy = this.busyService.beginBusy();
+
+  try {
+    this.filterOptions = await this.accountsService.getFilterOptions();
+    this.dataModel = await this.accountsService.getGAPDataModel();
+  this.viewConfig = await this.viewConfigService.getInitialDSTExtension(this.dataModel, this.viewConfigPath);
+} finally {
+ isBusy.endBusy();
+}
+if (this.applyIssuesFilter && !this.issuesFilterMode) {
+  const orphanedFilter = this.filterOptions.find((f) => {
+    return f.Name === 'orphaned';
+  });
+
+  if (orphanedFilter) {
+    orphanedFilter.InitialValue = '1';
+  }
+}
+
+if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
+  const managerDiscrepencyFilter = this.filterOptions.find((f) => {
+    return f.Name === 'managerdiscrepancy';
+  });
+
+  if (managerDiscrepencyFilter) {
+    managerDiscrepencyFilter.InitialValue = '1';
+  }
+}
     
     await this.navigate();
   }
@@ -179,25 +216,57 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   private async navigate(): Promise<void> {
     const isBusy = this.busyService.beginBusy();
     const getParams: GetAccountsOptionalParameters = this.navigationState;
-    
     try {
       this.logger.debug(this, `Retrieving accounts list`);
-      this.logger.debug('Navigation settings', this.navigationState);
-      //Obtiene lista de los dominios gestionados.
-
+      this.logger.trace('Navigation settings', this.navigationState);
+      const tsUid = this.dataExplorerFilters.selectedTargetSystemUid;
+      //const tsUid = "f40c77ba-3566-484b-8671-edc2288e15cc";
+      const cUid = this.dataExplorerFilters.selectedContainerUid;
+      getParams.system = tsUid ? tsUid : undefined;
+      getParams.container = cUid ? cUid : undefined;
+      this.filtrocuentas = [{
+        Type:FilterType.Expression,
+        Expression: {
+           LogOperator:LogOp.OR,
+           Operator: 'LIKE',
+           PropertyId: 'PrimaryEmail',
+           Value: ['@eprinsa.es']
+        }
+      },
+      ];
+      this.navigationState.filter = this.filtrocuentas;
       const datosmios = await this.accountsService.gapgetdomains(this.navigationState);
-
-      //Construye filtro para gapuser.
+      const data = await this.accountsService.getGAPAccounts(this.navigationState);
       
-      this.accountsService.getgapuser();
-      const data = await this.accountsService.getAccounts(getParams);
-      
-
+      const exportMethod: DataSourceToolbarExportMethod = this.accountsService.exportAccounts(this.navigationState);
+      exportMethod.initialColumns = this.displayedColumns.map(col => col.ColumnName);
+      this.dstSettings = {
+        displayedColumns: this.displayedColumns,
+        dataSource: data,
+        entitySchema: this.entitySchemaGAPAccount,
+        navigationState: this.navigationState,
+        filters: this.filterOptions,
+        filterTree: {
+          filterMethode: async (parentkey) => {
+            return this.accountsService.getFilterTree({
+              parentkey,
+              container: getParams.container,
+              system: getParams.system,
+              filter: getParams.filter,
+            });
+          },
+          multiSelect: false,
+        },
+        dataModel: this.dataModel,
+        viewConfig: this.viewConfig,
+        exportMethod,
+      };
       this.tableName = data.tableName;
       this.logger.debug(this, `Head at ${data.Data.length + this.navigationState.StartIndex} of ${data.totalCount} item(s)`);
     } finally {
        isBusy.endBusy();
     }
+    
   }
 
   private async viewAccount(data: AccountSidesheetData): Promise<void> {

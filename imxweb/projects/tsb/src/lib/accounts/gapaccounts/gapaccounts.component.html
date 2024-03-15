@@ -2,7 +2,7 @@
 
     <div  *ngIf="!dataExplorerFilters.showTsSyncStatus" class="data-explorer-card-header">
       <div class="data-explorer-card-header-bg">
-        <span translate>#LDS#Heading User Accounts</span>
+        Cuentas de correo electrónico
         <imx-help-contextual [contextId]="contextId"></imx-help-contextual>
       </div>
     </div>
@@ -35,29 +35,22 @@
       <span translate>#LDS#There is currently no data synchronization configured for the selected domain.</span>
     </eui-alert>
   
-    <div *ngIf="!dataExplorerFilters.showTsSyncStatus" class="imx-data-explorer-content">
+    <div class="imx-data-explorer-content">
       <div class="data-explorer-table">
         <imx-data-table [dst]="dst" (highlightedEntityChanged)="onAccountChanged($event)" detailViewVisible="false"
           mode="manual">
-          <imx-data-table-column width="500px" [entityColumn]="entitySchemaUnsAccount?.Columns[DisplayColumns.DISPLAY_PROPERTYNAME]">
+          <imx-data-table-column width="500px" [entityColumn]="entitySchemaGAPAccount?.Columns.PrimaryEmail">
             <ng-template let-item>
               <div [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().GetDisplay()}}</div>
             </ng-template>
           </imx-data-table-column>
-          <imx-data-table-column width="300px" [entityColumn]="entitySchemaUnsAccount?.Columns.UID_Person">
+          
+          <imx-data-table-column width="500px" [entityColumn]="entitySchemaGAPAccount?.Columns.UID_Person">
             <ng-template let-item>
-              <div [style.max-width]="'300px'" class="imx-ellipse-column">{{item.UID_Person.Column.GetDisplayValue()}}</div>
+              <div [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity()}}</div>
             </ng-template>
           </imx-data-table-column>
-          <imx-data-table-column align="center"
-            [entityColumn]="entitySchemaUnsAccount?.Columns.AccountDisabled">
-          </imx-data-table-column>
-          <imx-data-table-column [entityColumn]="entitySchemaUnsAccount?.Columns.UID_UNSRoot">
-            <ng-template let-item>
-              <div>{{item.UID_UNSRoot.Column.GetDisplayValue()}}</div>
-              <div subtitle >{{item.UID_DPRNameSpace.Column.GetDisplayValue()}}</div>
-            </ng-template>
-          </imx-data-table-column>
+          
           <imx-data-table-generic-column alignHeader="center" alignContent="center"
             [columnName]="entitySchemaUnsAccount?.Columns.XMarkedForDeletion.ColumnName">
             <ng-template let-item>
@@ -75,7 +68,7 @@
   <div class="data-explorer-bottom-button-row">
     <button mat-stroked-button data-imx-identifier="accounts-button-show-report-for-targetsystem" (click)="openReportOptionsSidesheet()">
       <eui-icon icon="reports"></eui-icon>
-      {{'#LDS#Download target system report' | translate}}
+      Crear cuenta 
     </button>
   </div>
   
