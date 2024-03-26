@@ -9,7 +9,7 @@
   
     <imx-data-source-toolbar #dst
       [settings]="dstSettings"
-      [options]="['search', 'sort', 'filter', 'filterTree', 'settings']"
+      [options]="['search', 'filter']"
       [hiddenFilters]="['namespace']"
       [busyService]="busyService"
       [searchBoxText]="'#LDS#Search' | translate"
@@ -39,26 +39,20 @@
       <div class="data-explorer-table">
         <imx-data-table [dst]="dst" (highlightedEntityChanged)="onAccountChanged($event)" detailViewVisible="false"
           mode="manual">
-          <imx-data-table-column width="500px" [entityColumn]="entitySchemaGAPAccount?.Columns.PrimaryEmail">
-            <ng-template let-item>
-              <div [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().GetDisplay()}}</div>
-            </ng-template>
-          </imx-data-table-column>
-          
           <imx-data-table-column width="500px" [entityColumn]="entitySchemaGAPAccount?.Columns.UID_Person">
             <ng-template let-item>
-              <div [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity()}}</div>
+              <div [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().GetColumn("UID_Person").GetDisplayValue()}}</div>
             </ng-template>
           </imx-data-table-column>
           
-          <imx-data-table-generic-column alignHeader="center" alignContent="center"
-            [columnName]="entitySchemaUnsAccount?.Columns.XMarkedForDeletion.ColumnName">
+          <imx-data-table-column width="500px" [entityColumn]="entitySchemaGAPAccount?.Columns.PrimaryEmail">
             <ng-template let-item>
-              <div *ngIf="item.XMarkedForDeletion.value !== 0">
-                <eui-badge color="gray">{{ item.XMarkedForDeletion.Column.GetDisplayValue() }}</eui-badge>
-              </div>
+              <div [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().GetColumn("PrimaryEmail").GetValue()}}</div>
             </ng-template>
-          </imx-data-table-generic-column>
+          </imx-data-table-column>
+          
+          
+          
         </imx-data-table>
         <imx-data-source-paginator [dst]="dst"></imx-data-source-paginator>
       </div>

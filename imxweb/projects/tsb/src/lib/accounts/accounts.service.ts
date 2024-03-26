@@ -109,6 +109,10 @@ export class AccountsService {
     return (await this.dynamicMethod.getById(AccountTypedEntity, { dbObjectKey, columnName })) as AccountTypedEntity;
   }
 
+  public async getGAPAccountInteractive(UID_GAPAccount: string): Promise<AccountTypedEntity> {
+    return (await this.gapClient.client.portal_targetsystem_gapuser_interactive_byid_get(UID_GAPAccount))  as AccountTypedEntity;
+  }
+
   public async getFilterOptions(): Promise<DataModelFilter[]> {
     return (await this.getDataModel()).Filters;
   }

@@ -35,6 +35,14 @@ export interface AccountSidesheetData {
   uidPerson: string;
 }
 
+export interface GAPAccountSidesheetData {
+  GAPAccountId: string;
+  UID_GAPAccount: string;
+  selectedGAPAccount: AccountTypedEntity;
+  tableName: string;
+  uidPerson: string;
+}
+
 export interface GetAccountsOptionalParameters extends CollectionLoadParameters {
   orphaned?: string;
   inactive?: string;

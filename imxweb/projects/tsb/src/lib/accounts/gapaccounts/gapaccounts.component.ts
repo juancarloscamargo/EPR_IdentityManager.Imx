@@ -16,16 +16,17 @@ import {
   FilterTreeEntityWrapperService
 } from 'qbm';
 import { ViewConfigService } from 'qer';
-import { CollectionLoadParameters, IClientProperty, DisplayColumns, DbObjectKey, EntitySchema, DataModel, FilterData, FilterType, CompareOperator, LogOp } from 'imx-qbm-dbts';
+import { CollectionLoadParameters, IClientProperty, DisplayColumns, DbObjectKey, EntitySchema, DataModel, FilterData, FilterType, CompareOperator, LogOp, SqlExpression } from 'imx-qbm-dbts';
 import { ViewConfigData } from 'imx-api-qer';
 import { PortalTargetsystemUnsSystem, PortalTargetsystemUnsAccount } from 'imx-api-tsb';
 import { ContainerTreeDatabaseWrapper } from '../../container-list/container-tree-database-wrapper';
 import { DataExplorerFiltersComponent } from '../../data-filters/data-explorer-filters.component';
 import { DeHelperService } from '../../de-helper.service';
 import { AccountSidesheetComponent } from '.././account-sidesheet/account-sidesheet.component';
-import { AccountSidesheetData, GetAccountsOptionalParameters } from '.././accounts.models'; 
+import { AccountSidesheetData, GAPAccountSidesheetData, GetAccountsOptionalParameters } from '.././accounts.models'; 
 import { AccountsService } from '../accounts.service';
 import { TargetSystemReportComponent } from '.././target-system-report/target-system-report.component';
+import { PortalTargetsystemGapuser } from 'imx-api-gap';
 
 
 
@@ -67,6 +68,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   private viewConfigPath = 'targetsystem/uns/account';
   private viewConfig: DataSourceToolbarViewConfig;
   private filtrocuentas: FilterData[];
+  
 
   constructor(
     public translateProvider: TranslateService,
@@ -96,8 +98,8 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     ]; */
 
     this.displayedColumns = [
-      this.entitySchemaGAPAccount.Columns.PrimaryEmail,
       this.entitySchemaGAPAccount.Columns.UID_Person,     
+      this.entitySchemaGAPAccount.Columns.PrimaryEmail,
     ];
 
 
@@ -162,21 +164,21 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
     await this.navigate();
   }
 
-  public async onAccountChanged(unsAccount: PortalTargetsystemUnsAccount): Promise<void> {
-    this.logger.debug(this, `Selected UNS account changed`);
-    this.logger.trace(this, `New UNS account selected`, unsAccount);
+  public async onAccountChanged(GAPAccount: PortalTargetsystemUnsAccount): Promise<void> {
+    this.logger.debug(this, `Cuenta de correo seleccionada`);
+    //this.logger.trace(this, `New UNS account selected`, unsAccount);
 
-    let data: AccountSidesheetData;
+    let data: GAPAccountSidesheetData;
 
     const isBusy = this.busyService.beginBusy();
     try {
-      const unsDbObjectKey = DbObjectKey.FromXml(unsAccount.XObjectKey.value);
-
+      //const GAPDbObjectKey = DbObjectKey.FromXml(GAPAccount.XObjectKey.value);
+      const UID_GAPAccount = GAPAccount.GetEntity().GetColumn("UID_GAPAccount").GetValue().toString;
       data = {
-        unsAccountId: unsAccount.UID_UNSAccount.value,
-        unsDbObjectKey,
-        selectedAccount: await this.accountsService.getAccountInteractive(unsDbObjectKey, 'UID_UNSAccount'),
-        uidPerson: unsAccount.UID_Person.value,
+        GAPAccountId: GAPAccount.UID_UNSAccount.value,
+        UID_GAPAccount,
+        selectedGAPAccount: await this.accountsService.getGAPAccountInteractive(UID_GAPAccount) ,
+        uidPerson: GAPAccount.UID_Person.value,
         tableName: this.tableName,
       };
     } finally {
@@ -216,7 +218,10 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
   private async navigate(): Promise<void> {
     const isBusy = this.busyService.beginBusy();
     const getParams: GetAccountsOptionalParameters = this.navigationState;
+    
+
     try {
+      
       this.logger.debug(this, `Retrieving accounts list`);
       this.logger.trace('Navigation settings', this.navigationState);
       const tsUid = this.dataExplorerFilters.selectedTargetSystemUid;
@@ -224,22 +229,28 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
       const cUid = this.dataExplorerFilters.selectedContainerUid;
       getParams.system = tsUid ? tsUid : undefined;
       getParams.container = cUid ? cUid : undefined;
+      const myexpressions=[];
+
+      //Crear un array de expresiones basadas en los dominios cargados en mydominios. Usar push y asignarlo al filtrocuentas.
+
+      const mydominios = await this.accountsService.gapgetdomains(this.navigationState);
+      
+      mydominios.forEach(dominio =>  {
+       
+        myexpressions.push(
+          { LogOperator:0,
+            Operator:'LIKE',
+            PropertyId: 'PrimaryEmail',
+            Value: "@" + dominio
+          }
+        )
+      });
+
       this.filtrocuentas = [{
         Type:FilterType.Expression,
         Expression: {
            LogOperator:LogOp.OR,
-           Expressions: [{
-              LogOperator:0,
-              Operator:'LIKE',
-              PropertyId:'PrimaryEmail',
-              Value:'@eprinsa.es'
-           },{
-              LogOperator:0,
-              Operator:'LIKE',
-              PropertyId:'PrimaryEmail',
-              Value:'@dipucordoba.es'
-           }
-              ]
+           Expressions: myexpressions
            
         }
       },
@@ -247,7 +258,7 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
 
       
       this.navigationState.filter = this.filtrocuentas;
-      const datosmios = await this.accountsService.gapgetdomains(this.navigationState);
+      
       const data = await this.accountsService.getGAPAccounts(this.navigationState);
       
       const exportMethod: DataSourceToolbarExportMethod = this.accountsService.exportAccounts(this.navigationState);
@@ -281,12 +292,12 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
     
   }
 
-  private async viewAccount(data: AccountSidesheetData): Promise<void> {
+  private async viewAccount(data: GAPAccountSidesheetData): Promise<void> {
     this.logger.debug(this, `Viewing account`);
-    this.logger.trace(this, `Account selected`, data.selectedAccount);
+    this.logger.trace(this, `Account selected`, data.selectedGAPAccount);
     const sidesheetRef = this.sideSheet.open(AccountSidesheetComponent, {
       title: await this.translateProvider.get('#LDS#Heading Edit User Account').toPromise(),
-      subTitle: data.selectedAccount.GetEntity().GetDisplay(),
+      subTitle: data.selectedGAPAccount.GetEntity().GetDisplay(),
       padding: '0px',
       width: 'max(600px, 60%)',
       icon: 'account',
