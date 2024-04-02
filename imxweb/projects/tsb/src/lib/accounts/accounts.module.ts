@@ -46,6 +46,7 @@ import { AccountsExtComponent } from './account-ext/accounts-ext.component';
 import { TargetSystemReportComponent } from './target-system-report/target-system-report.component';
 import { ObjectHyperviewModule } from 'qer';
 import { DataExplorerGapaccountsComponent } from './gapaccounts/gapaccounts.component';
+import { GAPAccountSidesheetComponent } from './gapaccount-sidesheet/gapaccount-sidesheet.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { DataExplorerGapaccountsComponent } from './gapaccounts/gapaccounts.comp
     AccountSidesheetComponent,
     AccountsExtComponent,
     TargetSystemReportComponent,
-    DataExplorerAccountsComponent
+    DataExplorerAccountsComponent,
+    GAPAccountSidesheetComponent
   ],
   imports: [
     DataFiltersModule,

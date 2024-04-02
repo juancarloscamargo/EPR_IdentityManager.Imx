@@ -16,7 +16,7 @@ import {
   FilterTreeEntityWrapperService
 } from 'qbm';
 import { ViewConfigService } from 'qer';
-import { CollectionLoadParameters, IClientProperty, DisplayColumns, DbObjectKey, EntitySchema, DataModel, FilterData, FilterType, CompareOperator, LogOp, SqlExpression } from 'imx-qbm-dbts';
+import { CollectionLoadParameters, IClientProperty, DisplayColumns, DbObjectKey, EntitySchema, DataModel, FilterData, FilterType, CompareOperator, LogOp, SqlExpression, EntityCollection, IEntity, InteractiveEntityData } from 'imx-qbm-dbts';
 import { ViewConfigData } from 'imx-api-qer';
 import { PortalTargetsystemUnsSystem, PortalTargetsystemUnsAccount } from 'imx-api-tsb';
 import { ContainerTreeDatabaseWrapper } from '../../container-list/container-tree-database-wrapper';
@@ -60,6 +60,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   public data: any;
   public busyService = new BusyService();
   public contextId = HELP_CONTEXTUAL.DataExplorerAccounts;
+  
 
   private displayedColumns: IClientProperty[] = [];
   private authorityDataDeleted$: Subscription;
@@ -164,21 +165,24 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
     await this.navigate();
   }
 
-  public async onAccountChanged(GAPAccount: PortalTargetsystemUnsAccount): Promise<void> {
-    this.logger.debug(this, `Cuenta de correo seleccionada`);
-    //this.logger.trace(this, `New UNS account selected`, unsAccount);
+  public async onAccountChanged(GAPAccount: PortalTargetsystemGapuser): Promise<void> {
+    this.logger.debug(this, `Selected UNS account changed`);
+    this.logger.trace(this, `New UNS account selected`, GAPAccount);
 
-    let data: GAPAccountSidesheetData;
-
+    let data: GAPAccountSidesheetData;  
+    const datosgap = GAPAccount.GetEntity().GetKeys()[0];
+    
+    //const uns2gap = this.accountsService.getGAPAccounts
+    console.log("Pulsado sobre : ");
     const isBusy = this.busyService.beginBusy();
     try {
-      //const GAPDbObjectKey = DbObjectKey.FromXml(GAPAccount.XObjectKey.value);
-      const UID_GAPAccount = GAPAccount.GetEntity().GetColumn("UID_GAPAccount").GetValue().toString;
+      //const unsDbObjectKey = DbObjectKey.FromXml(datosgap);
+
       data = {
-        GAPAccountId: GAPAccount.UID_UNSAccount.value,
-        UID_GAPAccount,
-        selectedGAPAccount: await this.accountsService.getGAPAccountInteractive(UID_GAPAccount) ,
-        uidPerson: GAPAccount.UID_Person.value,
+        GAPAccountId:"lala",
+        UID_GAPAccount:"lala",
+        selectedGAPAccount: await this.accountsService.getGAPAccountInteractive(datosgap),
+        uidPerson: GAPAccount.GetEntity().GetColumn("UID_Person").GetValue(),
         tableName: this.tableName,
       };
     } finally {
@@ -256,7 +260,7 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
       },
       ];
 
-      
+      this.navigationState.withProperties = "XObjectKey,CCC_EspacioMb,LastLoginTime";
       this.navigationState.filter = this.filtrocuentas;
       
       const data = await this.accountsService.getGAPAccounts(this.navigationState);
@@ -294,10 +298,11 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
 
   private async viewAccount(data: GAPAccountSidesheetData): Promise<void> {
     this.logger.debug(this, `Viewing account`);
-    this.logger.trace(this, `Account selected`, data.selectedGAPAccount);
+    //this.logger.trace(this, `Account selected`, data.selectedGAPAccount);
     const sidesheetRef = this.sideSheet.open(AccountSidesheetComponent, {
       title: await this.translateProvider.get('#LDS#Heading Edit User Account').toPromise(),
-      subTitle: data.selectedGAPAccount.GetEntity().GetDisplay(),
+      //subTitle: data.selectedGAPAccount.GetEntity().GetDisplay(),
+      subTitle:"lala",
       padding: '0px',
       width: 'max(600px, 60%)',
       icon: 'account',

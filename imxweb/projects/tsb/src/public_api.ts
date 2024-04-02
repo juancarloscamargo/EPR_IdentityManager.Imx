@@ -40,6 +40,7 @@ export { DataFiltersModule } from './lib/data-filters/data-filters.module';
 export { DataExplorerFiltersComponent } from './lib/data-filters/data-explorer-filters.component';
 export { AccountsService } from './lib/accounts/accounts.service';
 export { AccountSidesheetComponent } from './lib/accounts/account-sidesheet/account-sidesheet.component';
+export { GAPAccountSidesheetComponent } from './lib/accounts/gapaccount-sidesheet/gapaccount-sidesheet.component';
 export { AccountsReportsService } from './lib/accounts/accounts-reports.service';
 export { DeHelperService, DataDeleteOptions } from './lib/de-helper.service';
 export { DataExplorerNoDataComponent } from './lib/no-data/no-data.component';
