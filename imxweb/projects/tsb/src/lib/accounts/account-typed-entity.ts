@@ -35,3 +35,7 @@ export class AccountTypedEntity extends TypedEntity {
   public readonly uidPersonColumn = CdrFactoryService.tryGetColumn(this.GetEntity(), 'UID_Person');
   public readonly uidADSDomain = CdrFactoryService.tryGetColumn(this.GetEntity(), 'UID_ADSDomain');
 }
+
+//export class GAPAccountTypedEntity extends TypedEntity {
+ // public readonly displayColumn = this.GetEntity().GetColumn(DisplayColumns.DISPLAY_PROPERTYNAME);
+//}

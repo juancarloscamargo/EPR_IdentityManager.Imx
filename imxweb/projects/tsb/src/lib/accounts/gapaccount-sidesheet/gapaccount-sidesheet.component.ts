@@ -36,15 +36,16 @@ import {
   ExtService,
   CdrFactoryService,
 } from 'qbm';
-import { DbObjectKey } from 'imx-qbm-dbts';
+import { DbObjectKey, IEntity } from 'imx-qbm-dbts';
 import { EuiLoadingService, EuiSidesheetRef, EUI_SIDESHEET_DATA } from '@elemental-ui/core';
-import { AccountSidesheetData } from '../accounts.models';
+import { AccountSidesheetData, GAPAccountSidesheetData } from '../accounts.models';
 import { IdentitiesService, ProjectConfigurationService } from 'qer';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { AccountsService } from '../accounts.service';
 import { EuiDownloadOptions } from '@elemental-ui/core';
 import { AccountsReportsService } from '../accounts-reports.service';
 import { AccountTypedEntity } from '../account-typed-entity';
+import { PortalTargetsystemGapuser } from 'imx-api-gap';
 
 @Component({
   selector: 'imx-account-sidesheet',
@@ -65,7 +66,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
 
   constructor(
     formBuilder: UntypedFormBuilder,
-    @Inject(EUI_SIDESHEET_DATA) public readonly sidesheetData: AccountSidesheetData,
+    @Inject(EUI_SIDESHEET_DATA) public readonly sidesheetData: GAPAccountSidesheetData,
     private readonly logger: ClassloggerService,
     private readonly busyService: EuiLoadingService,
     private readonly snackbar: SnackBarService,
@@ -80,15 +81,12 @@ export class GAPAccountSidesheetComponent implements OnInit {
   ) {
     this.detailsFormGroup = new UntypedFormGroup({ formArray: formBuilder.array([]) });
 
-    this.parameters = {
-      objecttable: sidesheetData.unsDbObjectKey?.TableName,
-      objectuid: sidesheetData.unsDbObjectKey?.Keys.join(','),
-    };
+    //this.parameters = {
+     // objecttable: sidesheetData.unsDbObjectKey?.TableName,
+     // objectuid: sidesheetData.unsDbObjectKey?.Keys.join(','),
+    //};
 
-    this.reportDownload = {
-      ...this.elementalUiConfigService.Config.downloadOptions,
-      url: this.reports.accountsReport(30, this.selectedAccount.GetEntity().GetKeys()[0], this.sidesheetData.tableName),
-    };
+    
   }
 
   public ngOnInit(): void {
@@ -104,7 +102,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
       this.logger.debug(this, `Saving identity change`);
       const overlayRef = this.busyService.show();
       try {
-        await this.selectedAccount.GetEntity().Commit(true);
+        //await this.selectedAccount.GetEntity().Commit(true);
         this.detailsFormGroup.markAsPristine();
         this.snackbar.open({ key: '#LDS#The user account has been successfully saved.' });
         this.sidesheetRef.close(true);
@@ -115,59 +113,30 @@ export class GAPAccountSidesheetComponent implements OnInit {
     }
   }
 
-  get selectedAccount(): AccountTypedEntity {
-    return this.sidesheetData.selectedAccount;
+  get selectedAccount(): PortalTargetsystemGapuser {
+    return this.sidesheetData.selectedGAPAccount;
   }
 
   get formArray(): UntypedFormArray {
     return this.detailsFormGroup.get('formArray') as UntypedFormArray;
   }
 
-  get identityManagerMatchesAccountManager(): boolean {
-    let isMatch = false;
 
-    const objectKeyManager = this.selectedAccount?.objectKeyManagerColumn?.GetValue();
-
-    if (this.linkedIdentitiesManager && objectKeyManager?.length) {
-      isMatch = objectKeyManager === this.linkedIdentitiesManager.ToXmlString();
-    }
-    return isMatch;
-  }
-
-  get accountManagerIsEditable(): boolean {
-    return this.selectedAccount.objectKeyManagerColumn?.GetMetadata().CanEdit();
-  }
-
-  public async syncToIdentityManager(event: MatSlideToggleChange): Promise<void> {
-    const objectKeyManagerColumn = this.selectedAccount.objectKeyManagerColumn;
-
-    if (objectKeyManagerColumn != null && event.checked) {
-      await objectKeyManagerColumn.PutValue(this.linkedIdentitiesManager.ToXmlString());
-      this.detailsFormGroup.markAsDirty();
-      this.unsavedSyncChanges = true;
-    }
-  }
-
+  
   private async setup(): Promise<void> {
-    const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
-
+ //   const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
+    const cols = ['PrimaryEmail','UID_Person'];
+    const prueba = this.sidesheetData.selectedGAPAccount;
     this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.selectedAccount.GetEntity(), cols);
 
     this.dynamicTabs = (
       await this.tabService.getFittingComponents<TabItem>('accountSidesheet', (ext) => ext.inputData.checkVisibility(this.parameters))
     ).sort((tab1: TabItem, tab2: TabItem) => tab1.sortOrder - tab2.sortOrder);
 
-    this.setupIdentityManagerSync();
+  //  this.setupIdentityManagerSync();
   }
 
-  private async setupIdentityManagerSync(): Promise<void> {
-    this.initialAccountManagerValue = this.selectedAccount.objectKeyManagerColumn?.GetValue();
-    const linkedIdentityId = this.selectedAccount.uidPersonColumn?.GetValue();
-    if (linkedIdentityId) {
-      this.linkedIdentitiesManager = await this.getLinkedIdentitiesManager(linkedIdentityId, this.sidesheetData.unsDbObjectKey.TableName);
-    }
-  }
-
+  
   private async getLinkedIdentitiesManager(linkedIdentityId: string, tableName: string): Promise<DbObjectKey> {
     const identityData = await this.identitiesService.getPerson(linkedIdentityId);
     if (identityData?.UID_PersonHead.value) {

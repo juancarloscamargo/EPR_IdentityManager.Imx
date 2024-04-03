@@ -26,6 +26,7 @@
 
 import { CollectionLoadParameters, DbObjectKey, FilterData } from 'imx-qbm-dbts';
 import { AccountTypedEntity } from './account-typed-entity';
+import { PortalTargetsystemGapuser } from 'imx-api-gap';
 
 export interface AccountSidesheetData {
   unsAccountId: string;
@@ -38,7 +39,7 @@ export interface AccountSidesheetData {
 export interface GAPAccountSidesheetData {
   GAPAccountId: string;
   UID_GAPAccount: string;
-  selectedGAPAccount: AccountTypedEntity;
+  selectedGAPAccount: PortalTargetsystemGapuser;
   tableName: string;
   uidPerson: string;
 }

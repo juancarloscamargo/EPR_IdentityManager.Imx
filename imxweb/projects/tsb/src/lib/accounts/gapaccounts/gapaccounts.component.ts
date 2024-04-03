@@ -27,6 +27,7 @@ import { AccountSidesheetData, GAPAccountSidesheetData, GetAccountsOptionalParam
 import { AccountsService } from '../accounts.service';
 import { TargetSystemReportComponent } from '.././target-system-report/target-system-report.component';
 import { PortalTargetsystemGapuser } from 'imx-api-gap';
+import { GAPAccountSidesheetComponent } from '../gapaccount-sidesheet/gapaccount-sidesheet.component';
 
 
 
@@ -181,7 +182,7 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
       data = {
         GAPAccountId:"lala",
         UID_GAPAccount:"lala",
-        selectedGAPAccount: await this.accountsService.getGAPAccountInteractive(datosgap),
+        selectedGAPAccount: GAPAccount,
         uidPerson: GAPAccount.GetEntity().GetColumn("UID_Person").GetValue(),
         tableName: this.tableName,
       };
@@ -299,10 +300,9 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
   private async viewAccount(data: GAPAccountSidesheetData): Promise<void> {
     this.logger.debug(this, `Viewing account`);
     //this.logger.trace(this, `Account selected`, data.selectedGAPAccount);
-    const sidesheetRef = this.sideSheet.open(AccountSidesheetComponent, {
+    const sidesheetRef = this.sideSheet.open(GAPAccountSidesheetComponent, {
       title: await this.translateProvider.get('#LDS#Heading Edit User Account').toPromise(),
-      //subTitle: data.selectedGAPAccount.GetEntity().GetDisplay(),
-      subTitle:"lala",
+      subTitle: data.selectedGAPAccount.GetEntity().GetDisplay(),
       padding: '0px',
       width: 'max(600px, 60%)',
       icon: 'account',

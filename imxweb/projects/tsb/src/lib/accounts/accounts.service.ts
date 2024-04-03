@@ -44,7 +44,7 @@ import { PortalTargetsystemGapuser } from 'imx-api-gap';
 import { QerApiService } from 'qer';
 
 import { TargetSystemDynamicMethodService } from '../target-system/target-system-dynamic-method.service';
-import { AccountTypedEntity } from './account-typed-entity';
+import { AccountTypedEntity} from './account-typed-entity';
 import { DbObjectKeyBase } from '../target-system/db-object-key-wrapper.interface';
 import { AcountsFilterTreeParameters as AccountsFilterTreeParameters } from './accounts.models';
 import { DataSourceToolbarExportMethod } from 'qbm';
@@ -109,8 +109,8 @@ export class AccountsService {
     return (await this.dynamicMethod.getById(AccountTypedEntity, { dbObjectKey, columnName })) as AccountTypedEntity;
   }
 
-  public async getGAPAccountInteractive(UID_GAPAccount: string): Promise<AccountTypedEntity> {
-    return (await this.gapClient.client.portal_targetsystem_gapuser_interactive_byid_get(UID_GAPAccount))  as AccountTypedEntity;
+  public async getGAPAccountInteractive(UID_GAPAccount: string): Promise<PortalTargetsystemGapuser> {
+    return (await this.gapClient.client.portal_targetsystem_gapuser_interactive_byid_get(UID_GAPAccount))  as PortalTargetsystemGapuser;
   }
 
   public async getFilterOptions(): Promise<DataModelFilter[]> {
