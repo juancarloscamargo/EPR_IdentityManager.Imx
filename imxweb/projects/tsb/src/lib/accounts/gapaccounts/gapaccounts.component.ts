@@ -265,6 +265,8 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
       this.navigationState.filter = this.filtrocuentas;
       
       const data = await this.accountsService.getGAPAccounts(this.navigationState);
+      //const licencia = await this.accountsService.gapgetsku("llla");
+      
       
       const exportMethod: DataSourceToolbarExportMethod = this.accountsService.exportAccounts(this.navigationState);
       exportMethod.initialColumns = this.displayedColumns.map(col => col.ColumnName);
@@ -300,6 +302,7 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
   private async viewAccount(data: GAPAccountSidesheetData): Promise<void> {
     this.logger.debug(this, `Viewing account`);
     //this.logger.trace(this, `Account selected`, data.selectedGAPAccount);
+    const licencia = this.accountsService.gapgetsku("aasd");
     const sidesheetRef = this.sideSheet.open(GAPAccountSidesheetComponent, {
       title: await this.translateProvider.get('#LDS#Heading Edit User Account').toPromise(),
       subTitle: data.selectedGAPAccount.GetEntity().GetDisplay(),

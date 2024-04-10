@@ -35,7 +35,9 @@ import {
   DataModel,
   EntityCollectionData,
   MethodDescriptor,
-  MethodDefinition
+  MethodDefinition,
+  FilterType,
+  LogOp
 } from 'imx-qbm-dbts';
 import { TsbApiService } from '../tsb-api-client.service';
 
@@ -143,6 +145,19 @@ export class AccountsService {
     //devolvemos los dominios eliminando los duplicados
     return dominios.filter((item,index,self) => self.indexOf(item)===index);
  }
+
+ 
+ public async gapgetsku (UID_GAPAccount: String):Promise<String>{
+  const gapuserinpasku = await this.qerClient.typedClient. 
+             
+  console.log("lala")        ;
+    
+  
+  
+ return null;
+}
+
+  
 
  public async getgapuser():Promise<any> {
     

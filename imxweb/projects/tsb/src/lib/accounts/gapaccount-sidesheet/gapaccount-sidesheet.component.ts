@@ -137,22 +137,5 @@ export class GAPAccountSidesheetComponent implements OnInit {
   }
 
   
-  private async getLinkedIdentitiesManager(linkedIdentityId: string, tableName: string): Promise<DbObjectKey> {
-    const identityData = await this.identitiesService.getPerson(linkedIdentityId);
-    if (identityData?.UID_PersonHead.value) {
-      const managerAccountData = await this.accountsService.getAccount(
-        {
-          TableName: tableName,
-          Keys: [identityData.UID_PersonHead.value],
-        },
-        'UID_Person'
-      );
 
-      if (managerAccountData) {
-        return new DbObjectKey(tableName, managerAccountData.GetEntity().GetKeys());
-      }
-    }
-
-    return undefined;
-  }
 }
