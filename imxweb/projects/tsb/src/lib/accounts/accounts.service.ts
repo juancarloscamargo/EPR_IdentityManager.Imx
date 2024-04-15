@@ -51,10 +51,13 @@ import { DbObjectKeyBase } from '../target-system/db-object-key-wrapper.interfac
 import { AcountsFilterTreeParameters as AccountsFilterTreeParameters } from './accounts.models';
 import { DataSourceToolbarExportMethod } from 'qbm';
 import { GAPApiService } from '../gap-api-client.service';
+import { SKUAPI } from '../gap-api-client.service';
+
 
 @Injectable({ providedIn: 'root' })
 export class AccountsService {
   constructor(
+    private readonly skuapi: SKUAPI,
     private readonly tsbClient: TsbApiService,
     private readonly qerClient : QerApiService,
     private readonly gapClient: GAPApiService,
@@ -148,11 +151,9 @@ export class AccountsService {
 
  
  public async gapgetsku (UID_GAPAccount: String):Promise<String>{
-  const gapuserinpasku = await this.qerClient.typedClient. 
-             
-  console.log("lala")        ;
-    
-  
+ 
+    const licencia = await this.skuapi.client.portal_solicitudotp_get();
+    console.log("lala");
   
  return null;
 }

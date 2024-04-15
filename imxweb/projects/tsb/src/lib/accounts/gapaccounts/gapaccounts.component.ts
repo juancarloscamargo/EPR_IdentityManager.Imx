@@ -31,6 +31,7 @@ import { GAPAccountSidesheetComponent } from '../gapaccount-sidesheet/gapaccount
 
 
 
+
 @Component({
   selector: 'imx-gapaccounts',
   templateUrl: './gapaccounts.component.html',

@@ -26,6 +26,7 @@
 
 import { Injectable } from '@angular/core';
 import { V2Client, TypedClient } from 'imx-api-gap';
+import { V2Client as SKUV2, TypedClient as SKUTyped} from 'imx-api-ccc'
 import { ApiClient } from 'imx-qbm-dbts';
 import { AppConfigService, ClassloggerService, ImxTranslationProviderService } from 'qbm';
 
@@ -47,6 +48,8 @@ export class GAPApiService {
     return this.config.apiClient;
   }
 
+
+
   constructor(
     private readonly config: AppConfigService,
     private readonly logger: ClassloggerService,
@@ -58,6 +61,40 @@ export class GAPApiService {
       const schemaProvider = config.client;
       this.c = new V2Client(this.config.apiClient, schemaProvider);
       this.tc = new TypedClient(this.c, this.translationProvider);
+    } catch (e) {
+      this.logger.error(this, e);
+    }
+  }
+}
+
+export class SKUAPI {
+  private tc: SKUTyped;
+  public get typedClient(): SKUTyped {
+    return this.tc;
+  }
+
+  private c: SKUV2;
+  public get client(): SKUV2{
+    return this.c;
+  }
+
+  public get apiClient(): ApiClient {
+    return this.config.apiClient;
+  }
+
+
+
+  constructor(
+    private readonly config: AppConfigService,
+    private readonly logger: ClassloggerService,
+    private readonly translationProvider: ImxTranslationProviderService) {
+    try {
+      this.logger.debug(this, 'Initializing CCC service');
+
+      // Use schema loaded by QBM client
+      const schemaProvider = config.client;
+      this.c = new SKUV2(this.config.apiClient, schemaProvider);
+      this.tc = new SKUTyped(this.c, this.translationProvider);
     } catch (e) {
       this.logger.error(this, e);
     }
