@@ -16,7 +16,7 @@ import {
   FilterTreeEntityWrapperService
 } from 'qbm';
 import { ViewConfigService } from 'qer';
-import { CollectionLoadParameters, IClientProperty, DisplayColumns, DbObjectKey, EntitySchema, DataModel, FilterData, FilterType, CompareOperator, LogOp, SqlExpression, EntityCollection, IEntity, InteractiveEntityData } from 'imx-qbm-dbts';
+import { CollectionLoadParameters, IClientProperty, DisplayColumns, DbObjectKey, EntitySchema, DataModel, FilterData, FilterType, CompareOperator, LogOp, SqlExpression, EntityCollection, IEntity, InteractiveEntityData, ValType } from 'imx-qbm-dbts';
 import { ViewConfigData } from 'imx-api-qer';
 import { PortalTargetsystemUnsSystem, PortalTargetsystemUnsAccount } from 'imx-api-tsb';
 import { ContainerTreeDatabaseWrapper } from '../../container-list/container-tree-database-wrapper';
@@ -26,8 +26,11 @@ import { AccountSidesheetComponent } from '.././account-sidesheet/account-sidesh
 import { AccountSidesheetData, GAPAccountSidesheetData, GetAccountsOptionalParameters } from '.././accounts.models'; 
 import { AccountsService } from '../accounts.service';
 import { TargetSystemReportComponent } from '.././target-system-report/target-system-report.component';
-import { PortalTargetsystemGapuser } from 'imx-api-gap';
+import { PortalTargetsystemGapuser, PortalTargetsystemGappasku } from 'imx-api-gap';
 import { GAPAccountSidesheetComponent } from '../gapaccount-sidesheet/gapaccount-sidesheet.component';
+import { Column } from 'qer/lib/password/helpers.model';
+
+
 
 
 
@@ -58,6 +61,8 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
 
   public readonly entitySchemaUnsAccount: EntitySchema;
   public readonly entitySchemaGAPAccount: EntitySchema;
+  public readonly entitySchemaSKUGAP: EntitySchema;
+  public readonly SchemaCuentaGAP: EntitySchema;
   public readonly DisplayColumns = DisplayColumns;
   public data: any;
   public busyService = new BusyService();
@@ -68,9 +73,11 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   private authorityDataDeleted$: Subscription;
   private tableName: string;
   private dataModel: DataModel;
+  private columna: IClientProperty[] =  [];
   private viewConfigPath = 'targetsystem/uns/account';
   private viewConfig: DataSourceToolbarViewConfig;
   private filtrocuentas: FilterData[];
+  
   
 
   constructor(
@@ -86,6 +93,16 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     this.navigationState = { PageSize: settingsService.DefaultPageSize, StartIndex: 0 };
     this.entitySchemaUnsAccount = accountsService.accountSchema;
     this.entitySchemaGAPAccount = accountsService.gapaccountSchema;
+    this.entitySchemaSKUGAP = accountsService.gapskuSchema;
+    this.SchemaCuentaGAP = {
+      Columns: 
+       {
+        Ocupacion: this.entitySchemaGAPAccount.Columns.CCC_EspacioMb
+
+       }
+      
+    }
+
     this.authorityDataDeleted$ = this.dataHelper.authorityDataDeleted.subscribe(() => this.navigate());
     this.treeDbWrapper = new ContainerTreeDatabaseWrapper(this.busyService, dataHelper);
   }
@@ -100,9 +117,17 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
       this.entitySchemaUnsAccount.Columns.XMarkedForDeletion,
     ]; */
 
+    //this.columna[] = this.accountsService.createRequesterProperty;
+
+    
+    
+
     this.displayedColumns = [
       this.entitySchemaGAPAccount.Columns.UID_Person,     
       this.entitySchemaGAPAccount.Columns.PrimaryEmail,
+      
+      
+      
     ];
 
 
@@ -240,18 +265,31 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
       //Crear un array de expresiones basadas en los dominios cargados en mydominios. Usar push y asignarlo al filtrocuentas.
 
       const mydominios = await this.accountsService.gapgetdomains(this.navigationState);
-      
-      mydominios.forEach(dominio =>  {
-       
+    
+      if (await this.accountsService.admingap()) {
         myexpressions.push(
-          { LogOperator:0,
+          { LogOperator:LogOp.AND,
             Operator:'LIKE',
             PropertyId: 'PrimaryEmail',
-            Value: "@" + dominio
+            Value: "@"
           }
-        )
-      });
+        )}
+      else {
+        mydominios.forEach(dominio =>  {
+       
+          myexpressions.push(
+            { LogOperator:LogOp.AND,
+              Operator:'LIKE',
+              PropertyId: 'PrimaryEmail',
+              Value: "@" + dominio
+            }
+          )
+        });
+  
 
+      }
+      
+      
       this.filtrocuentas = [{
         Type:FilterType.Expression,
         Expression: {
@@ -259,17 +297,24 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
            Expressions: myexpressions
            
         }
-      },
+      }
       ];
 
-      this.navigationState.withProperties = "XObjectKey,CCC_EspacioMb,LastLoginTime";
+      //this.navigationState.withProperties = "CCC_EspacioMb,LastLoginTime,CCC_LicenciaWorkspace,UID_GAPUser";
       this.navigationState.filter = this.filtrocuentas;
       
+      
+
       const data = await this.accountsService.getGAPAccounts(this.navigationState);
-      //const licencia = await this.accountsService.gapgetsku("llla");
+      const datoslicencias = await this.accountsService.gapgetsku();
       
       
+      
+
       const exportMethod: DataSourceToolbarExportMethod = this.accountsService.exportAccounts(this.navigationState);
+
+      
+
       exportMethod.initialColumns = this.displayedColumns.map(col => col.ColumnName);
       this.dstSettings = {
         displayedColumns: this.displayedColumns,
@@ -303,7 +348,7 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
   private async viewAccount(data: GAPAccountSidesheetData): Promise<void> {
     this.logger.debug(this, `Viewing account`);
     //this.logger.trace(this, `Account selected`, data.selectedGAPAccount);
-    const licencia = this.accountsService.gapgetsku("aasd");
+    
     const sidesheetRef = this.sideSheet.open(GAPAccountSidesheetComponent, {
       title: await this.translateProvider.get('#LDS#Heading Edit User Account').toPromise(),
       subTitle: data.selectedGAPAccount.GetEntity().GetDisplay(),

@@ -39,15 +39,16 @@
       <div class="data-explorer-table">
         <imx-data-table [dst]="dst" (highlightedEntityChanged)="onAccountChanged($event)" detailViewVisible="false"
           mode="manual">
-          <imx-data-table-column width="500px" [entityColumn]="entitySchemaGAPAccount?.Columns.UID_Person">
-            <ng-template let-item>
-              <div [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().GetColumn("UID_Person").GetDisplayValue()}}</div>
-            </ng-template>
-          </imx-data-table-column>
           
           <imx-data-table-column width="500px" [entityColumn]="entitySchemaGAPAccount?.Columns.PrimaryEmail">
             <ng-template let-item>
-              <div [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().GetColumn("PrimaryEmail").GetValue()}}</div>
+              <div [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().GetColumn("PrimaryEmail").GetDisplayValue()}}</div>
+            </ng-template>
+          </imx-data-table-column>
+                   
+          <imx-data-table-column width="500px" [entityColumn]="entitySchemaGAPAccount?.Columns.UID_Person">
+            <ng-template let-item>
+              <div [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().GetColumn("UID_Person").GetDisplayValue()}}</div>
             </ng-template>
           </imx-data-table-column>
           

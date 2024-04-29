@@ -125,7 +125,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
   
   private async setup(): Promise<void> {
  //   const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
-    const cols = ['PrimaryEmail','UID_Person'];
+    const cols = ['PrimaryEmail','UID_Person','IsSuspended'];
     const prueba = this.sidesheetData.selectedGAPAccount;
     this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.selectedAccount.GetEntity(), cols);
 

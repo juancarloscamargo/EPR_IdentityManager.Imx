@@ -37,36 +37,56 @@ import {
   MethodDescriptor,
   MethodDefinition,
   FilterType,
-  LogOp
+  DisplayBuilder,
+  ReadWriteEntity,
+  ValType,
+  FkCandidateProvider,
+  MetaTableRelationData,
+  IClientProperty,
+  LogOp,
+  ApiClient,
+  IEntityColumn
 } from 'imx-qbm-dbts';
 import { TsbApiService } from '../tsb-api-client.service';
 
 import { PortalTargetsystemUnsAccount, V2ApiClientMethodFactory } from 'imx-api-tsb';
 import { PortalTargetsystemGapuser } from 'imx-api-gap';
-import { QerApiService } from 'qer';
+import { QerApiService, QerPermissionsService } from 'qer';
 
 import { TargetSystemDynamicMethodService } from '../target-system/target-system-dynamic-method.service';
 import { AccountTypedEntity} from './account-typed-entity';
 import { DbObjectKeyBase } from '../target-system/db-object-key-wrapper.interface';
 import { AcountsFilterTreeParameters as AccountsFilterTreeParameters } from './accounts.models';
-import { DataSourceToolbarExportMethod } from 'qbm';
+import { DataSourceToolbarExportMethod, BaseCdr, ImxTranslationProviderService } from 'qbm';
 import { GAPApiService } from '../gap-api-client.service';
-import { SKUAPI } from '../gap-api-client.service';
+import { TranslateService } from '@ngx-translate/core';
+import {CCCApiService } from '../ccc-api-client.service';
+import { PortalTargetsystemGappaskuGapuserlicense } from 'imx-api-ccc';
+
+
 
 
 @Injectable({ providedIn: 'root' })
 export class AccountsService {
   constructor(
-    private readonly skuapi: SKUAPI,
     private readonly tsbClient: TsbApiService,
     private readonly qerClient : QerApiService,
     private readonly gapClient: GAPApiService,
+    private readonly miapi : CCCApiService,
     
+    
+    private translate: TranslateService,
+    private translateService: ImxTranslationProviderService,    
+    private readonly permisosgap: QerPermissionsService,
     private readonly dynamicMethod: TargetSystemDynamicMethodService
   ) {
 
     
    }
+
+  public async admingap(): Promise<boolean> {
+    return await this.permisosgap.isGAPAdmin()
+  }
 
   public get accountSchema(): EntitySchema {
     return this.tsbClient.typedClient.PortalTargetsystemUnsAccount.GetSchema();
@@ -74,6 +94,10 @@ export class AccountsService {
 
   public get gapaccountSchema(): EntitySchema {
     return this.gapClient.typedClient.PortalTargetsystemGapuser.GetSchema();
+  }
+
+  public get gapskuSchema():EntitySchema {
+    return this.miapi.typedClient.PortalTargetsystemGappaskuGapuserlicense.GetSchema();
   }
   /**
    * Gets a list of accounts.
@@ -150,12 +174,12 @@ export class AccountsService {
  }
 
  
- public async gapgetsku (UID_GAPAccount: String):Promise<String>{
+ public async gapgetsku ():Promise<any>{
  
-    const licencia = await this.skuapi.client.portal_solicitudotp_get();
-    console.log("lala");
+     return  await this.miapi.typedClient.PortalTargetsystemGappaskuGapuserlicense.Get();
+    
   
- return null;
+ 
 }
 
   
@@ -164,10 +188,60 @@ export class AccountsService {
     
 
   
-  const datos = await this.gapClient.typedClient.PortalTargetsystemGapuser.Get();  
+  const datos = await this.gapClient.client.portal_targetsystem_gapuser_get();
   
   console.log("Cargado");
   return null;
   //return null;
  }
+
+
+ public createRecipientCdr(): BaseCdr {
+  const columnProperties = {};
+
+  const property = this.createRequesterProperty();
+  columnProperties[property.ColumnName] = property;
+  const entityColumn = new ReadWriteEntity(
+    { Columns: columnProperties },
+    {},
+    this.createRequesterFkProvider(property.FkRelation),
+    undefined,
+    new DisplayBuilder(this.translateService)
+  ).GetColumn(property.ColumnName);
+
+  return new BaseCdr(entityColumn, 'Licencia asignada');
+}
+
+
+
+public createRequesterProperty(): IClientProperty {
+  const fkRelation = {
+    ChildColumnName: 'UID_GAPPaSku',
+    ParentTableName: 'GAPUserInPaSku',
+    ParentColumnName: 'UID_GAPUser',
+    IsMemberRelation: false,
+  };
+  this.createRequesterFkProvider(fkRelation);
+  return {
+    ColumnName: 'UID_GAPPaSku',
+    Type: ValType.String,
+    Description: this.translate.instant('#LDS#Here you can select a recipient or requester whose requests you want to display.'),
+    FkRelation: fkRelation,
+    
+    
+  };
+}
+
+private createRequesterFkProvider(fkRelation: MetaTableRelationData): FkCandidateProvider {
+  return new FkCandidateProvider([
+    {
+      columnName: fkRelation.ChildColumnName,
+      fkTableName: fkRelation.ParentTableName,
+      parameterNames: ['OrderBy', 'StartIndex', 'PageSize', 'filter', 'search'],
+      load: async (_, parameters = {}) => this.miapi.client.portal_targetsystem_gappasku_GAPUserLicense_get(parameters),
+      getDataModel: async () => ({}),
+      getFilterTree: async () => ({ Elements: [] }),
+    },
+  ]);
+}
 }

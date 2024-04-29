@@ -25,7 +25,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { V2Client, TypedClient } from 'imx-api-gap';
+import { V2Client, TypedClient } from 'imx-api-ccc';
 
 import { ApiClient } from 'imx-qbm-dbts';
 import { AppConfigService, ClassloggerService, ImxTranslationProviderService } from 'qbm';
@@ -33,7 +33,7 @@ import { AppConfigService, ClassloggerService, ImxTranslationProviderService } f
 @Injectable({
   providedIn: 'root'
 })
-export class GAPApiService {
+export class CCCApiService {
   private tc: TypedClient;
   public get typedClient(): TypedClient {
     return this.tc;
