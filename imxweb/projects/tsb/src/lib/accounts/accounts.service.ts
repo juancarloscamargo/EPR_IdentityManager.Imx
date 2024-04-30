@@ -48,10 +48,10 @@ import {
   IEntityColumn
 } from 'imx-qbm-dbts';
 import { TsbApiService } from '../tsb-api-client.service';
-
+import { TsbPermissionsService} from './../admin/tsb-permissions.service';
 import { PortalTargetsystemUnsAccount, V2ApiClientMethodFactory } from 'imx-api-tsb';
 import { PortalTargetsystemGapuser } from 'imx-api-gap';
-import { QerApiService, QerPermissionsService } from 'qer';
+import { QerApiService } from 'qer';
 
 import { TargetSystemDynamicMethodService } from '../target-system/target-system-dynamic-method.service';
 import { AccountTypedEntity} from './account-typed-entity';
@@ -73,21 +73,16 @@ export class AccountsService {
     private readonly qerClient : QerApiService,
     private readonly gapClient: GAPApiService,
     private readonly miapi : CCCApiService,
-    
-    
+    private readonly permisosgap: TsbPermissionsService,
     private translate: TranslateService,
     private translateService: ImxTranslationProviderService,    
-    private readonly permisosgap: QerPermissionsService,
     private readonly dynamicMethod: TargetSystemDynamicMethodService
   ) {
 
     
    }
 
-  public async admingap(): Promise<boolean> {
-    return await this.permisosgap.isGAPAdmin()
-  }
-
+  
   public get accountSchema(): EntitySchema {
     return this.tsbClient.typedClient.PortalTargetsystemUnsAccount.GetSchema();
   }
@@ -175,14 +170,15 @@ export class AccountsService {
 
  
  public async gapgetsku ():Promise<any>{
- 
-     return  await this.miapi.typedClient.PortalTargetsystemGappaskuGapuserlicense.Get();
-    
-  
- 
+      return  await this.miapi.typedClient.PortalTargetsystemGappaskuGapuserlicense.Get();
+        
 }
 
   
+ public async adminGAP():Promise<boolean>{
+  return  await this.permisosgap.isAdminGAP();
+ }
+
 
  public async getgapuser():Promise<any> {
     

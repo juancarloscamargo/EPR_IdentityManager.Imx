@@ -178,7 +178,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   public onSelectAuthConfig(): void {
-    this.logger.debug(this, 'LoginComponent - onSelectAuthConfig', this.selectedConfigProvider.name);
+    this.logger.debug(this, 'LoginComponente - onSelectAuthConfig', this.selectedConfigProvider.name);
     localStorage.setItem(this.authProviderStorageKey, this.selectedConfigProvider.name);
     this.loginData = { Module: this.selectedConfigProvider.name };
     this.initCustomAuthFlowView(this.selectedConfigProvider);

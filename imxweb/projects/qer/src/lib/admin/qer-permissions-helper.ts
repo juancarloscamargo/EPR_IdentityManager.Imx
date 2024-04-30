@@ -77,6 +77,3 @@ export function isTsbNameSpaceAdminBase(groups: string[]): boolean {
   return groups.find((item) => item.toUpperCase() === 'TSB_4_NAMESPACEADMIN_BASE') != null;
 
 }
-export function isGAPAdmin(features: string[]): boolean {
-  return features.find((item) => item === 'Portal_UI_GAP') !=null;
-}

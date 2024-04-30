@@ -19,6 +19,7 @@ import { ViewConfigService } from 'qer';
 import { CollectionLoadParameters, IClientProperty, DisplayColumns, DbObjectKey, EntitySchema, DataModel, FilterData, FilterType, CompareOperator, LogOp, SqlExpression, EntityCollection, IEntity, InteractiveEntityData, ValType } from 'imx-qbm-dbts';
 import { ViewConfigData } from 'imx-api-qer';
 import { PortalTargetsystemUnsSystem, PortalTargetsystemUnsAccount } from 'imx-api-tsb';
+import { TsbPermissionsService} from '../../admin/tsb-permissions.service';
 import { ContainerTreeDatabaseWrapper } from '../../container-list/container-tree-database-wrapper';
 import { DataExplorerFiltersComponent } from '../../data-filters/data-explorer-filters.component';
 import { DeHelperService } from '../../de-helper.service';
@@ -44,6 +45,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   @Input() public applyIssuesFilter = false;
   @Input() public issuesFilterMode: string;
   @Input() public targetSystemData?: PortalTargetsystemUnsSystem[];
+  
 
   @ViewChild('dataExplorerFilters', { static: false }) public dataExplorerFilters: DataExplorerFiltersComponent;
 
@@ -67,16 +69,19 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   public data: any;
   public busyService = new BusyService();
   public contextId = HELP_CONTEXTUAL.DataExplorerAccounts;
-  
+  public soyAdmin:boolean = false;
+
 
   private displayedColumns: IClientProperty[] = [];
   private authorityDataDeleted$: Subscription;
   private tableName: string;
+  
   private dataModel: DataModel;
   private columna: IClientProperty[] =  [];
   private viewConfigPath = 'targetsystem/uns/account';
   private viewConfig: DataSourceToolbarViewConfig;
   private filtrocuentas: FilterData[];
+  
   
   
 
@@ -90,6 +95,8 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     readonly settingsService: SettingsService
   ) {
     
+
+
     this.navigationState = { PageSize: settingsService.DefaultPageSize, StartIndex: 0 };
     this.entitySchemaUnsAccount = accountsService.accountSchema;
     this.entitySchemaGAPAccount = accountsService.gapaccountSchema;
@@ -100,9 +107,9 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
         Ocupacion: this.entitySchemaGAPAccount.Columns.CCC_EspacioMb
 
        }
-      
+    
     }
-
+    
     this.authorityDataDeleted$ = this.dataHelper.authorityDataDeleted.subscribe(() => this.navigate());
     this.treeDbWrapper = new ContainerTreeDatabaseWrapper(this.busyService, dataHelper);
   }
@@ -121,10 +128,20 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
 
     
     
-
+    if ( await this.accountsService.adminGAP()) {
+      this.soyAdmin=true;
+      console.log("Soy ad1000");
+    }
     this.displayedColumns = [
       this.entitySchemaGAPAccount.Columns.UID_Person,     
       this.entitySchemaGAPAccount.Columns.PrimaryEmail,
+      
+      {
+        ColumnName:"LastLoginTime",
+        Display: "Ultimo Login",
+        Type: ValType.Date
+      }
+      
       
       
       
@@ -137,6 +154,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     this.filterOptions = await this.accountsService.getFilterOptions();
     this.dataModel = await this.accountsService.getGAPDataModel();
   this.viewConfig = await this.viewConfigService.getInitialDSTExtension(this.dataModel, this.viewConfigPath);
+  
 } finally {
  isBusy.endBusy();
 }
@@ -266,7 +284,7 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
 
       const mydominios = await this.accountsService.gapgetdomains(this.navigationState);
     
-      if (await this.accountsService.admingap()) {
+      if (await this.accountsService.adminGAP()) {
         myexpressions.push(
           { LogOperator:LogOp.AND,
             Operator:'LIKE',
@@ -300,7 +318,16 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
       }
       ];
 
-      //this.navigationState.withProperties = "CCC_EspacioMb,LastLoginTime,CCC_LicenciaWorkspace,UID_GAPUser";
+      if (this.soyAdmin)
+        {
+          this.displayedColumns.push({
+            ColumnName:"CCC_LicenciaWorkspace",
+            Display: "Licencia asignada",
+            Type: ValType.String
+          })
+        };
+        
+      this.navigationState.withProperties = "CCC_EspacioMb,LastLoginTime,CCC_LicenciaWorkspace,UID_GAPUser";
       this.navigationState.filter = this.filtrocuentas;
       
       

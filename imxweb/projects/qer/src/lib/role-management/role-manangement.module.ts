@@ -60,7 +60,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { isAuditor, isGAPAdmin, isRoleAdmin, isRoleStatistics, isStructAdmin, isStructStatistics } from '../admin/qer-permissions-helper';
+import { isAuditor,  isRoleAdmin, isRoleStatistics, isStructAdmin, isStructStatistics } from '../admin/qer-permissions-helper';
 import { DataExplorerRegistryService } from '../data-explorer-view/data-explorer-registry.service';
 import { MyResponsibilitiesRegistryService } from '../my-responsibilities-view/my-responsibilities-registry.service';
 import { CompareItemComponent } from './compare/compare-item.component';

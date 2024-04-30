@@ -27,7 +27,7 @@
 import { Injectable } from '@angular/core';
 
 import { UserModelService } from 'qer';
-import { isTsbNameSpaceAdminBase } from './tsb-permissions-helper';
+import { isAdminGAP, isTsbNameSpaceAdminBase } from './tsb-permissions-helper';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +37,16 @@ export class TsbPermissionsService {
 
   public async isTsbNameSpaceAdminBase(): Promise<boolean> {
     return isTsbNameSpaceAdminBase((await this.userService.getGroups()).map(userGroupInfo => userGroupInfo.Name));
+  }
+
+  public async isAdminGAP(): Promise<boolean> {
+    if (isAdminGAP((await this.userService.getGroups()).map(userGroupInfo => userGroupInfo.Name))) {
+      console.log("soy admin");
+     return true;
+        } else {
+          console.log("soy un mojón");
+          return false;
+
+        }
   }
 }

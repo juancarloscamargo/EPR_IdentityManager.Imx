@@ -27,3 +27,7 @@
 export function isTsbNameSpaceAdminBase(groups: string[]): boolean {
   return groups.find(item => item.toUpperCase() === 'TSB_4_NAMESPACEADMIN_BASE') != null;
 }
+
+export function isAdminGAP(groups: string[]): boolean {
+  return groups.find(item => item.toUpperCase() === 'GAP_4_NAMESPACEADMIN_GSUITE') != null;
+}

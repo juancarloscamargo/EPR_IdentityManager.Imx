@@ -43,8 +43,7 @@ import {
   hasFeatures,
   isAuditor,
   isStatistics,
-  isTsbNameSpaceAdminBase,
-  isGAPAdmin
+  isTsbNameSpaceAdminBase
 } from './qer-permissions-helper';
 
 @Injectable({
@@ -102,7 +101,7 @@ export class QerPermissionsService {
     return isTsbNameSpaceAdminBase((await this.userService.getGroups()).map((group) => group.Name));
   }
 
-  public async isGAPAdmin(): Promise<boolean> {
-    return isGAPAdmin((await this.userService.getFeatures()).Features);
-  }
+  
+    
+  
 }
