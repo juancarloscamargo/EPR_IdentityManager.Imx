@@ -35,7 +35,7 @@
       <span translate>#LDS#There is currently no data synchronization configured for the selected domain.</span>
     </eui-alert>
   
-    <div class="imx-data-explorer-content">
+    <div (hidden)="this.algunerror=true" class="imx-data-explorer-content" >
       <div class="data-explorer-table">
         <imx-data-table [dst]="dst" (highlightedEntityChanged)="onAccountChanged($event)" detailViewVisible="false"
           mode="manual">

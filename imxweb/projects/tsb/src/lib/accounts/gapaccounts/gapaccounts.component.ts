@@ -70,6 +70,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   public busyService = new BusyService();
   public contextId = HELP_CONTEXTUAL.DataExplorerAccounts;
   public soyAdmin:boolean = false;
+  public algunerror:boolean = false;
 
 
   private displayedColumns: IClientProperty[] = [];
@@ -366,7 +367,12 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
       };
       this.tableName = data.tableName;
       this.logger.debug(this, `Head at ${data.Data.length + this.navigationState.StartIndex} of ${data.totalCount} item(s)`);
-    } finally {
+    }
+    catch (e)
+      {
+        this.algunerror=true;
+      }
+    finally {
        isBusy.endBusy();
     }
     

@@ -30,7 +30,7 @@
 
 export const environment = {
   production: false,
-  clientUrl: 'http://localhost:8182',
+  clientUrl: 'https://iam-desarrollo.eprinsa.org/Apiserver',
   appName: 'qer-app-pwdportal',
   appVersion: '1.0.0'
 };
