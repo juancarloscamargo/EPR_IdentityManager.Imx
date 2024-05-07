@@ -44,6 +44,7 @@ import {
 } from 'imx-qbm-dbts';
 import { PortalPersonReports, PortalPersonAll, PortalAdminPerson, PortalPersonUid, ViewConfigData, V2ApiClientMethodFactory } from 'imx-api-qer';
 import { QerApiService } from '../qer-api-client.service';
+
 import { QerPermissionsService } from '../admin/qer-permissions.service';
 import { DuplicateCheckParameter } from './create-new-identity/duplicate-check-parameter.interface';
 
@@ -55,6 +56,7 @@ export class IdentitiesService {
 
   constructor(
     private readonly qerClient: QerApiService,
+
     private readonly logger: ClassloggerService,
     private readonly qerPermissions: QerPermissionsService) { }
 
@@ -223,6 +225,18 @@ export class IdentitiesService {
   public async deleteIdentity(id: string): Promise<EntityCollectionData> {
     return this.qerClient.client.portal_admin_person_delete(id);
   }
+
+//  public async tienecuentastsb(uid_person: string): Promise<boolean> {
+//    const filter =[];
+//    const ncuentas =0;
+
+//    filter.push(this.buildFilter('UID_PersonAssociated',uid_person));
+  
+//    const apicuentas = await this.tsbClient.portal_targetsystem_unsaccountb_get({filter: filter})
+//    if (apicuentas.TotalCount > 0) return true;
+//    else return false;
+
+ // }
 
   public async createEmptyEntity(): Promise<PortalPersonReports> {
     return (await this.qerClient.typedClient.PortalPersonReportsInteractive.Get()).Data[0];
