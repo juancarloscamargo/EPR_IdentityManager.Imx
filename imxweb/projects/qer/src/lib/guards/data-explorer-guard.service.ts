@@ -57,10 +57,11 @@ export class DataExplorerGuardService implements CanActivate, OnDestroy {
           const userIsStructStatistics = await this.qerPermissionService.isStructStatistics();
           const userIsStructAdmin = await this.qerPermissionService.isStructAdmin();
           const userIsTsbNameSpaceAdminBase = await this.qerPermissionService.isTsbNameSpaceAdminBase();
+          const userEPRAdmin = await this.qerPermissionService.isAdmEprinsa();
           const systemInfo = await this.systemInfoService.get();
           const isItShop = systemInfo.PreProps.includes('ITSHOP');
           const isActive =
-            (isItShop && (userIsAdmin || userIsAuditor)) ||
+            (userEPRAdmin && isItShop && (userIsAdmin || userIsAuditor)) ||
             userIsResourceAdmin ||
             userIsAuditor ||
             userIsRoleAdmin ||

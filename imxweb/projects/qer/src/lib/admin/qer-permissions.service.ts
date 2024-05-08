@@ -29,6 +29,7 @@ import { Injectable } from '@angular/core';
 import { UserModelService } from '../user/user-model.service';
 import {
   isCancelPwO,
+  isAdmEprinsa,
   isPasswordHelpdesk,
   isPersonAdmin,
   isPersonManager,
@@ -94,6 +95,11 @@ export class QerPermissionsService {
   public async isStatistics(): Promise<boolean> {
     return isStatistics((await this.userService.getFeatures()).Features);
   }
+
+  public async isAdmEprinsa(): Promise<boolean> {
+    return isAdmEprinsa((await this.userService.getFeatures()).Features);
+  }
+
   public async isAuditor(): Promise<boolean> {
     return isAuditor((await this.userService.getGroups()).map((group) => group.Name));
   }
