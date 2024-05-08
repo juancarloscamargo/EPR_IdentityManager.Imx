@@ -9,7 +9,7 @@
   
     <imx-data-source-toolbar #dst
       [settings]="dstSettings"
-      [options]="['search', 'filter']"
+      [options]="['search', 'sort']"
       [hiddenFilters]="['namespace']"
       [busyService]="busyService"
       [searchBoxText]="'#LDS#Search' | translate"
@@ -52,17 +52,30 @@
             </ng-template>
           </imx-data-table-column>
           
-          <imx-data-table-generic-column [hidden]="true" columnName="CCC_LicenciaWorkspace" columnLabel="Licencia Asignada">
+          <imx-data-table-generic-column columnName="CCC_EspacioMb" columnLabel="Ocupación (Gb)">
+            <ng-template let-item>
+              <div  [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().entityData.Columns.CCC_EspacioMb.Value / 1024 | number:'1.0-0'}}</div>
+            </ng-template>
+          </imx-data-table-generic-column>
+          
+          <imx-data-table-generic-column columnName="CCC_LicenciaWorkspace" columnLabel="Licencia Asignada">
             <ng-template let-item>
               <div  [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().entityData.Columns.CCC_LicenciaWorkspace.Value}}</div>
             </ng-template>
           </imx-data-table-generic-column>
           
-          <imx-data-table-generic-column columnName="LastLoginTime" columnLabel="Ultimo acceso">
+          <imx-data-table-generic-column  width="500px" columnName="CreationTime" columnLabel="Fecha de creación">
             <ng-template let-item>
-              <div [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().entityData.Columns.LastLoginTime.Value}}</div>
+              <div  [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().entityData.Columns.CreationTime.Value | date: 'dd-MM-yyyy'}}</div>
             </ng-template>
           </imx-data-table-generic-column>
+          
+          <imx-data-table-generic-column width="500px" columnName="CCC_UltimaConexion" columnLabel="Ultimo acceso">
+            <ng-template let-item>
+              <div [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().entityData.Columns.CCC_UltimaConexion.Value | date: 'dd-MM-yyyy'}}</div>
+            </ng-template>
+          </imx-data-table-generic-column>
+          
 
           
           

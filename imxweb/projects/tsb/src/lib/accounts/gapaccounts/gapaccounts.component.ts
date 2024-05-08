@@ -76,9 +76,12 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   private displayedColumns: IClientProperty[] = [];
   private authorityDataDeleted$: Subscription;
   private tableName: string;
+
+  
   
   private dataModel: DataModel;
-  private columna: IClientProperty[] =  [];
+
+  
   private viewConfigPath = 'targetsystem/uns/account';
   private viewConfig: DataSourceToolbarViewConfig;
   private filtrocuentas: FilterData[];
@@ -131,30 +134,34 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     
     if ( await this.accountsService.adminGAP()) {
       this.soyAdmin=true;
-      console.log("Soy ad1000");
+      
     }
-    this.displayedColumns = [
+    
+    
+  this.displayedColumns = [
       this.entitySchemaGAPAccount.Columns.UID_Person,     
       this.entitySchemaGAPAccount.Columns.PrimaryEmail,
-      
       {
-        ColumnName:"LastLoginTime",
+        ColumnName:"CreationTime",
+        Display: "Fecha de creación",
+        Type: ValType.Date
+      },
+      {
+        ColumnName:"CCC_UltimaConexion",
         Display: "Ultimo Login",
         Type: ValType.Date
       }
-      
-      
-      
-      
-    ];
+      ];
 
+    
 
     const isBusy = this.busyService.beginBusy();
 
   try {
     this.filterOptions = await this.accountsService.getFilterOptions();
     this.dataModel = await this.accountsService.getGAPDataModel();
-  this.viewConfig = await this.viewConfigService.getInitialDSTExtension(this.dataModel, this.viewConfigPath);
+    this.viewConfig = await this.viewConfigService.getInitialDSTExtension(this.dataModel, this.viewConfigPath);
+    
   
 } finally {
  isBusy.endBusy();
@@ -319,16 +326,25 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
       }
       ];
 
+      // Si soy admin añade los datos de licencia y ocupación
       if (this.soyAdmin)
         {
+          
           this.displayedColumns.push({
             ColumnName:"CCC_LicenciaWorkspace",
             Display: "Licencia asignada",
             Type: ValType.String
-          })
+          }, {
+            ColumnName:"CCC_EspacioMb",
+            Display: "Ocupación (Gb)",
+            Type: ValType.Int
+          },)
+        } else  //Y si no soy admin, quita de la ordenación las columnas que no nos interesan
+        {
+          this.dataModel.Properties = this.dataModel.Properties.filter(propiedad => ['CreationTime','CCC_UltimaConexion',].includes(propiedad.Property.ColumnName));
         };
         
-      this.navigationState.withProperties = "CCC_EspacioMb,LastLoginTime,CCC_LicenciaWorkspace,UID_GAPUser";
+      this.navigationState.withProperties = "CCC_EspacioMb,CCC_UltimaConexion,CCC_LicenciaWorkspace,UID_GAPUser,CreationTime";
       this.navigationState.filter = this.filtrocuentas;
       
       

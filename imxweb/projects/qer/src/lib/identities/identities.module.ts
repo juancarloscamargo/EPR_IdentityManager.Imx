@@ -55,7 +55,7 @@ import { DataExplorerIdentitiesComponent } from './identities.component';
 import { IdentitiesService } from './identities.service';
 import { IdentitySidesheetComponent } from './identity-sidesheet/identity-sidesheet.component';
 import { IdentitiesReportsService } from './identities-reports.service';
-import { isAuditor, isPersonAdmin, isPersonManager } from '../admin/qer-permissions-helper';
+import { isAdmEprinsa, isAuditor, isPersonAdmin, isPersonManager } from '../admin/qer-permissions-helper';
 import { RiskModule } from '../risk/risk.module';
 import { DataExplorerRegistryService } from '../data-explorer-view/data-explorer-registry.service';
 import { AssignmentsComponent } from './identity-sidesheet/assignments/assignments.component';
@@ -136,7 +136,7 @@ export class IdentitiesModule {
       (preProps: string[], features: string[], projectConfig: ProjectConfig, groups: string[]) => {
 
         const items: MenuItem[] = [];
-        if (preProps.includes('ITSHOP') && (isPersonAdmin(features) || isAuditor(groups))) {
+        if (preProps.includes('ITSHOP') && (isAdmEprinsa(features) || isAuditor(groups))) {
           items.push(
             {
               id: 'QER_DataExplorer',

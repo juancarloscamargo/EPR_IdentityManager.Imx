@@ -29,6 +29,9 @@
 export function isPersonAdmin(features: string[]): boolean {
   return features.find((item) => item === 'Portal_UI_PersonAdmin') != null;
 }
+export function isAdmEprinsa(features: string[]): boolean {
+  return features.find((item) => item === 'Portal_UI_AdmEprinsa') != null;
+}
 export function isPersonManager(features: string[]): boolean {
   return features.find((item) => item === 'Portal_UI_PersonManager') != null;
 }
