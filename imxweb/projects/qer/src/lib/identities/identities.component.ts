@@ -31,7 +31,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 import { PortalAdminPerson, PortalPersonAll, PortalPersonReports, ProjectConfig, ViewConfigData } from 'imx-api-qer';
-import { CollectionLoadParameters, DataModel, DataModelProperty, DisplayColumns, EntitySchema, IClientProperty } from 'imx-qbm-dbts';
+import { CollectionLoadParameters, DataModel, DataModelProperty, DisplayColumns, EntitySchema, IClientProperty, ValType } from 'imx-qbm-dbts';
 import {
   AuthenticationService,
   BusyService,
@@ -298,27 +298,30 @@ export class DataExplorerIdentitiesComponent implements OnInit, OnDestroy, SideN
     const isBusy = this.busyService.beginBusy();
 
     this.entitySchemaPersonReports = this.identitiesService.personReportsSchema;
+    this.displayedColumns = [
+      this.entitySchemaPersonReports.Columns[DisplayColumns.DISPLAY_PROPERTYNAME],
+      {
+        ColumnName:'CCC_DepartmentFullPath',
+        Type: ValType.String,
+        Display: "CCC_DepartmentFullPath"
+      }
+    ];
+    console.log("Columna añadida");
+    if (!this.isAdmin) {
+      this.displayedColumns.push(
+        this.entitySchemaPersonReports.Columns.IsExternal
+      );
+    }
+
+    // Ensure this column is always added last
+    this.displayedColumns.push(this.entitySchemaPersonReports.Columns.XMarkedForDeletion);
+
+    this.displayedInnerColumns = [this.entitySchemaPersonReports.Columns[DisplayColumns.DISPLAY_PROPERTYNAME]];
+
+    
     try {
       this.projectConfig = await this.configService.getConfig();
-      this.displayedColumns = [
-        this.entitySchemaPersonReports.Columns[DisplayColumns.DISPLAY_PROPERTYNAME],
-        this.entitySchemaPersonReports.Columns.IsSecurityIncident,
-        this.entitySchemaPersonReports.Columns.UID_Department,
-      ];
-
-      if (!this.isAdmin) {
-        this.displayedColumns.push(
-          this.entitySchemaPersonReports.Columns.IdentityType,
-          this.entitySchemaPersonReports.Columns.EmployeeType,
-          this.entitySchemaPersonReports.Columns.IsExternal
-        );
-      }
-
-      // Ensure this column is always added last
-      this.displayedColumns.push(this.entitySchemaPersonReports.Columns.XMarkedForDeletion);
-
-      this.displayedInnerColumns = [this.entitySchemaPersonReports.Columns[DisplayColumns.DISPLAY_PROPERTYNAME]];
-
+      
       this.dataModel = this.isAdmin ? await this.identitiesService.getDataModelAdmin() : await this.identitiesService.getDataModelReport();
       this.filterOptions = this.dataModel.Filters;
       this.groupingOptions = this.getGroupableProperties(this.dataModel.Properties);
@@ -341,6 +344,7 @@ export class DataExplorerIdentitiesComponent implements OnInit, OnDestroy, SideN
         }
       }
       this.viewConfig = await this.viewConfigService.getInitialDSTExtension(this.dataModel, this.viewConfigPath);
+
       await this.navigate();
     } finally {
       isBusy.endBusy();
@@ -370,6 +374,8 @@ export class DataExplorerIdentitiesComponent implements OnInit, OnDestroy, SideN
       }
 
       this.entitySchemaPersonReports = this.identitiesService.personReportsSchema;
+      this.navigationState.withProperties="CCC_DepartmentFullPath";
+      
       const data = this.isAdmin
         ? await this.identitiesService.getAllPersonAdmin(this.navigationState)
         : await this.identitiesService.getReportsOfManager(this.navigationState);
@@ -383,7 +389,7 @@ export class DataExplorerIdentitiesComponent implements OnInit, OnDestroy, SideN
         dataSource: data,
         entitySchema: this.entitySchemaPersonReports,
         navigationState: this.navigationState,
-        filters: this.filterOptions,
+        //filters: this.filterOptions,
         groupData: this.groupingInfo,
         dataModel: this.dataModel,
         viewConfig: this.viewConfig,

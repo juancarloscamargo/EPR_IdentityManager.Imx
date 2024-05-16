@@ -10,8 +10,7 @@
     (search)="onSearch($event)" (updateConfig)="updateConfig($event)" (deleteConfigById)="deleteConfigById($event)"></imx-data-source-toolbar>
   <div class="data-explorer-table">
     <imx-data-table [dst]="dst" (highlightedEntityChanged)="onIdentityChanged($event)" detailViewVisible="false"
-      data-imx-identifier="identities-tabledata-table" mode="manual" [groupData]="groupData"
-      (groupDataChanged)="onGroupingChange($event)">
+      data-imx-identifier="identities-tabledata-table" mode="manual">
       <imx-data-table-column [entityColumn]="entitySchemaPersonReports?.Columns[DisplayColumns.DISPLAY_PROPERTYNAME]">
         <ng-template let-item>
           <div data-imx-identifier="identities-tabledata-display">{{ item.GetEntity().GetDisplay() }}</div>
@@ -19,21 +18,18 @@
             item.DefaultEmailAddress.Column.GetDisplayValue() }}</div>
         </ng-template>
       </imx-data-table-column>
-      <imx-data-table-column [entityColumn]="entitySchemaPersonReports?.Columns.IsSecurityIncident" columnLabel="">
-        <ng-template let-item>
-          <div *ngIf="item.IsSecurityIncident.value">
-            <eui-badge color="red">{{ '#LDS#Security risk' | translate }}</eui-badge>
-          </div>
-        </ng-template>
-      </imx-data-table-column>
-      <imx-data-table-column [entityColumn]="entitySchemaPersonReports?.Columns.UID_Department">
-      </imx-data-table-column>
-      <imx-data-table-column *ngIf="!this.isAdmin" [entityColumn]="entitySchemaPersonReports?.Columns.IdentityType">
-      </imx-data-table-column>
-      <imx-data-table-column *ngIf="!this.isAdmin" [entityColumn]="entitySchemaPersonReports?.Columns.EmployeeType">
-      </imx-data-table-column>
+      
+      
+      
       <imx-data-table-column *ngIf="!this.isAdmin" [entityColumn]="entitySchemaPersonReports?.Columns.IsExternal">
       </imx-data-table-column>
+
+      <imx-data-table-generic-column columnName="CCC_DepartmentFullPath" columnLabel="Dpto">
+        <ng-template let-item>
+          <div  [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().entityData.Columns.CCC_DepartmentFullPath.Value}}</div>
+        </ng-template>
+      </imx-data-table-generic-column>
+
       <imx-data-table-generic-column alignHeader="center" alignContent="center"
         [columnName]="entitySchemaPersonReports?.Columns.XMarkedForDeletion.ColumnName">
         <ng-template let-item>
