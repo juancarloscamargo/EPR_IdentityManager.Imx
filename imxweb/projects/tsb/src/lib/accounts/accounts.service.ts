@@ -45,7 +45,8 @@ import {
   IClientProperty,
   LogOp,
   ApiClient,
-  IEntityColumn
+  IEntityColumn,
+  TypedEntity
 } from 'imx-qbm-dbts';
 import { TsbApiService } from '../tsb-api-client.service';
 import { TsbPermissionsService} from './../admin/tsb-permissions.service';
@@ -240,4 +241,19 @@ private createRequesterFkProvider(fkRelation: MetaTableRelationData): FkCandidat
     },
   ]);
 }
+
+
+public async getDuplicates(parameter: CollectionLoadParameters)
+    : Promise<any> {
+
+    if (parameter.filter?.length === 0) {
+      return { Data: [], totalCount: 0 };
+    }
+    return this.gapClient.client.portal_targetsystem_gapuser_get();
+  }
+
+  public async createEmptyEntity(): Promise<PortalTargetsystemGapuser> {
+    return ((await this.gapClient.typedClient.PortalTargetsystemGapuser.Get()).Data[0]);
+  }
+
 }
