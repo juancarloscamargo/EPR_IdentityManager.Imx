@@ -30,7 +30,8 @@ import { TargetSystemReportComponent } from '.././target-system-report/target-sy
 import { PortalTargetsystemGapuser, PortalTargetsystemGappasku } from 'imx-api-gap';
 import { GAPAccountSidesheetComponent } from '../gapaccount-sidesheet/gapaccount-sidesheet.component';
 import { Column } from 'qer/lib/password/helpers.model';
-import { NuevaCuentaCorreoComponent } from './nueva-cuenta-correo/nueva-cuenta-correo.component';
+import { GAPAccountTypedEntity } from '../account-typed-entity';
+
 
 
 
@@ -417,16 +418,15 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
 
   public async createNewIdentity(): Promise<void> {
     await this.sideSheet
-      .open(NuevaCuentaCorreoComponent, {
+      .open(GAPAccountSidesheetComponent, {
         title: "Nueva cuenta de correo",
         padding: '0px',
         width: 'max(650px, 65%)',
         disableClose: true,
-        testId: 'create-new-identity-sidesheet',
         icon: 'contactinfo',
         data:
           {
-            nuevaCuenta: await this.accountsService.createEmptyEntity()
+            nuevaCuenta: await this.accountsService.CrearNuevaCuenta()
           }
         
       })

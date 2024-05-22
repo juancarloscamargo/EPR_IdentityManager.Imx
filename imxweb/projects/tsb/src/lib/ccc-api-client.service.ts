@@ -55,7 +55,7 @@ export class CCCApiService {
     private readonly logger: ClassloggerService,
     private readonly translationProvider: ImxTranslationProviderService) {
     try {
-      this.logger.debug(this, 'Initializing GAP API service');
+      this.logger.debug(this, 'Inicializando API customizada para el acceso a Google');
 
       // Use schema loaded by QBM client
       const schemaProvider = config.client;

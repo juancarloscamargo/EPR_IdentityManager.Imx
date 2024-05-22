@@ -48,6 +48,7 @@ import { ObjectHyperviewModule } from 'qer';
 import { DataExplorerGapaccountsComponent } from './gapaccounts/gapaccounts.component';
 import { GAPAccountSidesheetComponent } from './gapaccount-sidesheet/gapaccount-sidesheet.component';
 
+
 @NgModule({
   declarations: [
     DataExplorerAccountsComponent,

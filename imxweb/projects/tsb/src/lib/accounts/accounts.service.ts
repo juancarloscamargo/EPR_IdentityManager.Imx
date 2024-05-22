@@ -62,7 +62,8 @@ import { DataSourceToolbarExportMethod, BaseCdr, ImxTranslationProviderService }
 import { GAPApiService } from '../gap-api-client.service';
 import { TranslateService } from '@ngx-translate/core';
 import {CCCApiService } from '../ccc-api-client.service';
-import { PortalTargetsystemGappaskuGapuserlicense } from 'imx-api-ccc';
+import { PortalTargetsystemGapuserNuevacuenta } from 'imx-api-ccc';
+
 
 
 
@@ -252,8 +253,12 @@ public async getDuplicates(parameter: CollectionLoadParameters)
     return this.gapClient.client.portal_targetsystem_gapuser_get();
   }
 
-  public async createEmptyEntity(): Promise<PortalTargetsystemGapuser> {
-    return ((await this.gapClient.typedClient.PortalTargetsystemGapuser.Get()).Data[0]);
+  public async CrearNuevaCuenta(): Promise<PortalTargetsystemGapuserNuevacuenta> {
+    const nuevaCuenta = await this.miapi.typedClient.PortalTargetsystemGapuserNuevacuentaInteractive.Get();
+    return ;
   }
+    
+    //return (await this.qerClient.typedClient.PortalPersonReportsInteractive.Get()).Data[0];
+  
 
 }

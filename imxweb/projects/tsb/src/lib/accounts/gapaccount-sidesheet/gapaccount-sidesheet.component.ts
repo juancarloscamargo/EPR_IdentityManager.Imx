@@ -66,7 +66,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
 
   constructor(
     formBuilder: UntypedFormBuilder,
-    @Inject(EUI_SIDESHEET_DATA) public readonly sidesheetData: GAPAccountSidesheetData,
+    @Inject(EUI_SIDESHEET_DATA) public readonly sidesheetData: PortalTargetsystemGapuser,
     private readonly logger: ClassloggerService,
     private readonly busyService: EuiLoadingService,
     private readonly snackbar: SnackBarService,
@@ -113,9 +113,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
     }
   }
 
-  get selectedAccount(): PortalTargetsystemGapuser {
-    return this.sidesheetData.selectedGAPAccount;
-  }
+  
 
   get formArray(): UntypedFormArray {
     return this.detailsFormGroup.get('formArray') as UntypedFormArray;
@@ -126,8 +124,8 @@ export class GAPAccountSidesheetComponent implements OnInit {
   private async setup(): Promise<void> {
  //   const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
     const cols = ['PrimaryEmail','UID_Person','IsSuspended'];
-    const prueba = this.sidesheetData.selectedGAPAccount;
-    this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.selectedAccount.GetEntity(), cols);
+    
+    this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.sidesheetData.GetEntity(), cols);
 
     this.dynamicTabs = (
       await this.tabService.getFittingComponents<TabItem>('accountSidesheet', (ext) => ext.inputData.checkVisibility(this.parameters))

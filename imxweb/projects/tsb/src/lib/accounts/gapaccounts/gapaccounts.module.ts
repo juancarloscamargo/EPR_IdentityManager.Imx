@@ -47,9 +47,10 @@ import { TargetSystemReportComponent } from '.././target-system-report/target-sy
 import { ObjectHyperviewModule } from 'qer';
 
 
+
 @NgModule({
   declarations: [
-    DataExplorerGapaccountsComponent,
+    DataExplorerGapaccountsComponent
     
     
   ],
