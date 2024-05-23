@@ -29,8 +29,11 @@ import { AccountsService } from '../accounts.service';
 import { TargetSystemReportComponent } from '.././target-system-report/target-system-report.component';
 import { PortalTargetsystemGapuser, PortalTargetsystemGappasku } from 'imx-api-gap';
 import { GAPAccountSidesheetComponent } from '../gapaccount-sidesheet/gapaccount-sidesheet.component';
+import { CreateGAPAccountComponent } from '../create-gapaccount/create-gapaccount.component';
 import { Column } from 'qer/lib/password/helpers.model';
 import { GAPAccountTypedEntity } from '../account-typed-entity';
+import { PortalTargetsystemGapuserNuevacuenta } from 'imx-api-ccc';
+
 
 
 
@@ -220,7 +223,7 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
     await this.navigate();
   }
 
-  public async onAccountChanged(GAPAccount: PortalTargetsystemGapuser): Promise<void> {
+  public async onAccountChanged(GAPAccount: PortalTargetsystemGapuserNuevacuenta): Promise<void> {
     this.logger.debug(this, `Selected UNS account changed`);
     this.logger.trace(this, `New UNS account selected`, GAPAccount);
 
@@ -352,6 +355,8 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
       
 
       const data = await this.accountsService.getGAPAccounts(this.navigationState);
+      //const data = await this.accountsService.ObtenerNuevasCuentas(this.navigationState);
+
       const datoslicencias = await this.accountsService.gapgetsku();
       
       
@@ -389,6 +394,7 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
     catch (e)
       {
         this.algunerror=true;
+        console.log("ERRORAZO EN ALGUNA PARTE");
       }
     finally {
        isBusy.endBusy();
@@ -417,8 +423,12 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
   }
 
   public async createNewIdentity(): Promise<void> {
+    
+    
+    
+
     await this.sideSheet
-      .open(GAPAccountSidesheetComponent, {
+      .open(CreateGAPAccountComponent, {
         title: "Nueva cuenta de correo",
         padding: '0px',
         width: 'max(650px, 65%)',

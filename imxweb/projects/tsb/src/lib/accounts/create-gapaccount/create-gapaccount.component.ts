@@ -36,24 +36,24 @@ import {
   ExtService,
   CdrFactoryService,
 } from 'qbm';
-import { DbObjectKey, IEntity } from 'imx-qbm-dbts';
+import { DbObjectKey, IEntity, TypedEntity } from 'imx-qbm-dbts';
 import { EuiLoadingService, EuiSidesheetRef, EUI_SIDESHEET_DATA } from '@elemental-ui/core';
-import { AccountSidesheetData, GAPAccountSidesheetData } from '../accounts.models';
+import { AccountSidesheetData, GAPAccountSidesheetData, createGAPAccountSidesheetData } from '../accounts.models';
 import { IdentitiesService, ProjectConfigurationService } from 'qer';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { AccountsService } from '../accounts.service';
 import { EuiDownloadOptions } from '@elemental-ui/core';
 import { AccountsReportsService } from '../accounts-reports.service';
-import { AccountTypedEntity } from '../account-typed-entity';
+import { AccountTypedEntity,GAPAccountTypedEntity } from '../account-typed-entity';
 import { PortalTargetsystemGapuser } from 'imx-api-gap';
 import { PortalTargetsystemGapuserNuevacuenta } from 'imx-api-ccc';
 
 @Component({
-  selector: 'imx-account-sidesheet',
-  templateUrl: './gapaccount-sidesheet.component.html',
-  styleUrls: ['./gapaccount-sidesheet.component.scss'],
+  selector: 'imx-new-account-sidesheet',
+  templateUrl: './create-gapaccount.component.html',
+  styleUrls: ['./create-gapaccount.component.scss'],
 })
-export class GAPAccountSidesheetComponent implements OnInit {
+export class CreateGAPAccountComponent implements OnInit {
   public readonly detailsFormGroup: UntypedFormGroup;
   public cdrList: ColumnDependentReference[] = [];
   public linkedIdentitiesManager: DbObjectKey;
@@ -67,7 +67,8 @@ export class GAPAccountSidesheetComponent implements OnInit {
 
   constructor(
     formBuilder: UntypedFormBuilder,
-    @Inject(EUI_SIDESHEET_DATA) public readonly sidesheetData: GAPAccountSidesheetData,
+    @Inject(EUI_SIDESHEET_DATA) public  data: {
+      nuevacuentaseleccionada: TypedEntity},
     private readonly logger: ClassloggerService,
     private readonly busyService: EuiLoadingService,
     private readonly snackbar: SnackBarService,
@@ -91,6 +92,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    console.log("recibida cuenta para crear del tipo: " + this.data.nuevacuentaseleccionada.GetEntity().TypeName);
     this.setup();
   }
 
@@ -98,7 +100,6 @@ export class GAPAccountSidesheetComponent implements OnInit {
     this.sidesheetRef.close();
   }
 
-  
   public async save(): Promise<void> {
     if (this.detailsFormGroup.valid) {
       this.logger.debug(this, `Saving identity change`);
@@ -125,10 +126,9 @@ export class GAPAccountSidesheetComponent implements OnInit {
   
   private async setup(): Promise<void> {
  //   const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
- 
-    const cols = ['PrimaryEmail','IsSuspended','UID_Person'];
-    console.log("mostrando cuenta del tipo: " + this.sidesheetData.selectedGAPAccount.GetEntity().TypeName)   ;
-    this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.sidesheetData.selectedGAPAccount.GetEntity(), cols);
+    const cols = ['PrimaryEmail','UID_Person','IsSuspended'];
+    
+    this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.data.nuevacuentaseleccionada.GetEntity(),cols);
 
     this.dynamicTabs = (
       await this.tabService.getFittingComponents<TabItem>('accountSidesheet', (ext) => ext.inputData.checkVisibility(this.parameters))

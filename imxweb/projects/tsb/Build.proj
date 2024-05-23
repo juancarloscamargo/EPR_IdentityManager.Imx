@@ -17,6 +17,7 @@
 		<InputFiles Include="$(Workspace)\imx-modules\imx-api-tsb.tgz" />
 		<InputFiles Include="$(Workspace)\imx-modules\imx-api-qer.tgz" />
 		<InputFiles Include="$(Workspace)\imx-modules\imx-api-gap.tgz" />
+		<InputFiles Include="$(Workspace)\imx-modules\imx-api-ccc.tgz" />
 	</ItemGroup>
 	
 </Project>

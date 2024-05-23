@@ -38,4 +38,6 @@ export class AccountTypedEntity extends TypedEntity {
 
 export class GAPAccountTypedEntity extends TypedEntity {
   public readonly displayColumn = this.GetEntity().GetColumn(DisplayColumns.DISPLAY_PROPERTYNAME);
+  public readonly uidPersonColumn = CdrFactoryService.tryGetColumn(this.GetEntity(), 'UID_Person');
+  public readonly PrimaryEmail = CdrFactoryService.tryGetColumn(this.GetEntity(), 'PrimaryEmail');
 }

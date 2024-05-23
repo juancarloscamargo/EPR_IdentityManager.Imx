@@ -46,7 +46,8 @@ import {
   LogOp,
   ApiClient,
   IEntityColumn,
-  TypedEntity
+  TypedEntity,
+  ExtendedTypedEntityCollection
 } from 'imx-qbm-dbts';
 import { TsbApiService } from '../tsb-api-client.service';
 import { TsbPermissionsService} from './../admin/tsb-permissions.service';
@@ -107,8 +108,8 @@ export class AccountsService {
     return this.tsbClient.typedClient.PortalTargetsystemUnsAccount.Get(navigationState);
   }
 
-  public async getGAPAccounts(navigationState: CollectionLoadParameters): Promise<TypedEntityCollectionData<PortalTargetsystemGapuser>> {
-    return this.gapClient.typedClient.PortalTargetsystemGapuser.Get(navigationState);
+  public async getGAPAccounts(navigationState: CollectionLoadParameters): Promise<TypedEntityCollectionData<PortalTargetsystemGapuserNuevacuenta>> {
+    return this.miapi.typedClient.PortalTargetsystemGapuserNuevacuenta.Get(navigationState);
   }
 
 
@@ -253,9 +254,13 @@ public async getDuplicates(parameter: CollectionLoadParameters)
     return this.gapClient.client.portal_targetsystem_gapuser_get();
   }
 
+  public async ObtenerNuevasCuentas(navigationState:CollectionLoadParameters): Promise<any>{
+    return (await this.miapi.typedClient.PortalTargetsystemGapuserNuevacuenta.Get(navigationState));
+  }
+
   public async CrearNuevaCuenta(): Promise<PortalTargetsystemGapuserNuevacuenta> {
-    const nuevaCuenta = await this.miapi.typedClient.PortalTargetsystemGapuserNuevacuentaInteractive.Get();
-    return ;
+    return  (await this.miapi.typedClient.PortalTargetsystemGapuserNuevacuentaInteractive.Get()).Data[0];
+    
   }
     
     //return (await this.qerClient.typedClient.PortalPersonReportsInteractive.Get()).Data[0];

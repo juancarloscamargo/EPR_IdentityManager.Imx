@@ -25,8 +25,9 @@
  */
 
 import { CollectionLoadParameters, DbObjectKey, FilterData } from 'imx-qbm-dbts';
-import { AccountTypedEntity } from './account-typed-entity';
+import { AccountTypedEntity, GAPAccountTypedEntity } from './account-typed-entity';
 import { PortalTargetsystemGapuser } from 'imx-api-gap';
+import { PortalTargetsystemGapuserNuevacuenta  } from 'imx-api-ccc';
 
 export interface AccountSidesheetData {
   unsAccountId: string;
@@ -39,7 +40,15 @@ export interface AccountSidesheetData {
 export interface GAPAccountSidesheetData {
   GAPAccountId: string;
   UID_GAPAccount: string;
-  selectedGAPAccount: PortalTargetsystemGapuser;
+  selectedGAPAccount: PortalTargetsystemGapuserNuevacuenta;
+  tableName: string;
+  uidPerson: string;
+}
+
+export interface createGAPAccountSidesheetData {
+  GAPAccountId: string;
+  UID_GAPAccount: string;
+  selectedGAPAccount: GAPAccountTypedEntity;
   tableName: string;
   uidPerson: string;
 }
