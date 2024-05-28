@@ -67,8 +67,7 @@ export class CreateGAPAccountComponent implements OnInit {
 
   constructor(
     formBuilder: UntypedFormBuilder,
-    @Inject(EUI_SIDESHEET_DATA) public  data: {
-      nuevacuentaseleccionada: TypedEntity},
+    @Inject(EUI_SIDESHEET_DATA) public  data: PortalTargetsystemGapuserNuevacuenta,
     private readonly logger: ClassloggerService,
     private readonly busyService: EuiLoadingService,
     private readonly snackbar: SnackBarService,
@@ -92,7 +91,7 @@ export class CreateGAPAccountComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    console.log("recibida cuenta para crear del tipo: " + this.data.nuevacuentaseleccionada.GetEntity().TypeName);
+    
     this.setup();
   }
 
@@ -105,7 +104,7 @@ export class CreateGAPAccountComponent implements OnInit {
       this.logger.debug(this, `Saving identity change`);
       const overlayRef = this.busyService.show();
       try {
-        //await this.selectedAccount.GetEntity().Commit(true);
+        await this.data.GetEntity().Commit(true);
         this.detailsFormGroup.markAsPristine();
         this.snackbar.open({ key: '#LDS#The user account has been successfully saved.' });
         this.sidesheetRef.close(true);
@@ -128,7 +127,7 @@ export class CreateGAPAccountComponent implements OnInit {
  //   const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
     const cols = ['PrimaryEmail','UID_Person','IsSuspended'];
     
-    this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.data.nuevacuentaseleccionada.GetEntity(),cols);
+    this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.data.GetEntity(),cols);
 
     this.dynamicTabs = (
       await this.tabService.getFittingComponents<TabItem>('accountSidesheet', (ext) => ext.inputData.checkVisibility(this.parameters))

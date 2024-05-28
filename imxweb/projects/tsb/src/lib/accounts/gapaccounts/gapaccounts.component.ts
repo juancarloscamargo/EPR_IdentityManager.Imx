@@ -227,26 +227,24 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
     this.logger.debug(this, `Selected UNS account changed`);
     this.logger.trace(this, `New UNS account selected`, GAPAccount);
 
-    let data: GAPAccountSidesheetData;  
-    const datosgap = GAPAccount.GetEntity().GetKeys()[0];
+    let data: GAPAccountSidesheetData;
+
+    const unsDbObjectKey = DbObjectKey.FromXml(GAPAccount.XObjectKey.value);
+    data = {
+      GAPAccountId: "lala",
+      UID_GAPAccount: "lala",
+      selectedGAPAccount: await this.accountsService.getAccountInteractive(unsDbObjectKey,GAPAccount.UID_GAPUser.value),
+      uidPerson: "lala",
+      tableName: this.tableName,
+    };
+
     
     //const uns2gap = this.accountsService.getGAPAccounts
     console.log("Pulsado sobre : ");
     const isBusy = this.busyService.beginBusy();
-    try {
-      //const unsDbObjectKey = DbObjectKey.FromXml(datosgap);
-
-      data = {
-        GAPAccountId:"lala",
-        UID_GAPAccount:"lala",
-        selectedGAPAccount: GAPAccount,
-        uidPerson: GAPAccount.GetEntity().GetColumn("UID_Person").GetValue(),
-        tableName: this.tableName,
-      };
-    } finally {
-      isBusy.endBusy();
-    }
-
+    isBusy.endBusy();
+    
+    const cuentaint= await this.accountsService.getAccountInteractive(unsDbObjectKey,GAPAccount.UID_GAPUser.value);
     await this.viewAccount(data);
   }
 
@@ -349,7 +347,7 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
           this.dataModel.Properties = this.dataModel.Properties.filter(propiedad => ['CreationTime','CCC_UltimaConexion',].includes(propiedad.Property.ColumnName));
         };
         
-      this.navigationState.withProperties = "CCC_EspacioMb,CCC_UltimaConexion,CCC_LicenciaWorkspace,UID_GAPUser,CreationTime";
+      //this.navigationState.withProperties = "CCC_EspacioMb,CCC_UltimaConexion,CCC_LicenciaWorkspace,UID_GAPUser,CreationTime";
       this.navigationState.filter = this.filtrocuentas;
       
       
@@ -405,15 +403,22 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
   private async viewAccount(data: GAPAccountSidesheetData): Promise<void> {
     this.logger.debug(this, `Viewing account`);
     //this.logger.trace(this, `Account selected`, data.selectedGAPAccount);
+    //ES NECESARIO HACER LAS CUENTAS INTERACTIVAS PARA PODER EDITARLAS.
+    this.logger.debug(this,"Convirtiendo cuenta en cuenta interactiva para poder editarla");
     
+
+    //const data_int= await this.accountsService.getGAPAccountInteractive(data.selectedGAPAccount.GetEntity().GetColumn("UID_GAPUser").GetValue())[0];
+
+    //data.selectedGAPAccount = data_int;
+
     const sidesheetRef = this.sideSheet.open(GAPAccountSidesheetComponent, {
-      title: await this.translateProvider.get('#LDS#Heading Edit User Account').toPromise(),
+      title: 'Editor de cuentas de correo',
       subTitle: data.selectedGAPAccount.GetEntity().GetDisplay(),
       padding: '0px',
       width: 'max(600px, 60%)',
       icon: 'account',
-      testId: 'edit-user-account-sidesheet',
-      data,
+      testId: 'edit-user-gapaccount-sidesheet',
+      data
     });
     sidesheetRef.afterClosed().subscribe((dataRefreshRequired) => {
       if (dataRefreshRequired) {
@@ -424,9 +429,14 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
 
   public async createNewIdentity(): Promise<void> {
     
-    
-    
+    //Primero crea la cuenta.
+    const gapbase = await this.accountsService.CrearNuevaCuenta();
+    //Luego hazla interactiva
+    //const gapbaseinter = await this.accountsService.getAccountInteractive(DbObjectKey.FromXml(gapbase.XObjectKey.value),'UID_GAPUser');
 
+
+    
+    
     await this.sideSheet
       .open(CreateGAPAccountComponent, {
         title: "Nueva cuenta de correo",
@@ -434,10 +444,7 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
         width: 'max(650px, 65%)',
         disableClose: true,
         icon: 'contactinfo',
-        data:
-          {
-            nuevaCuenta: await this.accountsService.CrearNuevaCuenta()
-          }
+        data: gapbase
         
       })
       .afterClosed()

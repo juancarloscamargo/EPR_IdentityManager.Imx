@@ -59,6 +59,8 @@ export class GAPAccountSidesheetComponent implements OnInit {
   public linkedIdentitiesManager: DbObjectKey;
   public unsavedSyncChanges = false;
   public initialAccountManagerValue: string;
+  public soyadmin: boolean;
+  public cuentaligada: boolean;
   public reportDownload: EuiDownloadOptions;
   public neverConnectFormControl = new UntypedFormControl();
   public parameters: { objecttable: string; objectuid: string };
@@ -67,7 +69,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
 
   constructor(
     formBuilder: UntypedFormBuilder,
-    @Inject(EUI_SIDESHEET_DATA) public readonly sidesheetData: GAPAccountSidesheetData,
+    @Inject(EUI_SIDESHEET_DATA) public  sidesheetData: GAPAccountSidesheetData,
     private readonly logger: ClassloggerService,
     private readonly busyService: EuiLoadingService,
     private readonly snackbar: SnackBarService,
@@ -91,6 +93,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    
     this.setup();
   }
 
@@ -102,9 +105,12 @@ export class GAPAccountSidesheetComponent implements OnInit {
   public async save(): Promise<void> {
     if (this.detailsFormGroup.valid) {
       this.logger.debug(this, `Saving identity change`);
+      
+     
       const overlayRef = this.busyService.show();
       try {
-        //await this.selectedAccount.GetEntity().Commit(true);
+        await this.sidesheetData.selectedGAPAccount.GetEntity().Commit(true);
+        
         this.detailsFormGroup.markAsPristine();
         this.snackbar.open({ key: '#LDS#The user account has been successfully saved.' });
         this.sidesheetRef.close(true);
@@ -125,11 +131,16 @@ export class GAPAccountSidesheetComponent implements OnInit {
   
   private async setup(): Promise<void> {
  //   const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
- 
-    const cols = ['PrimaryEmail','IsSuspended','UID_Person'];
+    this.soyadmin = await this.accountsService.adminGAP();
+
+    this.cuentaligada = false;
+    
+    const cols = ['IsSuspended','GivenName','FamilyName', 'Aliases','IsEnrolledIn2Sv','RecoveryEmail','RecoveryPhone','UID_Person','IncludeInGlobalAddressList'];
+    if (this.soyadmin) { cols.push('CCC_LicenciaWorkspace')};
+      
     
     this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.sidesheetData.selectedGAPAccount.GetEntity(), cols);
-    console.log("mostrando cuenta del tipo: " + this.sidesheetData.selectedGAPAccount.GetEntity().TypeName)   ;
+     console.log("mostrando cuenta del tipo: " + this.sidesheetData.selectedGAPAccount.GetEntity().TypeName)   ;
     /*
     this.dynamicTabs = (
       await this.tabService.getFittingComponents<TabItem>('accountSidesheet', (ext) => ext.inputData.checkVisibility(this.parameters))

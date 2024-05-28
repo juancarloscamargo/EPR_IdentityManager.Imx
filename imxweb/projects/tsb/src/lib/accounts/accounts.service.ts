@@ -56,14 +56,14 @@ import { PortalTargetsystemGapuser } from 'imx-api-gap';
 import { QerApiService } from 'qer';
 
 import { TargetSystemDynamicMethodService } from '../target-system/target-system-dynamic-method.service';
-import { AccountTypedEntity} from './account-typed-entity';
+import { AccountTypedEntity, GAPAccountTypedEntity} from './account-typed-entity';
 import { DbObjectKeyBase } from '../target-system/db-object-key-wrapper.interface';
 import { AcountsFilterTreeParameters as AccountsFilterTreeParameters } from './accounts.models';
 import { DataSourceToolbarExportMethod, BaseCdr, ImxTranslationProviderService } from 'qbm';
 import { GAPApiService } from '../gap-api-client.service';
 import { TranslateService } from '@ngx-translate/core';
 import {CCCApiService } from '../ccc-api-client.service';
-import { PortalTargetsystemGapuserNuevacuenta } from 'imx-api-ccc';
+import { PortalTargetsystemGapuserNuevacuenta, PortalTargetsystemGapuserNuevacuentaInteractiveWrapper } from 'imx-api-ccc';
 
 
 
@@ -136,9 +136,11 @@ export class AccountsService {
     return (await this.dynamicMethod.getById(AccountTypedEntity, { dbObjectKey, columnName })) as AccountTypedEntity;
   }
 
-  public async getGAPAccountInteractive(UID_GAPAccount: string): Promise<PortalTargetsystemGapuser> {
-    return (await this.gapClient.client.portal_targetsystem_gapuser_interactive_byid_get(UID_GAPAccount))  as PortalTargetsystemGapuser;
+  public async getGAPAccountInteractive(UID_GAPAccount: string): Promise<GAPAccountTypedEntity>{
+      return (await this.miapi.client.portal_targetsystem_gapuser_nuevaCuenta_interactive_byid_get(UID_GAPAccount)) as GAPAccountTypedEntity;
+  //  return (await this.miapi.client.portal_targetsystem_gapuser_nuevaCuenta_interactive_byid_get(UID_GAPAccount)) as GAPAccountTypedEntity;
   }
+
 
   public async getFilterOptions(): Promise<DataModelFilter[]> {
     return (await this.getDataModel()).Filters;
@@ -172,6 +174,9 @@ export class AccountsService {
  }
 
  
+ public async GAPSave(cuenta: PortalTargetsystemGapuserNuevacuenta):Promise<any>{
+  this.miapi.typedClient.PortalTargetsystemGapuserNuevacuentaInteractive.Put(cuenta);
+ }
  public async gapgetsku ():Promise<any>{
       return  await this.miapi.typedClient.PortalTargetsystemGappaskuGapuserlicense.Get();
         

@@ -7,7 +7,13 @@
             <mat-card class="imx-tab-card">
               <form [formGroup]="detailsFormGroup">
                 <imx-cdr-editor *ngFor="let cdr of cdrList" [cdr]="cdr" (controlCreated)="formArray.push($event)"> </imx-cdr-editor>
-                
+                <div *ngIf="cuentaligada">
+                  <eui-alert type="info" condensed="true" [colored]="true">
+                    <span> Esta cuenta está asociada a un usuario para sincronización de passwords </span>
+                  </eui-alert>
+                  
+                  
+                </div>
               </form>
             </mat-card>
           </div>

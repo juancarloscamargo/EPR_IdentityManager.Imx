@@ -241,7 +241,7 @@ export class DataExplorerAccountsComponent implements OnInit, OnDestroy, SideNav
       getParams.system = tsUid ? tsUid : undefined;
       getParams.container = cUid ? cUid : undefined;
 
-      const datosmios = await this.accountsService.gapgetdomains(this.navigationState);
+      
       const data = await this.accountsService.getAccounts(getParams);
       
       const exportMethod: DataSourceToolbarExportMethod = this.accountsService.exportAccounts(this.navigationState);

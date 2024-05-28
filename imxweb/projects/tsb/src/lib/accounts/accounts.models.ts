@@ -40,7 +40,7 @@ export interface AccountSidesheetData {
 export interface GAPAccountSidesheetData {
   GAPAccountId: string;
   UID_GAPAccount: string;
-  selectedGAPAccount: PortalTargetsystemGapuserNuevacuenta;
+  selectedGAPAccount: AccountTypedEntity;
   tableName: string;
   uidPerson: string;
 }
