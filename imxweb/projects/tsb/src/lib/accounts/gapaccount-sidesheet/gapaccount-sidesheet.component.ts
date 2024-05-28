@@ -127,14 +127,16 @@ export class GAPAccountSidesheetComponent implements OnInit {
  //   const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
  
     const cols = ['PrimaryEmail','IsSuspended','UID_Person'];
-    console.log("mostrando cuenta del tipo: " + this.sidesheetData.selectedGAPAccount.GetEntity().TypeName)   ;
+    
     this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.sidesheetData.selectedGAPAccount.GetEntity(), cols);
-
+    console.log("mostrando cuenta del tipo: " + this.sidesheetData.selectedGAPAccount.GetEntity().TypeName)   ;
+    /*
     this.dynamicTabs = (
       await this.tabService.getFittingComponents<TabItem>('accountSidesheet', (ext) => ext.inputData.checkVisibility(this.parameters))
     ).sort((tab1: TabItem, tab2: TabItem) => tab1.sortOrder - tab2.sortOrder);
 
-  //  this.setupIdentityManagerSync();
+    this.setupIdentityManagerSync();*/
+
   }
 
   
