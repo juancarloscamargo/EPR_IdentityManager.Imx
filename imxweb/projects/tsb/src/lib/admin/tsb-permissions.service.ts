@@ -41,10 +41,8 @@ export class TsbPermissionsService {
 
   public async isAdminGAP(): Promise<boolean> {
     if (isAdminGAP((await this.userService.getGroups()).map(userGroupInfo => userGroupInfo.Name))) {
-      console.log("soy admin");
      return true;
         } else {
-          console.log("soy un mojón");
           return false;
 
         }

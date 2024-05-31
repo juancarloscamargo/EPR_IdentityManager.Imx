@@ -120,7 +120,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     }
     
     this.authorityDataDeleted$ = this.dataHelper.authorityDataDeleted.subscribe(() => this.navigate());
-    this.treeDbWrapper = new ContainerTreeDatabaseWrapper(this.busyService, dataHelper);
+    //this.treeDbWrapper = new ContainerTreeDatabaseWrapper(this.busyService, dataHelper);
   }
 
   public async ngOnInit(): Promise<void> {
@@ -142,7 +142,8 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
       
     }
     
-    
+  this.dataModel = await this.accountsService.getGAPDataModel();
+  this.viewConfig = await this.viewConfigService.getInitialDSTExtension(this.dataModel, this.viewConfigPath);    
   this.displayedColumns = [
       this.entitySchemaGAPAccount.Columns.UID_Person,     
       this.entitySchemaGAPAccount.Columns.PrimaryEmail,
@@ -158,37 +159,75 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
       }
       ];
 
+    // Si soy admin añade los datos de licencia y ocupación
+    if (this.soyAdmin)
+      {
+        
+        this.displayedColumns.push({
+          ColumnName:"CCC_LicenciaWorkspace",
+          Display: "Licencia asignada",
+          Type: ValType.String
+        }, {
+          ColumnName:"CCC_EspacioMb",
+          Display: "Ocupación (Gb)",
+          Type: ValType.Int
+        },)
+      } else  //Y si no soy admin, quita de la ordenación las columnas que no nos interesan
+      {
+        this.dataModel.Properties = this.dataModel.Properties.filter(propiedad => ['CreationTime','CCC_UltimaConexion',].includes(propiedad.Property.ColumnName));
+      };
+
     
 
     const isBusy = this.busyService.beginBusy();
-
+    console.log("Inicio búsqueda...");
   try {
-    this.filterOptions = await this.accountsService.getFilterOptions();
-    this.dataModel = await this.accountsService.getGAPDataModel();
-    this.viewConfig = await this.viewConfigService.getInitialDSTExtension(this.dataModel, this.viewConfigPath);
+    //this.filterOptions = await this.accountsService.getFilterOptions();
     
+    const myexpressions=[];
+
+    //Crear un array de expresiones basadas en los dominios cargados en mydominios. Usar push y asignarlo al filtrocuentas.
+
+    const mydominios = await this.accountsService.gapgetdomains(this.navigationState);
+  
+    if (await this.accountsService.adminGAP()) {
+      myexpressions.push(
+        { LogOperator:LogOp.AND,
+          Operator:'LIKE',
+          PropertyId: 'PrimaryEmail',
+          Value: "@"
+        }
+      )}
+    else {
+      mydominios.forEach(dominio =>  {
+     
+        myexpressions.push(
+          { LogOperator:LogOp.AND,
+            Operator:'LIKE',
+            PropertyId: 'PrimaryEmail',
+            Value: "@" + dominio
+          }
+        )
+      });
+
+
+    }
+    
+    
+    this.filtrocuentas = [{
+      Type:FilterType.Expression,
+      Expression: {
+         LogOperator:LogOp.OR,
+         Expressions: myexpressions
+         
+      }
+    }
+    ];
+
+
   
 } finally {
  isBusy.endBusy();
-}
-if (this.applyIssuesFilter && !this.issuesFilterMode) {
-  const orphanedFilter = this.filterOptions.find((f) => {
-    return f.Name === 'orphaned';
-  });
-
-  if (orphanedFilter) {
-    orphanedFilter.InitialValue = '1';
-  }
-}
-
-if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
-  const managerDiscrepencyFilter = this.filterOptions.find((f) => {
-    return f.Name === 'managerdiscrepancy';
-  });
-
-  if (managerDiscrepencyFilter) {
-    managerDiscrepencyFilter.InitialValue = '1';
-  }
 }
     
     await this.navigate();
@@ -278,74 +317,17 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
   private async navigate(): Promise<void> {
     const isBusy = this.busyService.beginBusy();
     const getParams: GetAccountsOptionalParameters = this.navigationState;
-    
+    console.log("Inicio carga de cuentas");
 
     try {
       
       this.logger.debug(this, `Retrieving accounts list`);
       this.logger.trace('Navigation settings', this.navigationState);
-      const tsUid = this.dataExplorerFilters.selectedTargetSystemUid;
+      //const tsUid = this.dataExplorerFilters.selectedTargetSystemUid;
       //const tsUid = "f40c77ba-3566-484b-8671-edc2288e15cc";
-      const cUid = this.dataExplorerFilters.selectedContainerUid;
-      getParams.system = tsUid ? tsUid : undefined;
-      getParams.container = cUid ? cUid : undefined;
-      const myexpressions=[];
-
-      //Crear un array de expresiones basadas en los dominios cargados en mydominios. Usar push y asignarlo al filtrocuentas.
-
-      const mydominios = await this.accountsService.gapgetdomains(this.navigationState);
-    
-      if (await this.accountsService.adminGAP()) {
-        myexpressions.push(
-          { LogOperator:LogOp.AND,
-            Operator:'LIKE',
-            PropertyId: 'PrimaryEmail',
-            Value: "@"
-          }
-        )}
-      else {
-        mydominios.forEach(dominio =>  {
-       
-          myexpressions.push(
-            { LogOperator:LogOp.AND,
-              Operator:'LIKE',
-              PropertyId: 'PrimaryEmail',
-              Value: "@" + dominio
-            }
-          )
-        });
-  
-
-      }
-      
-      
-      this.filtrocuentas = [{
-        Type:FilterType.Expression,
-        Expression: {
-           LogOperator:LogOp.OR,
-           Expressions: myexpressions
-           
-        }
-      }
-      ];
-
-      // Si soy admin añade los datos de licencia y ocupación
-      if (this.soyAdmin)
-        {
-          
-          this.displayedColumns.push({
-            ColumnName:"CCC_LicenciaWorkspace",
-            Display: "Licencia asignada",
-            Type: ValType.String
-          }, {
-            ColumnName:"CCC_EspacioMb",
-            Display: "Ocupación (Gb)",
-            Type: ValType.Int
-          },)
-        } else  //Y si no soy admin, quita de la ordenación las columnas que no nos interesan
-        {
-          this.dataModel.Properties = this.dataModel.Properties.filter(propiedad => ['CreationTime','CCC_UltimaConexion',].includes(propiedad.Property.ColumnName));
-        };
+      //const cUid = this.dataExplorerFilters.selectedContainerUid;
+      //getParams.system = tsUid ? tsUid : undefined;
+      //getParams.container = cUid ? cUid : undefined;
         
       //this.navigationState.withProperties = "CCC_EspacioMb,CCC_UltimaConexion,CCC_LicenciaWorkspace,UID_GAPUser,CreationTime";
       this.navigationState.filter = this.filtrocuentas;
@@ -355,7 +337,7 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
       const data = await this.accountsService.getGAPAccounts(this.navigationState);
       //const data = await this.accountsService.ObtenerNuevasCuentas(this.navigationState);
 
-      const datoslicencias = await this.accountsService.gapgetsku();
+      //const datoslicencias = await this.accountsService.gapgetsku();
       
       
       
@@ -370,21 +352,7 @@ if (this.applyIssuesFilter && this.issuesFilterMode === 'manager') {
         dataSource: data,
         entitySchema: this.entitySchemaGAPAccount,
         navigationState: this.navigationState,
-        filters: this.filterOptions,
-        filterTree: {
-          filterMethode: async (parentkey) => {
-            return this.accountsService.getFilterTree({
-              parentkey,
-              container: getParams.container,
-              system: getParams.system,
-              filter: getParams.filter,
-            });
-          },
-          multiSelect: false,
-        },
-        dataModel: this.dataModel,
-        viewConfig: this.viewConfig,
-        exportMethod,
+        viewConfig: this.viewConfig
       };
       this.tableName = data.tableName;
       this.logger.debug(this, `Head at ${data.Data.length + this.navigationState.StartIndex} of ${data.totalCount} item(s)`);

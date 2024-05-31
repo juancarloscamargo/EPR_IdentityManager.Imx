@@ -73,7 +73,7 @@ export class AppService {
   ) { }
 
   public async init(): Promise<void> {
-    this.showSplash();
+    //this.showSplash();
     await this.config.init(environment.clientUrl);
 
     this.translateService.addLangs(this.config.Config.Translation.Langs);
