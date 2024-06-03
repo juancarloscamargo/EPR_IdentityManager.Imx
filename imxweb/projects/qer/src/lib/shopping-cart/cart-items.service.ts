@@ -153,6 +153,8 @@ export class CartItemsService {
       cartItems.map(async (cartItem) => {
         if (filter == null || filter(cartItem)) {
           try {
+            //Elimina la marca de multicliente. Lo dejamos preparado por si vamos a la opción SHoppingCartItem en lugar de PWO
+            //cartItem.GetEntity().GetColumn("CustomProperty10").PutValue("");
             await this.qerClient.client.portal_cartitem_delete(cartItem.GetEntity().GetKeys()[0]);
             this.logger.trace(this, 'cart item removed:', cartItem);
           } catch (error) {
@@ -248,6 +250,7 @@ export class CartItemsService {
             this.logger.debug(this, `${found.typedEntity.GetEntity().GetDisplay} saved`);
             
           } else {
+            
             await this.removeItems([found.typedEntity]);
             result = result - 1;
             this.logger.debug(this, `${found.typedEntity.GetEntity().GetDisplay} removed`);
