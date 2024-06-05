@@ -288,12 +288,12 @@ export class CartItemsService {
         const producto = item.entity.GetEntity().GetColumn("UID_AccProduct").GetDisplayValue();          
         const uidprodbasequery = await this.qerClient.typedClient.PortalAdminResourcesQerreuseus.Get({
             filter: [{'ColumnName':'Ident_QERReuseUS','Type':FilterType.Compare,'Value1':producto},
-                 {'ColumnName':'UID_QERResourceType','Type':FilterType.Compare,'Value2':'44ddcbce-e85b-459e-8ccc-c25135a1a0db'}
+                 {'ColumnName':'UID_QERResourceType','Type':FilterType.Compare,'Value2':'9434a518-67a7-4ba5-a696-0cb7e69c25f6'}
                 ]
         });
         console.log("le casco el multicliente");
         if (uidprodbasequery.totalCount > 0) {
-          item.entity.GetEntity().GetColumn("CustomProperty10").PutValue("INIT_MULTICLIENTE");
+          item.entity.GetEntity().GetColumn("CustomProperty09").PutValue("INIT_MULTICLIENTE");
         
         }
       
