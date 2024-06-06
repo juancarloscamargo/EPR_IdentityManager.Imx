@@ -291,8 +291,9 @@ export class CartItemsService {
                  {'ColumnName':'UID_QERResourceType','Type':FilterType.Compare,'Value2':'9434a518-67a7-4ba5-a696-0cb7e69c25f6'}
                 ]
         });
-        console.log("le casco el multicliente");
+        
         if (uidprodbasequery.totalCount > 0) {
+          console.log("le casco el multicliente");
           item.entity.GetEntity().GetColumn("CustomProperty09").PutValue("INIT_MULTICLIENTE");
         
         }
