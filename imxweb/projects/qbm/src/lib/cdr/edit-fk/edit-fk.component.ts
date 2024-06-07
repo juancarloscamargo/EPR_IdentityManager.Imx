@@ -54,12 +54,17 @@ import { ForeignKeySelection } from '../../fk-advanced-picker/foreign-key-select
 import { Candidate } from '../../fk-advanced-picker/candidate.interface';
 import { MetadataService } from '../../base/metadata.service';
 import { FkHierarchicalDialogComponent } from '../../fk-hierarchical-dialog/fk-hierarchical-dialog.component';
-import { LdsReplacePipe } from '../../lds-replace/lds-replace.pipe';
 
 /**
- * A component for viewing / editing foreign key relations
+ * Provides a {@link CdrEditor | CDR editor} for editing / viewing foreign key value columns.
+ * 
+ * There are two methods for selecting values available:
+ * <ol>
+ * <li>using an auto complete control - this is used for a flat list, containing values from a single table. </li>
+ * <li>by using a 'select' / 'change' button - this is used by hierarchical listings or elements from multiple tables.</li>
+ * </ol>
+ * When set to read-only, it uses a {@link ViewPropertyComponent | view property component} to display the content.
  */
-// tslint:disable-next-line: max-classes-per-file
 @Component({
   selector: 'imx-edit-fk',
   templateUrl: './edit-fk.component.html',
@@ -67,10 +72,17 @@ import { LdsReplacePipe } from '../../lds-replace/lds-replace.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 /**
- * A component for viewing / editing foreign key relations
+ * A component for viewing / editing foreign key relations.
  */
 export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnInit {
+  /**
+   * A subject for triggering an update of the editor.
+   */
   public readonly updateRequested = new Subject<void>();
+
+  /**
+   * Indicator that the component is loading data from the server, or has a candidate list.
+   */
   public get hasCandidatesOrIsLoading(): boolean {
     return (
       this.candidatesTotalCount > 0 ||
@@ -83,15 +95,50 @@ export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnI
     );
   }
 
+  /**
+   * The form control associated with the editor.
+   */
   public readonly control = new UntypedFormControl(undefined);
+
+  /**
+   * The container that wraps the column functionality.
+   */
   public readonly columnContainer = new EntityColumnContainer<string>();
+
+  /**
+   * @ignore Only used in template.
+   */
   public readonly pageSize = 20;
+
+  /**
+   * A list of possible candidates, that can be selected.
+   */
   public candidates: Candidate[];
+
+  /**
+   * Indicator that the component is loading data from the server.
+   */
   public loading = false;
+
+  /**
+   * The table, the user is currently selecting items from.
+   * It is possible to choose elements from different tables at the same time.
+   */
   public selectedTable: IForeignKeyInfo;
+
+  /**
+   * Indicator, whether the candidate data is hierarchical or not.
+   */
   public isHierarchical: boolean;
+
+  /**
+   * The number of possible candidates
+   */
   public candidatesTotalCount: number;
 
+  /**
+   * Event that is emitted, after a value has been changed.
+   */
   public readonly valueHasChanged = new EventEmitter<ValueHasChangedEventArg>();
 
   private parameters: CollectionLoadParameters = { PageSize: this.pageSize, StartIndex: 0 };
@@ -102,19 +149,18 @@ export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnI
 
   @ViewChild('viewport') private viewport: CdkVirtualScrollViewport;
   /**
-   * Creates a new EditFkComponent for column dependent reference with a foreign key relation.
-   * @param logger Log service.
-   * @param sidesheet Dialog to open the pickerdialog for selecting an object.
-   * @param metadataProvider Service providing table meta data
+   * Creates a new EditFkComponent.
+   * @param logger The log service, that is used for logging.
+   * @param sidesheet Side sheet, that opens the picker dialog for selecting an object.
+   * @param metadataProvider Service providing table meta data.
    */
   constructor(
     private readonly logger: ClassloggerService,
     private readonly sidesheet: EuiSidesheetService,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly translator: TranslateService,
-    private readonly ldsReplace: LdsReplacePipe,
     public readonly metadataProvider: MetadataService,
-    private readonly errorHandler: ErrorHandler
+    private readonly errorHandler: ErrorHandler,
   ) {
     this.subscribers.push(
       this.control.valueChanges.pipe(debounceTime(500)).subscribe(async (keyword) => {
@@ -124,15 +170,21 @@ export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnI
         }
 
         return this.search(keyword);
-      })
+      }),
     );
   }
 
+  /**
+   * Initializes the candidate list, after the 'OnInit' hook is triggered.
+   */
   public async ngOnInit(): Promise<void> {
     return this.initCandidates();
-    // Muss leider immer gemacht werden, damit klar ist, ob es sich um eine hierarchische Ansicht handelt oder nicht
+    // Unfortunately this is mandatory, to decide, if the component is hierarchical or not
   }
 
+  /**
+   * Initializes the viewport for dynamic scrolling, after the 'AfterViewInit' hook is triggered.
+   */
   public async ngAfterViewInit(): Promise<void> {
     if (this.columnContainer && this.columnContainer.canEdit && this.viewport) {
       // Give a debounce to the stream so we don't get multiple calls and lose data
@@ -151,31 +203,37 @@ export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnI
             this.viewport.checkViewportSize();
             this.changeDetectorRef.detectChanges();
           }
-        })
+        }),
       );
     }
   }
 
+  /**
+   * Unsubscribes all events, after the 'OnDestroy' hook is triggered.
+   */
   public ngOnDestroy(): void {
     this.subscribers.forEach((s) => s.unsubscribe());
   }
 
+  /**
+   * Reinitialize the candidate list, if the input is focused.
+   */
   public async inputFocus(): Promise<void> {
     if (!this.candidates?.length && !this.loading) {
       await this.initCandidates();
     }
   }
 
+  /**
+   * Handles the control value and displays it, when the auto complete control is opened.
+   */
   public async onOpened(): Promise<void> {
-    if (this.control.value) {
-      // Use the stashed values if we already have a selected value
-      this.parameters = this.savedParameters ?? { PageSize: this.pageSize, StartIndex: 0 };
-      if ((this.savedCandidates?.length ?? 0) > 0) {
-        this.candidates = this.savedCandidates;
-      }
+    // Use the stashed values if we already have a selected value
+    this.parameters = this.savedParameters ?? { PageSize: this.pageSize, StartIndex: 0 };
+    if ((this.savedCandidates?.length ?? 0) > 0) {
+      this.candidates = this.savedCandidates;
     } else if (this.parameters.search || this.parameters.filter || this.control.value == null) {
-      // If we don't have a chosen value, then we have residual values, reset them and update
-      await this.updateCandidates({ search: undefined, filter: undefined }, false);
+      await this.updateCandidates({ search: undefined, filter: undefined, StartIndex: 0 }, false);
     }
 
     if (this.viewport) {
@@ -185,17 +243,29 @@ export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnI
     }
   }
 
+  /**
+   * @ignore Only used in template.
+   * Gets the display of a candidate.
+   * @param candidate The candidate object.
+   * @returns The display of the candidate object.
+   */
   public getDisplay(candidate: Candidate): string {
     return candidate ? candidate.DisplayValue : undefined;
   }
 
+  /**
+   * Writes the value, if a new one is selected in the auto complete control.
+   * @param event The MatAutocompleteSelectedEvent, that was triggered.
+   */
   public async optionSelected(event: MatAutocompleteSelectedEvent): Promise<void> {
-    // Save these parameters for later use, set start index back to zero
-    this.savedParameters = this.parameters;
-    this.savedCandidates = this.candidates;
     return this.writeValue(event.option.value);
   }
 
+  /**
+   * Removes all the assignments and writes the 'empty' value to the column.
+   * Afterward it resets all request parameter and updates the candidate list.
+   * @param event The event, that was emitted.
+   */
   public async removeAssignment(event?: Event): Promise<void> {
     if (event) {
       event.stopPropagation();
@@ -219,16 +289,24 @@ export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnI
     */
   }
 
+  /**
+   * Is called, after the auto complete closes and writes the value to the column.
+   * @param event The event, that was emitted.
+   */
   public close(event?: any): void {
     if (this.control.value == null || typeof this.control.value === 'string') {
       this.logger.debug(this, 'autoCompleteClose no match - reset to previous value', event);
       this.control.setValue(this.getValueStruct(), { emitEvent: false });
     }
+    // Save these parameters for later use, set start index back to zero
+    this.savedParameters = this.parameters;
+    this.savedCandidates = this.candidates;
   }
 
   /**
-   * @ignore
-   * Opens a dialog for selecting an object
+   * Opens a dialog for selecting an object.
+   * This is used, if the data is hierarchical or multiple tabes are available.
+   * @param event The event, that was emitted.
    */
   public async editAssignment(event?: Event): Promise<void> {
     if (event) {
@@ -269,7 +347,8 @@ export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnI
   }
 
   /**
-   * Binds a column dependent reference to the component
+   * Binds a column dependent reference to the component.
+   * Subscribes to subjects from the column dependent reference and its container.
    * @param cdref a column dependent reference
    */
   public bind(cdref: ColumnDependentReference): void {
@@ -282,7 +361,7 @@ export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnI
           cdref.minlengthSubject.subscribe((elem) => {
             this.setControlValue();
             this.changeDetectorRef.detectChanges();
-          })
+          }),
         );
       }
 
@@ -300,7 +379,7 @@ export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnI
                 this,
                 `Control (${this.columnContainer.name}) set to new value:`,
                 this.columnContainer.value,
-                this.control.value
+                this.control.value,
               );
               this.candidates = [];
               this.setControlValue();
@@ -310,7 +389,7 @@ export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnI
             }
           }
           this.valueHasChanged.emit({ value: this.control.value });
-        })
+        }),
       );
 
       this.subscribers.push(
@@ -326,7 +405,7 @@ export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnI
             }
             this.valueHasChanged.emit({ value: this.control.value });
           });
-        })
+        }),
       );
       this.logger.trace(this, 'Control initialized', this.control.value);
     } else {
@@ -345,7 +424,7 @@ export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnI
       }
       this.selectedTable = table || fkRelations[0];
 
-      this.metadataProvider.update(fkRelations.map((fkr) => fkr.TableName));
+      this.metadataProvider.updateNonExisting(fkRelations.map((fkr) => fkr.TableName));
     }
     this.control.setValue(this.getValueStruct(), { emitEvent: false });
 
@@ -377,8 +456,8 @@ export class EditFkComponent implements CdrEditor, AfterViewInit, OnDestroy, OnI
   }
 
   /**
-   * updates the value for the CDR
-   * @param value the new value
+   * Updates the value for the CDR.
+   * @param value The new value struct, that should be used as the new control value.
    */
   private async writeValue(value: ValueStruct<string>): Promise<void> {
     this.logger.debug(this, 'writeValue called with value', value);
