@@ -183,12 +183,20 @@ export class AccountsService {
 }
 
   
- public async adminGAP():Promise<boolean>{
-  return  await this.permisosgap.isAdminGAP();
+ public async esAdminPersonas():Promise<boolean>{
+  return  await this.permisosgap.esAdminPersonas();
  }
 
-
- public async getgapuser():Promise<any> {
+ public async operadorSD():Promise<boolean>{
+  return await this.permisosgap.esOperadorSD();
+ }
+ 
+ public async esAdminEPR():Promise<boolean>{
+  return await this.permisosgap.esAdminEPR();
+ }
+ 
+ 
+  public async getgapuser():Promise<any> {
     
 
   

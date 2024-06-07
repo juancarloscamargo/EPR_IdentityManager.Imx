@@ -131,7 +131,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
   
   private async setup(): Promise<void> {
  //   const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
-    this.soyadmin = await this.accountsService.adminGAP();
+    this.soyadmin = await this.accountsService.esAdminEPR();
 
     this.cuentaligada = false;
     

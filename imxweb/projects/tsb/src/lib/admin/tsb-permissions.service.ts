@@ -27,7 +27,8 @@
 import { Injectable } from '@angular/core';
 
 import { UserModelService } from 'qer';
-import { isAdminGAP, isTsbNameSpaceAdminBase } from './tsb-permissions-helper';
+import { esOperadorSD, isAdminGAP, isTsbNameSpaceAdminBase, esAdminEPR, esAdminPersonas } from './tsb-permissions-helper';
+
 
 @Injectable({
   providedIn: 'root'
@@ -47,4 +48,19 @@ export class TsbPermissionsService {
 
         }
   }
+
+  public async esOperadorSD(): Promise<boolean> {
+    return esOperadorSD((await this.userService.getGroups()).map(userGroupInfo => userGroupInfo.Name));
+  }
+
+  public async esAdminEPR(): Promise<boolean> {
+    return esAdminEPR((await this.userService.getFeatures()).Features);
+  }
+
+  public async esAdminPersonas(): Promise<boolean> {
+    return esAdminPersonas((await this.userService.getGroups()).map(userGroupInfo => userGroupInfo.Name));
+  }
+
 }
+
+

@@ -31,3 +31,18 @@ export function isTsbNameSpaceAdminBase(groups: string[]): boolean {
 export function isAdminGAP(groups: string[]): boolean {
   return groups.find(item => item.toUpperCase() === 'GAP_4_NAMESPACEADMIN_GSUITE') != null;
 }
+
+export function esOperadorSD(groups: string[]): boolean {
+  return groups.find(item => item.toUpperCase() === 'CCC_EPRINSA_PERMS_GAP') != null;
+
+  
+}
+
+export function esAdminPersonas(groups:string[]): boolean {
+  return groups.find(item=> item.toUpperCase() === 'VI_4_ALLMANAGER') != null;
+}
+
+
+export function esAdminEPR(features: string[]): boolean {
+  return features.find((item) => item === 'Portal_UI_AdmEprinsa') != null;
+}

@@ -74,8 +74,11 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   public data: any;
   public busyService = new BusyService();
   public contextId = HELP_CONTEXTUAL.DataExplorerAccounts;
-  public soyAdmin:boolean = false;
+  public esAdminPersonas:boolean = false;
+  public esAdminEPR:boolean = false;
+  
   public algunerror:boolean = false;
+  public dominios:String[];
 
 
   private displayedColumns: IClientProperty[] = [];
@@ -137,11 +140,17 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
 
     
     
-    if ( await this.accountsService.adminGAP()) {
-      this.soyAdmin=true;
-      
-    }
     
+    
+    if ( await this.accountsService.esAdminEPR()) {
+      this.esAdminEPR=true;
+    }
+
+    if ( await this.accountsService.esAdminPersonas()) {
+      this.esAdminPersonas=true;
+    }
+
+
   this.dataModel = await this.accountsService.getGAPDataModel();
   this.viewConfig = await this.viewConfigService.getInitialDSTExtension(this.dataModel, this.viewConfigPath);    
   this.displayedColumns = [
@@ -160,7 +169,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
       ];
 
     // Si soy admin añade los datos de licencia y ocupación
-    if (this.soyAdmin)
+    if (this.esAdminEPR)
       {
         
         this.displayedColumns.push({
@@ -188,9 +197,9 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
 
     //Crear un array de expresiones basadas en los dominios cargados en mydominios. Usar push y asignarlo al filtrocuentas.
 
-    const mydominios = await this.accountsService.gapgetdomains(this.navigationState);
+    this.dominios = await this.accountsService.gapgetdomains(this.navigationState);
   
-    if (await this.accountsService.adminGAP()) {
+    if (this.esAdminEPR) {
       myexpressions.push(
         { LogOperator:LogOp.AND,
           Operator:'LIKE',
@@ -199,7 +208,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
         }
       )}
     else {
-      mydominios.forEach(dominio =>  {
+      this.dominios.forEach(dominio =>  {
      
         myexpressions.push(
           { LogOperator:LogOp.AND,
@@ -412,7 +421,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
         width: 'max(650px, 65%)',
         disableClose: true,
         icon: 'contactinfo',
-        data: gapbase
+        data: {datos:gapbase, soyAdminEPR: this.esAdminEPR , soyAdminPersonas: this.esAdminPersonas, dominios:this.dominios}
         
       })
       .afterClosed()

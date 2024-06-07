@@ -62,12 +62,13 @@ export class CreateGAPAccountComponent implements OnInit {
   public reportDownload: EuiDownloadOptions;
   public neverConnectFormControl = new UntypedFormControl();
   public parameters: { objecttable: string; objectuid: string };
+  
 
   public dynamicTabs: TabItem[] = [];
 
   constructor(
     formBuilder: UntypedFormBuilder,
-    @Inject(EUI_SIDESHEET_DATA) public  data: PortalTargetsystemGapuserNuevacuenta,
+    @Inject(EUI_SIDESHEET_DATA) public  data: {datos:PortalTargetsystemGapuserNuevacuenta, soyAdminEPR:boolean, soyAdminPersonas:boolean, dominios:String[]},
     private readonly logger: ClassloggerService,
     private readonly busyService: EuiLoadingService,
     private readonly snackbar: SnackBarService,
@@ -80,6 +81,7 @@ export class CreateGAPAccountComponent implements OnInit {
     private readonly tabService: ExtService,
     private cdrFactory: CdrFactoryService
   ) {
+    
     this.detailsFormGroup = new UntypedFormGroup({ formArray: formBuilder.array([]) });
 
     //this.parameters = {
@@ -104,7 +106,9 @@ export class CreateGAPAccountComponent implements OnInit {
       this.logger.debug(this, `Saving identity change`);
       const overlayRef = this.busyService.show();
       try {
-        await this.data.GetEntity().Commit(true);
+        //Le cascamos el customer 
+        this.data.datos.GetEntity().GetColumn("UID_GAPCustomer").PutValue("387aa29b-4242-46f2-adba-1f53154defd9");
+        await this.data.datos.GetEntity().Commit(true);
         this.detailsFormGroup.markAsPristine();
         this.snackbar.open({ key: '#LDS#The user account has been successfully saved.' });
         this.sidesheetRef.close(true);
@@ -125,9 +129,12 @@ export class CreateGAPAccountComponent implements OnInit {
   
   private async setup(): Promise<void> {
  //   const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
-    const cols = ['PrimaryEmail','UID_Person','IsSuspended'];
     
-    this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.data.GetEntity(),cols);
+    const cols = ['PrimaryEmail','UID_Person'];
+    if (this.data.soyAdminEPR )  cols.push('CCC_LicenciaWorkspace');
+      
+
+    this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.data.datos.GetEntity(),cols);
 
     this.dynamicTabs = (
       await this.tabService.getFittingComponents<TabItem>('accountSidesheet', (ext) => ext.inputData.checkVisibility(this.parameters))
