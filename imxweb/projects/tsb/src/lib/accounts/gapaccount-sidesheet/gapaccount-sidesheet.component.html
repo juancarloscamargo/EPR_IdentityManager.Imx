@@ -4,22 +4,23 @@
       <ng-template matTabContent>
         <div eui-sidesheet-content class="governance-sidesheet__tab-content">
           <div class="governance-sidesheet__tab-content-body">
+            
             <mat-card class="imx-tab-card">
+              <div *ngIf="cuentaligada">
+                <eui-alert type="info" condensed="true" [colored]="true">
+                  <span> Esta cuenta está asociada a un usuario para sincronización de passwords </span>
+                </eui-alert>              
+                <p></p>                  
+              </div>
               <form [formGroup]="detailsFormGroup">
                 <imx-cdr-editor *ngFor="let cdr of cdrList" [cdr]="cdr" (controlCreated)="formArray.push($event)"> </imx-cdr-editor>
-                <div *ngIf="cuentaligada">
-                  <eui-alert type="info" condensed="true" [colored]="true">
-                    <span> Esta cuenta está asociada a un usuario para sincronización de passwords </span>
-                  </eui-alert>
-                  
-                  
-                </div>
+                
               </form>
             </mat-card>
           </div>
           <div eui-sidesheet-actions>
-            <button mat-stroked-button color="primary" [euiDownload]="reportDownload" class="justify-start">
-              <span translate>#LDS#Download report</span>
+            <button mat-button style="float:left;" [disabled]="(this.cuentaligada || !detailsFormGroup.pristine)" (click)="reinicio()">
+              <span translate>#LDS#Reiniciar contraseña</span>
             </button>
             <button mat-button (click)="cancel()">
               <span translate>#LDS#Cancel</span>

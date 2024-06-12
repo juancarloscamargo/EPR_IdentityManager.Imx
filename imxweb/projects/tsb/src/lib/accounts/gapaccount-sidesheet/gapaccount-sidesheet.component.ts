@@ -25,6 +25,7 @@
  */
 
 import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import {
   ColumnDependentReference,
@@ -35,6 +36,7 @@ import {
   TabItem,
   ExtService,
   CdrFactoryService,
+  MessageDialogComponent
 } from 'qbm';
 import { DbObjectKey, IEntity } from 'imx-qbm-dbts';
 import { EuiLoadingService, EuiSidesheetRef, EUI_SIDESHEET_DATA } from '@elemental-ui/core';
@@ -46,7 +48,8 @@ import { EuiDownloadOptions } from '@elemental-ui/core';
 import { AccountsReportsService } from '../accounts-reports.service';
 import { AccountTypedEntity } from '../account-typed-entity';
 import { PortalTargetsystemGapuser } from 'imx-api-gap';
-import { PortalTargetsystemGapuserNuevacuenta } from 'imx-api-ccc';
+import { PortalTargetsystemGapuserNuevacuenta,  } from 'imx-api-ccc';
+
 
 @Component({
   selector: 'imx-account-sidesheet',
@@ -64,6 +67,8 @@ export class GAPAccountSidesheetComponent implements OnInit {
   public reportDownload: EuiDownloadOptions;
   public neverConnectFormControl = new UntypedFormControl();
   public parameters: { objecttable: string; objectuid: string };
+  
+
 
   public dynamicTabs: TabItem[] = [];
 
@@ -80,7 +85,8 @@ export class GAPAccountSidesheetComponent implements OnInit {
     private readonly accountsService: AccountsService,
     private readonly reports: AccountsReportsService,
     private readonly tabService: ExtService,
-    private cdrFactory: CdrFactoryService
+    private cdrFactory: CdrFactoryService,
+    private readonly dialog:MatDialog,
   ) {
     this.detailsFormGroup = new UntypedFormGroup({ formArray: formBuilder.array([]) });
 
@@ -93,12 +99,37 @@ export class GAPAccountSidesheetComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.cuentaligada = false;
+    console.log("Usuario asociado: " + this.sidesheetData.selectedGAPAccount.GetEntity().GetColumn("UID_Person").GetValue()) ;
+    if (this.sidesheetData.selectedGAPAccount.GetEntity().GetColumn("UID_Person").GetValue().length > 0) 
+      {this.cuentaligada=true;
+       
+      }
+
     
+
     this.setup();
   }
 
   public cancel(): void {
     this.sidesheetRef.close();
+  }
+
+  public async reinicio():Promise<void> {
+    const clave =  await this.accountsService.ResetGAP(this.sidesheetData.GAPAccountId);
+    const dialogRef = this.dialog.open(MessageDialogComponent, {
+      data: {
+        ShowOk: true,
+        Title: 'Contraseña cambiada para la cuenta Google',
+        Message: 'Se ha generado la nueva contraseña : ' + clave,
+      },
+      panelClass: 'imx-messageDialog',
+    });
+
+    await dialogRef.afterClosed().toPromise();
+    // reload data
+    
+    
   }
 
   
@@ -131,10 +162,10 @@ export class GAPAccountSidesheetComponent implements OnInit {
   
   private async setup(): Promise<void> {
  //   const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
+    
+
     this.soyadmin = await this.accountsService.esAdminEPR();
 
-    this.cuentaligada = false;
-    
     const cols = ['IsSuspended','GivenName','FamilyName', 'Aliases','IsEnrolledIn2Sv','RecoveryEmail','RecoveryPhone','UID_Person','IncludeInGlobalAddressList'];
     if (this.soyadmin) { cols.push('CCC_LicenciaWorkspace')};
       

@@ -306,7 +306,7 @@ export class DataExplorerIdentitiesComponent implements OnInit, OnDestroy, SideN
         Display: "CCC_DepartmentFullPath"
       }
     ];
-    console.log("Columna añadida");
+    
     if (!this.isAdmin) {
       this.displayedColumns.push(
         this.entitySchemaPersonReports.Columns.IsExternal

@@ -42,7 +42,8 @@ import { PortalTargetsystemGapuserNuevacuenta } from 'imx-api-ccc';
 
 
 @Component({
-  selector: 'imx-gapaccounts',
+  //selector: 'imx-gapaccounts',
+  selector: 'imx-data-explorer-accounts',
   templateUrl: './gapaccounts.component.html',
   styleUrls: ['./gapaccounts.component.scss']
 })
@@ -50,6 +51,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   @Input() public applyIssuesFilter = false;
   @Input() public issuesFilterMode: string;
   @Input() public targetSystemData?: PortalTargetsystemUnsSystem[];
+  @Input() public showFullscreen = true;
   
 
   @ViewChild('dataExplorerFilters', { static: false }) public dataExplorerFilters: DataExplorerFiltersComponent;
@@ -168,7 +170,8 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
       }
       ];
 
-    // Si soy admin añade los datos de licencia y ocupación
+    
+      // Si soy admin añade los datos de licencia y ocupación
     if (this.esAdminEPR)
       {
         
@@ -233,13 +236,13 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     }
     ];
 
-
+    await this.navigate();
   
 } finally {
  isBusy.endBusy();
 }
     
-    await this.navigate();
+
   }
 
   public ngOnDestroy(): void {
@@ -279,10 +282,10 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
 
     const unsDbObjectKey = DbObjectKey.FromXml(GAPAccount.XObjectKey.value);
     data = {
-      GAPAccountId: "lala",
-      UID_GAPAccount: "lala",
+      GAPAccountId: GAPAccount.XObjectKey.value,
+      UID_GAPAccount: "",
       selectedGAPAccount: await this.accountsService.getAccountInteractive(unsDbObjectKey,GAPAccount.UID_GAPUser.value),
-      uidPerson: "lala",
+      uidPerson: "",
       tableName: this.tableName,
     };
 
@@ -292,7 +295,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     const isBusy = this.busyService.beginBusy();
     isBusy.endBusy();
     
-    const cuentaint= await this.accountsService.getAccountInteractive(unsDbObjectKey,GAPAccount.UID_GAPUser.value);
+    //const cuentaint= await this.accountsService.getAccountInteractive(unsDbObjectKey,GAPAccount.UID_GAPUser.value);
     await this.viewAccount(data);
   }
 

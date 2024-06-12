@@ -183,6 +183,10 @@ export class AccountsService {
 }
 
   
+ public async ResetGAP(GAPXObjectKey: string):Promise<string> {
+  return await this.miapi.client.portal_ResetGAP_get({GAPXObjectKey:GAPXObjectKey});
+ }
+
  public async esAdminPersonas():Promise<boolean>{
   return  await this.permisosgap.esAdminPersonas();
  }

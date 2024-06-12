@@ -48,6 +48,7 @@ import { ObjectHyperviewModule } from 'qer';
 import { DataExplorerGapaccountsComponent } from './gapaccounts/gapaccounts.component';
 import { GAPAccountSidesheetComponent } from './gapaccount-sidesheet/gapaccount-sidesheet.component';
 import { CreateGAPAccountComponent } from './create-gapaccount/create-gapaccount.component';
+import { VisorpassComponent } from './gapaccount-sidesheet/visorpass.component';
 
 
 @NgModule({
@@ -58,7 +59,8 @@ import { CreateGAPAccountComponent } from './create-gapaccount/create-gapaccount
     TargetSystemReportComponent,
     DataExplorerAccountsComponent,
     GAPAccountSidesheetComponent,
-    CreateGAPAccountComponent
+    CreateGAPAccountComponent,
+    VisorpassComponent
   ],
   imports: [
     DataFiltersModule,
