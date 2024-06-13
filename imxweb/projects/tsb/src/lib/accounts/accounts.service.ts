@@ -91,7 +91,8 @@ export class AccountsService {
   }
 
   public get gapaccountSchema(): EntitySchema {
-    return this.gapClient.typedClient.PortalTargetsystemGapuser.GetSchema();
+    //return this.gapClient.typedClient.PortalTargetsystemGapuser.GetSchema(); probado acceso a password
+    return this.miapi.typedClient.PortalTargetsystemGapuserNuevacuenta.GetSchema();
   }
 
   public get gapskuSchema():EntitySchema {
@@ -151,7 +152,8 @@ export class AccountsService {
   }
 
   public async getGAPDataModel(): Promise<DataModel>{
-    return this.gapClient.client.portal_targetsystem_gapuser_datamodel_get(undefined);
+    //return this.gapClient.client.portal_targetsystem_gapuser_datamodel_get(undefined);
+    return this.miapi.client.portal_targetsystem_gapuser_nuevaCuenta_datamodel_get(undefined);
   }
 
 
@@ -211,6 +213,11 @@ export class AccountsService {
   //return null;
  }
 
+
+ public async wgapassword(PortalTargetsystemGapuserNuevacuenta):Promise<any>{
+
+  return await this.miapi.typedClient.PortalTargetsystemGapuserNuevacuentaInteractive.Put(PortalTargetsystemGapuserNuevacuenta)
+ }
 
  public createRecipientCdr(): BaseCdr {
   const columnProperties = {};

@@ -38,17 +38,17 @@ export interface AccountSidesheetData {
 }
 
 export interface GAPAccountSidesheetData {
+  //ObjectKey de la cuenta
   GAPAccountId: string;
-  UID_GAPAccount: string;
-  selectedGAPAccount: AccountTypedEntity;
-  tableName: string;
-  uidPerson: string;
+  
+  selectedGAPAccount: AccountTypedEntity;  
 }
 
 export interface createGAPAccountSidesheetData {
   GAPAccountId: string;
   UID_GAPAccount: string;
-  selectedGAPAccount: GAPAccountTypedEntity;
+  //selectedGAPAccount: GAPAccountTypedEntity; Cambios para intentar poder grabar cuenta.
+  selectedGAPAccount: PortalTargetsystemGapuserNuevacuenta;
   tableName: string;
   uidPerson: string;
 }

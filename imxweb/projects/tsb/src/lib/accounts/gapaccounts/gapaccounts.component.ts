@@ -158,6 +158,8 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   this.displayedColumns = [
       this.entitySchemaGAPAccount.Columns.UID_Person,     
       this.entitySchemaGAPAccount.Columns.PrimaryEmail,
+      this.entitySchemaGAPAccount.Columns.IdentityType,
+    
       {
         ColumnName:"CreationTime",
         Display: "Fecha de creación",
@@ -172,7 +174,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
 
     
       // Si soy admin añade los datos de licencia y ocupación
-    if (this.esAdminEPR)
+    if (this.nesAdminEPR)
       {
         
         this.displayedColumns.push({
@@ -183,7 +185,8 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
           ColumnName:"CCC_EspacioMb",
           Display: "Ocupación (Gb)",
           Type: ValType.Int
-        },)
+        }
+        )
       } else  //Y si no soy admin, quita de la ordenación las columnas que no nos interesan
       {
         this.dataModel.Properties = this.dataModel.Properties.filter(propiedad => ['CreationTime','CCC_UltimaConexion',].includes(propiedad.Property.ColumnName));
@@ -283,19 +286,14 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     const unsDbObjectKey = DbObjectKey.FromXml(GAPAccount.XObjectKey.value);
     data = {
       GAPAccountId: GAPAccount.XObjectKey.value,
-      UID_GAPAccount: "",
-      selectedGAPAccount: await this.accountsService.getAccountInteractive(unsDbObjectKey,GAPAccount.UID_GAPUser.value),
-      uidPerson: "",
-      tableName: this.tableName,
+      selectedGAPAccount: await this.accountsService.getAccountInteractive(unsDbObjectKey,GAPAccount.UID_GAPUser.value)      
     };
 
     
-    //const uns2gap = this.accountsService.getGAPAccounts
-    console.log("Pulsado sobre : ");
+    
     const isBusy = this.busyService.beginBusy();
     isBusy.endBusy();
     
-    //const cuentaint= await this.accountsService.getAccountInteractive(unsDbObjectKey,GAPAccount.UID_GAPUser.value);
     await this.viewAccount(data);
   }
 

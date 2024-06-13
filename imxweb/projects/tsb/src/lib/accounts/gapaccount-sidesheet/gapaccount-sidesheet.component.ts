@@ -35,8 +35,7 @@ import {
   ElementalUiConfigService,
   TabItem,
   ExtService,
-  CdrFactoryService,
-  MessageDialogComponent
+  CdrFactoryService
 } from 'qbm';
 import { DbObjectKey, IEntity } from 'imx-qbm-dbts';
 import { EuiLoadingService, EuiSidesheetRef, EUI_SIDESHEET_DATA } from '@elemental-ui/core';
@@ -49,6 +48,7 @@ import { AccountsReportsService } from '../accounts-reports.service';
 import { AccountTypedEntity } from '../account-typed-entity';
 import { PortalTargetsystemGapuser } from 'imx-api-gap';
 import { PortalTargetsystemGapuserNuevacuenta,  } from 'imx-api-ccc';
+import { VisorpassComponent } from './visorpass.component'
 
 
 @Component({
@@ -86,7 +86,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
     private readonly reports: AccountsReportsService,
     private readonly tabService: ExtService,
     private cdrFactory: CdrFactoryService,
-    private readonly dialog:MatDialog,
+    private  dialog:MatDialog,
   ) {
     this.detailsFormGroup = new UntypedFormGroup({ formArray: formBuilder.array([]) });
 
@@ -101,9 +101,8 @@ export class GAPAccountSidesheetComponent implements OnInit {
   public ngOnInit(): void {
     this.cuentaligada = false;
     console.log("Usuario asociado: " + this.sidesheetData.selectedGAPAccount.GetEntity().GetColumn("UID_Person").GetValue()) ;
-    if (this.sidesheetData.selectedGAPAccount.GetEntity().GetColumn("UID_Person").GetValue().length > 0) 
-      {this.cuentaligada=true;
-       
+    if (this.sidesheetData.selectedGAPAccount.GetEntity().GetColumn("UID_Person").GetValue().length > 0  ||  this.sidesheetData.selectedGAPAccount.GetEntity().GetColumn("IsSuspended").GetValue()==true)
+      {this.cuentaligada=true;   
       }
 
     
@@ -117,16 +116,23 @@ export class GAPAccountSidesheetComponent implements OnInit {
 
   public async reinicio():Promise<void> {
     const clave =  await this.accountsService.ResetGAP(this.sidesheetData.GAPAccountId);
-    const dialogRef = this.dialog.open(MessageDialogComponent, {
+    const dialogRef = this.dialog.open(VisorpassComponent, {
       data: {
-        ShowOk: true,
-        Title: 'Contraseña cambiada para la cuenta Google',
-        Message: 'Se ha generado la nueva contraseña : ' + clave,
+        Title: 'Propuesta de contraseña para la cuenta de correo seleccionada',
+        Code: clave,
       },
       panelClass: 'imx-messageDialog',
-    });
+      disableClose: true
+    }, );
 
-    await dialogRef.afterClosed().toPromise();
+    dialogRef.afterClosed().subscribe(vuelta => {
+      if (vuelta) {
+        console.log("has pulsado que vale");
+        this.sidesheetData.selectedGAPAccount.GetEntity().GetColumn("Password").PutValue(clave);
+        
+      
+      }
+    })
     // reload data
     
     
@@ -166,7 +172,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
 
     this.soyadmin = await this.accountsService.esAdminEPR();
 
-    const cols = ['IsSuspended','GivenName','FamilyName', 'Aliases','IsEnrolledIn2Sv','RecoveryEmail','RecoveryPhone','UID_Person','IncludeInGlobalAddressList'];
+    const cols = ['IsSuspended','GivenName','FamilyName', 'Aliases','IsEnrolledIn2Sv','RecoveryEmail','RecoveryPhone','UID_Person','IncludeInGlobalAddressList', 'Password'];
     if (this.soyadmin) { cols.push('CCC_LicenciaWorkspace')};
       
     

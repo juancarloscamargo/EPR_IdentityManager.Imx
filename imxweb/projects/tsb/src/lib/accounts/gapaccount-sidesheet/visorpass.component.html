@@ -1,1 +1,12 @@
-<p>visorpass works!</p>
+<div>
+    <h1 mat-dialog-title>{{passcodeParameter.Title}}</h1>
+    <mat-dialog-content>      
+        <div class="imx-message-CrearGAPPass">{{passcodeParameter.Code}}</div>
+        <p>La nueva contraseña es temporal, deberá proporcionarla al usuario, y éste deberá cambiarla tras el login.</p>
+        <p>Pulse Aceptar para grabar los cambios.</p>        
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-raised-button color="primary" mat-dialog-close>Cancelar</button>
+      <button mat-raised-button color="primary" [mat-dialog-close]="aceptacambio()">Aceptar</button>
+    </mat-dialog-actions>
+  </div>
