@@ -174,7 +174,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
 
     
       // Si soy admin añade los datos de licencia y ocupación
-    if (this.nesAdminEPR)
+    if (this.esAdminEPR)
       {
         
         this.displayedColumns.push({
