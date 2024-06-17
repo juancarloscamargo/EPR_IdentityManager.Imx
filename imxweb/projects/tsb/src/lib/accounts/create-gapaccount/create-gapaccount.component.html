@@ -6,7 +6,16 @@
           <div class="governance-sidesheet__tab-content-body">
             <mat-card class="imx-tab-card">
               <form [formGroup]="detailsFormGroup">
-                <imx-cdr-editor *ngFor="let cdr of cdrList" [cdr]="cdr" (controlCreated)="formArray.push($event)"> </imx-cdr-editor>
+                <mat-form-field appearance="outline" >
+                  <mat-label>
+                    Dirección de correo principal
+                   </mat-label>
+                  <input matInput formControlName="Correo" matInput type = "email" placeholder="Email" autocomplete="email" [maxlength]="maxlength">
+                  <mat-error>
+                    donde vas, tontaina, uchi qué mierda dirección acabas de poner. Anda, anda y tira ya pa la casa
+                  </mat-error>
+                </mat-form-field>
+                <imx-cdr-editor *ngFor="let cdr of cdrList" [cdr]="cdr" (controlCreated)="formArray.push($event)" (valueChange)="checkValues(cdr.column.ColumnName)"> </imx-cdr-editor>
                 <div *ngIf="accountManagerIsEditable && linkedIdentitiesManager && (!identityManagerMatchesAccountManager || unsavedSyncChanges)">
                   <eui-alert type="info" condensed="true" [colored]="true" *ngIf="initialAccountManagerValue && (!identityManagerMatchesAccountManager || unsavedSyncChanges)">
                     <span translate>#LDS#The manager assigned to this user account differs from the manager assigned to the listed identity.</span>

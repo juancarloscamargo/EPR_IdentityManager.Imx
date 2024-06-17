@@ -20,9 +20,12 @@ export class VisorpassComponent  {
     private dialogRef: MatDialogRef<VisorpassComponent>,
     @Inject(MAT_DIALOG_DATA) public passcodeParameter: PasscodeParameter,
     
-  ) { dialogRef.disableClose = true; }
+  ) { dialogRef.disableClose = true;
+    
+   }
 
   public aceptacambio() {
+    
     return true;
   }
 

@@ -59,7 +59,7 @@ import { TargetSystemDynamicMethodService } from '../target-system/target-system
 import { AccountTypedEntity, GAPAccountTypedEntity} from './account-typed-entity';
 import { DbObjectKeyBase } from '../target-system/db-object-key-wrapper.interface';
 import { AcountsFilterTreeParameters as AccountsFilterTreeParameters } from './accounts.models';
-import { DataSourceToolbarExportMethod, BaseCdr, ImxTranslationProviderService } from 'qbm';
+import { DataSourceToolbarExportMethod, BaseCdr, ImxTranslationProviderService , AuthenticationService } from 'qbm';
 import { GAPApiService } from '../gap-api-client.service';
 import { TranslateService } from '@ngx-translate/core';
 import {CCCApiService } from '../ccc-api-client.service';
@@ -79,6 +79,7 @@ export class AccountsService {
     private readonly permisosgap: TsbPermissionsService,
     private translate: TranslateService,
     private translateService: ImxTranslationProviderService,    
+    private readonly ssoOPS : AuthenticationService,
     private readonly dynamicMethod: TargetSystemDynamicMethodService
   ) {
 
@@ -137,8 +138,8 @@ export class AccountsService {
     return (await this.dynamicMethod.getById(AccountTypedEntity, { dbObjectKey, columnName })) as AccountTypedEntity;
   }
 
-  public async getGAPAccountInteractive(UID_GAPAccount: string): Promise<GAPAccountTypedEntity>{
-      return (await this.miapi.client.portal_targetsystem_gapuser_nuevaCuenta_interactive_byid_get(UID_GAPAccount)) as GAPAccountTypedEntity;
+  public async getGAPAccountInteractive(UID_GAPAccount: string): Promise<PortalTargetsystemGapuserNuevacuenta>{
+      return (await this.miapi.client.portal_targetsystem_gapuser_nuevaCuenta_interactive_byid_get(UID_GAPAccount)) as PortalTargetsystemGapuserNuevacuenta;
   //  return (await this.miapi.client.portal_targetsystem_gapuser_nuevaCuenta_interactive_byid_get(UID_GAPAccount)) as GAPAccountTypedEntity;
   }
 
@@ -185,8 +186,9 @@ export class AccountsService {
 }
 
   
- public async ResetGAP(GAPXObjectKey: string):Promise<string> {
-  return await this.miapi.client.portal_ResetGAP_get({GAPXObjectKey:GAPXObjectKey});
+ public async ResetGAP(GAPXObjectKey: string):Promise<String>{
+  const clave =  await this.miapi.client.portal_ResetGAP_get({GAPXObjectKey:GAPXObjectKey});
+  return clave;
  }
 
  public async esAdminPersonas():Promise<boolean>{
@@ -218,6 +220,13 @@ export class AccountsService {
 
   return await this.miapi.typedClient.PortalTargetsystemGapuserNuevacuentaInteractive.Put(PortalTargetsystemGapuserNuevacuenta)
  }
+
+ 
+ public async opssupport():Promise<any>{
+    await this.ssoOPS.login({'Module':'opsupport'});
+    return Promise.resolve();
+ }
+
 
  public createRecipientCdr(): BaseCdr {
   const columnProperties = {};

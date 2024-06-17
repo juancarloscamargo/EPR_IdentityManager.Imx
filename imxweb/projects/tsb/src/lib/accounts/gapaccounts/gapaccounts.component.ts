@@ -158,7 +158,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   this.displayedColumns = [
       this.entitySchemaGAPAccount.Columns.UID_Person,     
       this.entitySchemaGAPAccount.Columns.PrimaryEmail,
-      this.entitySchemaGAPAccount.Columns.IdentityType,
+      
     
       {
         ColumnName:"CreationTime",
@@ -287,6 +287,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     data = {
       GAPAccountId: GAPAccount.XObjectKey.value,
       selectedGAPAccount: await this.accountsService.getAccountInteractive(unsDbObjectKey,GAPAccount.UID_GAPUser.value)      
+
     };
 
     
@@ -333,13 +334,9 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
       
       this.logger.debug(this, `Retrieving accounts list`);
       this.logger.trace('Navigation settings', this.navigationState);
-      //const tsUid = this.dataExplorerFilters.selectedTargetSystemUid;
-      //const tsUid = "f40c77ba-3566-484b-8671-edc2288e15cc";
-      //const cUid = this.dataExplorerFilters.selectedContainerUid;
-      //getParams.system = tsUid ? tsUid : undefined;
-      //getParams.container = cUid ? cUid : undefined;
+      
         
-      //this.navigationState.withProperties = "CCC_EspacioMb,CCC_UltimaConexion,CCC_LicenciaWorkspace,UID_GAPUser,CreationTime";
+      
       this.navigationState.filter = this.filtrocuentas;
       
       
@@ -385,7 +382,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     this.logger.debug(this,"Convirtiendo cuenta en cuenta interactiva para poder editarla");
     
 
-    //const data_int= await this.accountsService.getGAPAccountInteractive(data.selectedGAPAccount.GetEntity().GetColumn("UID_GAPUser").GetValue())[0];
+//    const data_int= await this.accountsService.getGAPAccountInteractive(data.selectedGAPAccount.GetEntity().GetColumn("UID_GAPUser").GetValue())[0];
 
     //data.selectedGAPAccount = data_int;
 

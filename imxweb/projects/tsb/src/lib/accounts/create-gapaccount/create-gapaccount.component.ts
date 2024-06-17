@@ -25,7 +25,7 @@
  */
 
 import { Component, OnInit, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, UntypedFormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, UntypedFormControl, FormControl, Validators } from '@angular/forms';
 import {
   ColumnDependentReference,
   BaseCdr,
@@ -130,12 +130,12 @@ export class CreateGAPAccountComponent implements OnInit {
   private async setup(): Promise<void> {
  //   const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
     
-    const cols = ['PrimaryEmail','UID_Person'];
+    const cols = ['UID_Person'];
     if (this.data.soyAdminEPR )  cols.push('CCC_LicenciaWorkspace');
-      
-
+    this.detailsFormGroup.addControl("Correo",new FormControl('', Validators.email));
+  
     this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.data.datos.GetEntity(),cols);
-
+    
     this.dynamicTabs = (
       await this.tabService.getFittingComponents<TabItem>('accountSidesheet', (ext) => ext.inputData.checkVisibility(this.parameters))
     ).sort((tab1: TabItem, tab2: TabItem) => tab1.sortOrder - tab2.sortOrder);
@@ -143,6 +143,19 @@ export class CreateGAPAccountComponent implements OnInit {
   //  this.setupIdentityManagerSync();
   }
 
-  
+
+  private async checkValues(columna: String) {
+
+    switch(columna) {
+
+    case 'PrimaryEmail':
+      //Verifica si es correcta
+      //Verifica si no está duplicada
+      //Verifica si es del dominio correcto
+      //Verifica si hay licencias
+      console.log("Verificando correo");
+      break;
+    }
+  }
 
 }

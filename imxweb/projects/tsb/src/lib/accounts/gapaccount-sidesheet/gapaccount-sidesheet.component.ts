@@ -40,7 +40,7 @@ import {
 import { DbObjectKey, IEntity } from 'imx-qbm-dbts';
 import { EuiLoadingService, EuiSidesheetRef, EUI_SIDESHEET_DATA } from '@elemental-ui/core';
 import { AccountSidesheetData, GAPAccountSidesheetData } from '../accounts.models';
-import { IdentitiesService, ProjectConfigurationService } from 'qer';
+import { IdentitiesService, ProjectConfigurationService, QerApiService } from 'qer';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { AccountsService } from '../accounts.service';
 import { EuiDownloadOptions } from '@elemental-ui/core';
@@ -64,6 +64,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
   public initialAccountManagerValue: string;
   public soyadmin: boolean;
   public cuentaligada: boolean;
+  
   public reportDownload: EuiDownloadOptions;
   public neverConnectFormControl = new UntypedFormControl();
   public parameters: { objecttable: string; objectuid: string };
@@ -85,6 +86,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
     private readonly accountsService: AccountsService,
     private readonly reports: AccountsReportsService,
     private readonly tabService: ExtService,
+    private readonly qerAPI : QerApiService,
     private cdrFactory: CdrFactoryService,
     private  dialog:MatDialog,
   ) {
@@ -115,10 +117,12 @@ export class GAPAccountSidesheetComponent implements OnInit {
   }
 
   public async reinicio():Promise<void> {
-    const clave =  await this.accountsService.ResetGAP(this.sidesheetData.GAPAccountId);
+    
+    let clave = "";
+
     const dialogRef = this.dialog.open(VisorpassComponent, {
       data: {
-        Title: 'Propuesta de contraseña para la cuenta de correo seleccionada',
+        Title: 'Confirme que desea cambiar la contraseña',
         Code: clave,
       },
       panelClass: 'imx-messageDialog',
@@ -126,11 +130,9 @@ export class GAPAccountSidesheetComponent implements OnInit {
     }, );
 
     dialogRef.afterClosed().subscribe(vuelta => {
-      if (vuelta) {
-        console.log("has pulsado que vale");
-        this.sidesheetData.selectedGAPAccount.GetEntity().GetColumn("Password").PutValue(clave);
+      if (vuelta )  {
+        this.reinicioconfirmado();
         
-      
       }
     })
     // reload data
@@ -138,6 +140,22 @@ export class GAPAccountSidesheetComponent implements OnInit {
     
   }
 
+  public async reinicioconfirmado()
+  {
+
+    const clave = await this.accountsService.ResetGAP(this.sidesheetData.GAPAccountId);    
+        
+        this.dialog.open(VisorpassComponent, {
+          data: {
+            Title: 'Cambiada',
+            Code: clave,
+          },
+          panelClass: 'imx-messageDialog',
+          disableClose: true
+        }, );
+        //Deshabilita el botón de cambio para que el operador no entre en un bucle de cambios que pueda molestar al api de Google
+        this.cuentaligada=true;    
+  }
   
   public async save(): Promise<void> {
     if (this.detailsFormGroup.valid) {

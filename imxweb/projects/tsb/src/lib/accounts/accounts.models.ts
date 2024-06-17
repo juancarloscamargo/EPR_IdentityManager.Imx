@@ -40,14 +40,14 @@ export interface AccountSidesheetData {
 export interface GAPAccountSidesheetData {
   //ObjectKey de la cuenta
   GAPAccountId: string;
-  
+  //selectedGAPAccount: PortalTargetsystemGapuserNuevacuenta;
   selectedGAPAccount: AccountTypedEntity;  
 }
 
 export interface createGAPAccountSidesheetData {
   GAPAccountId: string;
   UID_GAPAccount: string;
-  //selectedGAPAccount: GAPAccountTypedEntity; Cambios para intentar poder grabar cuenta.
+  //selectedGAPAccount: GAPAccountTypedEntity; Cambios para intentar tg
   selectedGAPAccount: PortalTargetsystemGapuserNuevacuenta;
   tableName: string;
   uidPerson: string;
