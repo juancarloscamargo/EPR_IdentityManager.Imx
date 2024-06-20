@@ -109,6 +109,7 @@
     "imx-api-apc": "file:imx-modules/imx-api-apc.tgz",
     "imx-api-att": "file:imx-modules/imx-api-att.tgz",
     "imx-api-ccc": "file:imx-modules/imx-api-ccc.tgz",
+    "imx-api-portal": "file:imx-modules/imx-api-portal.tgz",
     "imx-api-cpl": "file:imx-modules/imx-api-cpl.tgz",
     "imx-api-dpr": "file:imx-modules/imx-api-dpr.tgz",
     "imx-api-gap": "file:imx-modules/imx-api-gap.tgz",

@@ -27,7 +27,7 @@
 import { CollectionLoadParameters, DbObjectKey, FilterData } from 'imx-qbm-dbts';
 import { AccountTypedEntity, GAPAccountTypedEntity } from './account-typed-entity';
 import { PortalTargetsystemGapuser } from 'imx-api-gap';
-import { PortalTargetsystemGapuserNuevacuenta  } from 'imx-api-ccc';
+import { PortalCccNuevacuenta  } from 'imx-api-portal';
 
 export interface AccountSidesheetData {
   unsAccountId: string;
@@ -35,6 +35,14 @@ export interface AccountSidesheetData {
   selectedAccount: AccountTypedEntity;
   tableName: string;
   uidPerson: string;
+}
+
+export class  GAPLicenciasEprinsa {
+  EnterpriseStarter: number;
+  FrontLineStarter: number;
+  BusinessStandard: number;
+  BusinessPlus: number;
+  Cloud: number;
 }
 
 export interface GAPAccountSidesheetData {
@@ -48,7 +56,7 @@ export interface createGAPAccountSidesheetData {
   GAPAccountId: string;
   UID_GAPAccount: string;
   //selectedGAPAccount: GAPAccountTypedEntity; Cambios para intentar tg
-  selectedGAPAccount: PortalTargetsystemGapuserNuevacuenta;
+  selectedGAPAccount: PortalCccNuevacuenta;
   tableName: string;
   uidPerson: string;
 }

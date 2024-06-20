@@ -24,8 +24,8 @@
  *
  */
 
-import { Component, OnInit, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, UntypedFormControl, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, UntypedFormControl, FormControl, Validators, ValidatorFn, ValidationErrors, AbstractControl, AsyncValidatorFn } from '@angular/forms';
 import {
   ColumnDependentReference,
   BaseCdr,
@@ -46,7 +46,9 @@ import { EuiDownloadOptions } from '@elemental-ui/core';
 import { AccountsReportsService } from '../accounts-reports.service';
 import { AccountTypedEntity,GAPAccountTypedEntity } from '../account-typed-entity';
 import { PortalTargetsystemGapuser } from 'imx-api-gap';
-import { PortalTargetsystemGapuserNuevacuenta } from 'imx-api-ccc';
+import { PortalCccNuevacuenta } from 'imx-api-portal';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'imx-new-account-sidesheet',
@@ -62,13 +64,16 @@ export class CreateGAPAccountComponent implements OnInit {
   public reportDownload: EuiDownloadOptions;
   public neverConnectFormControl = new UntypedFormControl();
   public parameters: { objecttable: string; objectuid: string };
+  public emailDuplicado: boolean;
   
 
   public dynamicTabs: TabItem[] = [];
-
+  
+  
+  
   constructor(
     formBuilder: UntypedFormBuilder,
-    @Inject(EUI_SIDESHEET_DATA) public  data: {datos:PortalTargetsystemGapuserNuevacuenta, soyAdminEPR:boolean, soyAdminPersonas:boolean, dominios:String[]},
+    @Inject(EUI_SIDESHEET_DATA) public  data: {datos:PortalCccNuevacuenta, soyAdminEPR:boolean, soyAdminPersonas:boolean, dominios:String[]},
     private readonly logger: ClassloggerService,
     private readonly busyService: EuiLoadingService,
     private readonly snackbar: SnackBarService,
@@ -79,11 +84,14 @@ export class CreateGAPAccountComponent implements OnInit {
     private readonly accountsService: AccountsService,
     private readonly reports: AccountsReportsService,
     private readonly tabService: ExtService,
-    private cdrFactory: CdrFactoryService
+    private cdrFactory: CdrFactoryService,
+    private readonly cdref: ChangeDetectorRef
+
   ) {
     
     this.detailsFormGroup = new UntypedFormGroup({ formArray: formBuilder.array([]) });
 
+    
     //this.parameters = {
      // objecttable: sidesheetData.unsDbObjectKey?.TableName,
      // objectuid: sidesheetData.unsDbObjectKey?.Keys.join(','),
@@ -92,9 +100,11 @@ export class CreateGAPAccountComponent implements OnInit {
     
   }
 
+  
   public ngOnInit(): void {
-    
+    this.cdref.detectChanges();
     this.setup();
+    
   }
 
   public cancel(): void {
@@ -112,10 +122,16 @@ export class CreateGAPAccountComponent implements OnInit {
         this.detailsFormGroup.markAsPristine();
         this.snackbar.open({ key: '#LDS#The user account has been successfully saved.' });
         this.sidesheetRef.close(true);
-      } finally {
+      } catch (error) {
+        console.log("Pos algo ha pasao: " + error);
+        
+      }
+      
+      finally {
         this.unsavedSyncChanges = false;
         this.busyService.hide(overlayRef);
       }
+      
     }
   }
 
@@ -130,9 +146,11 @@ export class CreateGAPAccountComponent implements OnInit {
   private async setup(): Promise<void> {
  //   const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
     
-    const cols = ['UID_Person'];
+    this.emailDuplicado = false;
+
+    const cols = ['PrimaryEmail','UID_Person'];
     if (this.data.soyAdminEPR )  cols.push('CCC_LicenciaWorkspace');
-    this.detailsFormGroup.addControl("Correo",new FormControl('', Validators.email));
+    //this.detailsFormGroup.addControl("Correo",new FormControl('',  [Validators.email, Validators.minLength(1)]));
   
     this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.data.datos.GetEntity(),cols);
     
@@ -145,17 +163,27 @@ export class CreateGAPAccountComponent implements OnInit {
 
 
   private async checkValues(columna: String) {
+    this.emailDuplicado = false;
+    
 
     switch(columna) {
 
     case 'PrimaryEmail':
-      //Verifica si es correcta
+      //Verifica si es correcta-- Hecho a nivel de formato de columna
       //Verifica si no está duplicada
+      
+  
+      
+      
+  
       //Verifica si es del dominio correcto
       //Verifica si hay licencias
-      console.log("Verificando correo");
+      
+      
       break;
     }
   }
 
+  
 }
+

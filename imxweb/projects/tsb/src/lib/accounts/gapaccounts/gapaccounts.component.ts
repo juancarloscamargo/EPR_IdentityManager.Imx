@@ -24,7 +24,7 @@ import { ContainerTreeDatabaseWrapper } from '../../container-list/container-tre
 import { DataExplorerFiltersComponent } from '../../data-filters/data-explorer-filters.component';
 import { DeHelperService } from '../../de-helper.service';
 import { AccountSidesheetComponent } from '.././account-sidesheet/account-sidesheet.component';
-import { AccountSidesheetData, GAPAccountSidesheetData, GetAccountsOptionalParameters } from '.././accounts.models'; 
+import { AccountSidesheetData, GAPAccountSidesheetData, GetAccountsOptionalParameters, GAPLicenciasEprinsa } from '.././accounts.models'; 
 import { AccountsService } from '../accounts.service';
 import { TargetSystemReportComponent } from '.././target-system-report/target-system-report.component';
 import { PortalTargetsystemGapuser, PortalTargetsystemGappasku } from 'imx-api-gap';
@@ -32,7 +32,7 @@ import { GAPAccountSidesheetComponent } from '../gapaccount-sidesheet/gapaccount
 import { CreateGAPAccountComponent } from '../create-gapaccount/create-gapaccount.component';
 import { Column } from 'qer/lib/password/helpers.model';
 import { GAPAccountTypedEntity } from '../account-typed-entity';
-import { PortalTargetsystemGapuserNuevacuenta } from 'imx-api-ccc';
+import { PortalCccNuevacuenta } from 'imx-api-portal';
 
 
 
@@ -81,6 +81,8 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   
   public algunerror:boolean = false;
   public dominios:String[];
+  public GAPLicenciasActuales  : GAPLicenciasEprinsa;
+  
 
 
   private displayedColumns: IClientProperty[] = [];
@@ -141,8 +143,13 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     //this.columna[] = this.accountsService.createRequesterProperty;
 
     
-    
-    
+    this.GAPLicenciasActuales = {} as GAPLicenciasEprinsa;
+
+    this.GAPLicenciasActuales.BusinessPlus=0;
+    this.GAPLicenciasActuales.EnterpriseStarter=0;
+    this.GAPLicenciasActuales.BusinessStandard=0;
+    this.GAPLicenciasActuales.Cloud=0;
+    this.GAPLicenciasActuales.FrontLineStarter=0;
     
     if ( await this.accountsService.esAdminEPR()) {
       this.esAdminEPR=true;
@@ -239,6 +246,9 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     }
     ];
 
+
+    
+    await this.actualizaSKU();
     await this.navigate();
   
 } finally {
@@ -277,7 +287,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     await this.navigate();
   }
 
-  public async onAccountChanged(GAPAccount: PortalTargetsystemGapuserNuevacuenta): Promise<void> {
+  public async onAccountChanged(GAPAccount: PortalCccNuevacuenta): Promise<void> {
     this.logger.debug(this, `Selected UNS account changed`);
     this.logger.trace(this, `New UNS account selected`, GAPAccount);
 
@@ -325,26 +335,41 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     });
   }
 
+  
+  private async actualizaSKU(): Promise<void>
+  {
+    const data_GAPLicenciaActuales= await this.accountsService.gapgetsku();
+    
+    this.GAPLicenciasActuales.EnterpriseStarter = data_GAPLicenciaActuales.Data.reduce((conteo, licencia) => licencia.entity.columns.UID_GAPPaSku.data.Value === '743da811-6d42-429b-8257-4aa37d188e6f' ? ++conteo : conteo,0);
+    this.GAPLicenciasActuales.FrontLineStarter = data_GAPLicenciaActuales.Data.reduce((conteo, licencia) => licencia.entity.columns.UID_GAPPaSku.data.Value === '860c0de7-ba82-410d-9edf-821dcc09fd84' ? ++conteo : conteo,0);
+    this.GAPLicenciasActuales.BusinessPlus = data_GAPLicenciaActuales.Data.reduce((conteo, licencia) => licencia.entity.columns.UID_GAPPaSku.data.Value === '54724760-2d4c-43d5-a869-920343927c74' ? ++conteo : conteo,0);
+    this.GAPLicenciasActuales.BusinessStandard = data_GAPLicenciaActuales.Data.reduce((conteo, licencia) => licencia.entity.columns.UID_GAPPaSku.data.Value === '47fe0324-80f0-48fa-a566-99df023f63eb' ? ++conteo : conteo,0);
+    this.GAPLicenciasActuales.Cloud = data_GAPLicenciaActuales.Data.reduce((conteo, licencia) => licencia.entity.columns.UID_GAPPaSku.data.Value === '54724760-2d4c-43d5-a869-920343927c74' ? ++conteo : conteo,0);
+    
+  }
+  
+  
+  
+  
   private async navigate(): Promise<void> {
     const isBusy = this.busyService.beginBusy();
     const getParams: GetAccountsOptionalParameters = this.navigationState;
-    console.log("Inicio carga de cuentas");
-
+    
+    
     try {
       
-      this.logger.debug(this, `Retrieving accounts list`);
-      this.logger.trace('Navigation settings', this.navigationState);
       
         
       
       this.navigationState.filter = this.filtrocuentas;
       
       
-
+      //Carga las cuentas
       const data = await this.accountsService.getGAPAccounts(this.navigationState);
-      //const data = await this.accountsService.ObtenerNuevasCuentas(this.navigationState);
-
-      //const datoslicencias = await this.accountsService.gapgetsku();
+    
+      
+      
+      
       
       
       
@@ -372,7 +397,9 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     finally {
        isBusy.endBusy();
     }
+
     
+
   }
 
   private async viewAccount(data: GAPAccountSidesheetData): Promise<void> {

@@ -9,6 +9,7 @@ for (const name of [
 
   // Add any custom API client libraries to this list (imx-api-ccc is already
   // included by default.)
+  'imx-api-portal',
   'imx-api-ccc',
   'imx-qbm-dbts',
   'imx-api-qbm',

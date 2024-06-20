@@ -63,7 +63,7 @@ import { DataSourceToolbarExportMethod, BaseCdr, ImxTranslationProviderService ,
 import { GAPApiService } from '../gap-api-client.service';
 import { TranslateService } from '@ngx-translate/core';
 import {CCCApiService } from '../ccc-api-client.service';
-import { PortalTargetsystemGapuserNuevacuenta, PortalTargetsystemGapuserNuevacuentaInteractiveWrapper } from 'imx-api-ccc';
+import { PortalCccNuevacuenta, PortalCccGapuserlicense } from 'imx-api-portal';
 
 
 
@@ -93,11 +93,11 @@ export class AccountsService {
 
   public get gapaccountSchema(): EntitySchema {
     //return this.gapClient.typedClient.PortalTargetsystemGapuser.GetSchema(); probado acceso a password
-    return this.miapi.typedClient.PortalTargetsystemGapuserNuevacuenta.GetSchema();
+    return this.miapi.typedClient.PortalCccNuevacuenta.GetSchema();
   }
 
   public get gapskuSchema():EntitySchema {
-    return this.miapi.typedClient.PortalTargetsystemGappaskuGapuserlicense.GetSchema();
+    return this.miapi.typedClient.PortalCccGapuserlicense.GetSchema();
   }
   /**
    * Gets a list of accounts.
@@ -110,8 +110,8 @@ export class AccountsService {
     return this.tsbClient.typedClient.PortalTargetsystemUnsAccount.Get(navigationState);
   }
 
-  public async getGAPAccounts(navigationState: CollectionLoadParameters): Promise<TypedEntityCollectionData<PortalTargetsystemGapuserNuevacuenta>> {
-    return this.miapi.typedClient.PortalTargetsystemGapuserNuevacuenta.Get(navigationState);
+  public async getGAPAccounts(navigationState: CollectionLoadParameters): Promise<TypedEntityCollectionData<PortalCccNuevacuenta>> {
+    return this.miapi.typedClient.PortalCccNuevacuenta.Get(navigationState);
   }
 
 
@@ -138,9 +138,9 @@ export class AccountsService {
     return (await this.dynamicMethod.getById(AccountTypedEntity, { dbObjectKey, columnName })) as AccountTypedEntity;
   }
 
-  public async getGAPAccountInteractive(UID_GAPAccount: string): Promise<PortalTargetsystemGapuserNuevacuenta>{
-      return (await this.miapi.client.portal_targetsystem_gapuser_nuevaCuenta_interactive_byid_get(UID_GAPAccount)) as PortalTargetsystemGapuserNuevacuenta;
-  //  return (await this.miapi.client.portal_targetsystem_gapuser_nuevaCuenta_interactive_byid_get(UID_GAPAccount)) as GAPAccountTypedEntity;
+  public async getGAPAccountInteractive(UID_GAPAccount: string): Promise<PortalCccNuevacuenta>{
+      return (await this.miapi.client.portal_ccc_nuevaCuenta_interactive_byid_get(UID_GAPAccount)) as PortalCccNuevacuenta;
+  
   }
 
 
@@ -154,7 +154,7 @@ export class AccountsService {
 
   public async getGAPDataModel(): Promise<DataModel>{
     //return this.gapClient.client.portal_targetsystem_gapuser_datamodel_get(undefined);
-    return this.miapi.client.portal_targetsystem_gapuser_nuevaCuenta_datamodel_get(undefined);
+    return this.miapi.client.portal_ccc_nuevaCuenta_datamodel_get(undefined);
   }
 
 
@@ -177,17 +177,17 @@ export class AccountsService {
  }
 
  
- public async GAPSave(cuenta: PortalTargetsystemGapuserNuevacuenta):Promise<any>{
-  this.miapi.typedClient.PortalTargetsystemGapuserNuevacuentaInteractive.Put(cuenta);
+ public async GAPSave(cuenta: PortalCccNuevacuenta):Promise<any>{
+  this.miapi.typedClient.PortalCccNuevacuentaInteractive.Put(cuenta);
  }
  public async gapgetsku ():Promise<any>{
-      return  await this.miapi.typedClient.PortalTargetsystemGappaskuGapuserlicense.Get();
+      return  (await this.miapi.typedClient.PortalCccGapuserlicense.Get({PageSize: 8912}));
         
 }
 
   
  public async ResetGAP(GAPXObjectKey: string):Promise<String>{
-  const clave =  await this.miapi.client.portal_ResetGAP_get({GAPXObjectKey:GAPXObjectKey});
+  const clave =  await this.miapi.client.portal_ccc_resetGAP_get({GAPXObjectKey:GAPXObjectKey});
   return clave;
  }
 
@@ -204,78 +204,13 @@ export class AccountsService {
  }
  
  
-  public async getgapuser():Promise<any> {
-    
-
   
-  const datos = await this.gapClient.client.portal_targetsystem_gapuser_get();
-  
-  console.log("Cargado");
-  return null;
-  //return null;
- }
-
-
- public async wgapassword(PortalTargetsystemGapuserNuevacuenta):Promise<any>{
-
-  return await this.miapi.typedClient.PortalTargetsystemGapuserNuevacuentaInteractive.Put(PortalTargetsystemGapuserNuevacuenta)
- }
 
  
- public async opssupport():Promise<any>{
-    await this.ssoOPS.login({'Module':'opsupport'});
-    return Promise.resolve();
- }
+ 
+ 
 
 
- public createRecipientCdr(): BaseCdr {
-  const columnProperties = {};
-
-  const property = this.createRequesterProperty();
-  columnProperties[property.ColumnName] = property;
-  const entityColumn = new ReadWriteEntity(
-    { Columns: columnProperties },
-    {},
-    this.createRequesterFkProvider(property.FkRelation),
-    undefined,
-    new DisplayBuilder(this.translateService)
-  ).GetColumn(property.ColumnName);
-
-  return new BaseCdr(entityColumn, 'Licencia asignada');
-}
-
-
-
-public createRequesterProperty(): IClientProperty {
-  const fkRelation = {
-    ChildColumnName: 'UID_GAPPaSku',
-    ParentTableName: 'GAPUserInPaSku',
-    ParentColumnName: 'UID_GAPUser',
-    IsMemberRelation: false,
-  };
-  this.createRequesterFkProvider(fkRelation);
-  return {
-    ColumnName: 'UID_GAPPaSku',
-    Type: ValType.String,
-    Description: this.translate.instant('#LDS#Here you can select a recipient or requester whose requests you want to display.'),
-    FkRelation: fkRelation,
-    
-    
-  };
-}
-
-private createRequesterFkProvider(fkRelation: MetaTableRelationData): FkCandidateProvider {
-  return new FkCandidateProvider([
-    {
-      columnName: fkRelation.ChildColumnName,
-      fkTableName: fkRelation.ParentTableName,
-      parameterNames: ['OrderBy', 'StartIndex', 'PageSize', 'filter', 'search'],
-      load: async (_, parameters = {}) => this.miapi.client.portal_targetsystem_gappasku_GAPUserLicense_get(parameters),
-      getDataModel: async () => ({}),
-      getFilterTree: async () => ({ Elements: [] }),
-    },
-  ]);
-}
 
 
 public async getDuplicates(parameter: CollectionLoadParameters)
@@ -288,11 +223,11 @@ public async getDuplicates(parameter: CollectionLoadParameters)
   }
 
   public async ObtenerNuevasCuentas(navigationState:CollectionLoadParameters): Promise<any>{
-    return (await this.miapi.typedClient.PortalTargetsystemGapuserNuevacuenta.Get(navigationState));
+    return (await this.miapi.typedClient.PortalCccNuevacuenta.Get(navigationState));
   }
 
-  public async CrearNuevaCuenta(): Promise<PortalTargetsystemGapuserNuevacuenta> {
-    return  (await this.miapi.typedClient.PortalTargetsystemGapuserNuevacuentaInteractive.Get()).Data[0];
+  public async CrearNuevaCuenta(): Promise<PortalCccNuevacuenta> {
+    return  (await this.miapi.typedClient.PortalCccNuevacuentaInteractive.Get()).Data[0];
     
   }
     

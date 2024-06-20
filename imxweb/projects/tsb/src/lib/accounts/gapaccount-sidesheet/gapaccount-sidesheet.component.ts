@@ -47,7 +47,7 @@ import { EuiDownloadOptions } from '@elemental-ui/core';
 import { AccountsReportsService } from '../accounts-reports.service';
 import { AccountTypedEntity } from '../account-typed-entity';
 import { PortalTargetsystemGapuser } from 'imx-api-gap';
-import { PortalTargetsystemGapuserNuevacuenta,  } from 'imx-api-ccc';
+//import { PortalTargetsystemGapuserNuevacuenta,  } from 'imx-api-ccc';
 import { VisorpassComponent } from './visorpass.component'
 
 

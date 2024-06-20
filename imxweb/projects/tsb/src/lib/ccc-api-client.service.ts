@@ -25,7 +25,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { V2Client, TypedClient } from 'imx-api-ccc';
+import { V2Client, TypedClient } from 'imx-api-portal';
 
 import { ApiClient } from 'imx-qbm-dbts';
 import { AppConfigService, ClassloggerService, ImxTranslationProviderService } from 'qbm';
