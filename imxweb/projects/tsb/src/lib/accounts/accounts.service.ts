@@ -58,7 +58,7 @@ import { QerApiService } from 'qer';
 import { TargetSystemDynamicMethodService } from '../target-system/target-system-dynamic-method.service';
 import { AccountTypedEntity, GAPAccountTypedEntity} from './account-typed-entity';
 import { DbObjectKeyBase } from '../target-system/db-object-key-wrapper.interface';
-import { AcountsFilterTreeParameters as AccountsFilterTreeParameters } from './accounts.models';
+import { AcountsFilterTreeParameters as AccountsFilterTreeParameters,  GAPLicenciasEprinsa} from './accounts.models';
 import { DataSourceToolbarExportMethod, BaseCdr, ImxTranslationProviderService , AuthenticationService } from 'qbm';
 import { GAPApiService } from '../gap-api-client.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -81,6 +81,7 @@ export class AccountsService {
     private translateService: ImxTranslationProviderService,    
     private readonly ssoOPS : AuthenticationService,
     private readonly dynamicMethod: TargetSystemDynamicMethodService
+    
   ) {
 
     
@@ -185,7 +186,10 @@ export class AccountsService {
         
 }
 
-  
+ public async gapstocklicencias(): Promise<any>{
+    return (await this.miapi.client.portal_ccc_GAPStockLicencias_get()) ;
+ } 
+
  public async ResetGAP(GAPXObjectKey: string):Promise<String>{
   const clave =  await this.miapi.client.portal_ccc_resetGAP_get({GAPXObjectKey:GAPXObjectKey});
   return clave;
@@ -233,5 +237,28 @@ public async getDuplicates(parameter: CollectionLoadParameters)
     
     //return (await this.qerClient.typedClient.PortalPersonReportsInteractive.Get()).Data[0];
   
+    
 
+    public async actualizaSKU(svcLicenciaseprinsa: GAPLicenciasEprinsa): Promise<void>
+  {
+    
+    const data_GAPLicenciaActuales= await this.gapgetsku();
+    
+    const stock = await this.gapstocklicencias() ;
+
+
+    svcLicenciaseprinsa.EnterpriseStarter = data_GAPLicenciaActuales.Data.reduce((conteo, licencia) => licencia.entity.columns.UID_GAPPaSku.data.Value === '743da811-6d42-429b-8257-4aa37d188e6f' ? ++conteo : conteo,0);
+    svcLicenciaseprinsa.FrontlineStarter = data_GAPLicenciaActuales.Data.reduce((conteo, licencia) => licencia.entity.columns.UID_GAPPaSku.data.Value === '860c0de7-ba82-410d-9edf-821dcc09fd84' ? ++conteo : conteo,0);
+    svcLicenciaseprinsa.BusinessPlus = data_GAPLicenciaActuales.Data.reduce((conteo, licencia) => licencia.entity.columns.UID_GAPPaSku.data.Value === '54724760-2d4c-43d5-a869-920343927c74' ? ++conteo : conteo,0);
+    svcLicenciaseprinsa.BusinessStandard = data_GAPLicenciaActuales.Data.reduce((conteo, licencia) => licencia.entity.columns.UID_GAPPaSku.data.Value === '47fe0324-80f0-48fa-a566-99df023f63eb' ? ++conteo : conteo,0);
+    svcLicenciaseprinsa.CloudIdentity = data_GAPLicenciaActuales.Data.reduce((conteo, licencia) => licencia.entity.columns.UID_GAPPaSku.data.Value === '54724760-2d4c-43d5-a869-920343927c74' ? ++conteo : conteo,0);
+    svcLicenciaseprinsa.StockBusinessStandard = stock[0] - svcLicenciaseprinsa.BusinessStandard;
+    svcLicenciaseprinsa.StockBusinessPlus = stock[1] - svcLicenciaseprinsa.BusinessPlus;
+    svcLicenciaseprinsa.StockEnterpriseStarter = stock[2] - svcLicenciaseprinsa.EnterpriseStarter;
+    svcLicenciaseprinsa.StockFrontlineStarter = stock[3] - svcLicenciaseprinsa.FrontlineStarter;
+    svcLicenciaseprinsa.StockCloudIdentity = stock[4] - svcLicenciaseprinsa.CloudIdentity;
+    console.log("Licencias recalculadas");
+  }
+  
+  
 }

@@ -15,9 +15,15 @@
               
               <form [formGroup]="detailsFormGroup">            
                 <imx-cdr-editor *ngFor="let cdr of cdrList" [cdr]="cdr" (controlCreated)="formArray.push($event)" (valueChange)="checkValues(cdr.column.ColumnName)"> </imx-cdr-editor> 
-                
               </form>
+              <label id="example-radio-group-label">Selecciones licencia</label>
+              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"   [(ngModel)]="favoriteSeason">
+                <mat-radio-button class = "tp-radio-button"  
+                  *ngFor = "let opcioneslic of opcioneslic" [value] = "opcioneslic">       {{opcioneslic}}<t></t>
+             </mat-radio-button>  
+              </mat-radio-group>
             </mat-card>
+          
           </div>
           <div eui-sidesheet-actions>
             
@@ -30,11 +36,20 @@
           </div>
         </div>
       </ng-template>
+    </mat-tab>  
+    <mat-tab *ngIf="data.soyAdminEPR" [label]="'Información sobre Licencias' | translate" >
+      <ng-template matTabContent>
+        <div eui-sidesheet-content class="governance-sidesheet__tab-content">
+          <div class="governance-sidesheet__tab-content-body">
+            
+            <mat-card class="imx-tab-card">
+             
+            
+            </mat-card>
+          </div>
+        </div>
+      </ng-template>
     </mat-tab>
-  
-    
-    
-    
   </mat-tab-group>
   
 

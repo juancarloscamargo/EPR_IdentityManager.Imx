@@ -38,7 +38,7 @@ import {
 } from 'qbm';
 import { DbObjectKey, IEntity, TypedEntity } from 'imx-qbm-dbts';
 import { EuiLoadingService, EuiSidesheetRef, EUI_SIDESHEET_DATA } from '@elemental-ui/core';
-import { AccountSidesheetData, GAPAccountSidesheetData, createGAPAccountSidesheetData } from '../accounts.models';
+import { AccountSidesheetData, GAPAccountSidesheetData, GAPLicenciasEprinsa, createGAPAccountSidesheetData } from '../accounts.models';
 import { IdentitiesService, ProjectConfigurationService } from 'qer';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { AccountsService } from '../accounts.service';
@@ -65,6 +65,8 @@ export class CreateGAPAccountComponent implements OnInit {
   public neverConnectFormControl = new UntypedFormControl();
   public parameters: { objecttable: string; objectuid: string };
   public emailDuplicado: boolean;
+  private readonly opcioneslic: string[] = ["Enterprise Starter","Frontline Starter", "Business Plus", "Business Standard", "Cloud Identity"];
+  
   
 
   public dynamicTabs: TabItem[] = [];
@@ -73,7 +75,7 @@ export class CreateGAPAccountComponent implements OnInit {
   
   constructor(
     formBuilder: UntypedFormBuilder,
-    @Inject(EUI_SIDESHEET_DATA) public  data: {datos:PortalCccNuevacuenta, soyAdminEPR:boolean, soyAdminPersonas:boolean, dominios:String[]},
+    @Inject(EUI_SIDESHEET_DATA) public  data: {datos:PortalCccNuevacuenta, soyAdminEPR:boolean, soyAdminPersonas:boolean, dominios:String[], licencias:GAPLicenciasEprinsa},
     private readonly logger: ClassloggerService,
     private readonly busyService: EuiLoadingService,
     private readonly snackbar: SnackBarService,
@@ -152,7 +154,12 @@ export class CreateGAPAccountComponent implements OnInit {
     if (this.data.soyAdminEPR )  cols.push('CCC_LicenciaWorkspace');
     //this.detailsFormGroup.addControl("Correo",new FormControl('',  [Validators.email, Validators.minLength(1)]));
   
+
+    
+    
     this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.data.datos.GetEntity(),cols);
+    
+    //VAmos a desactivar los elementos de las licencias que no nos valen
     
     this.dynamicTabs = (
       await this.tabService.getFittingComponents<TabItem>('accountSidesheet', (ext) => ext.inputData.checkVisibility(this.parameters))

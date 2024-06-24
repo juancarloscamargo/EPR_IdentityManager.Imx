@@ -58,8 +58,20 @@
     </div>
   </div>
 </mat-card>
-  
-  
+
+
+<div *ngIf="this.esAdminEPR" class="wrapper">
+<eui-alert type="info" condensed="true" [colored]="true">
+    <span>
+    Licencias Adquiridas/Actuales -> 
+    Enterprise: {{GAPLicenciasActuales.EnterpriseStarter}}/{{GAPLicenciasActuales.StockEnterpriseStarter}}
+    , Frontline: {{GAPLicenciasActuales.FrontlineStarter}}/{{GAPLicenciasActuales.StockFrontlineStarter}}
+    , BPluss: {{GAPLicenciasActuales.BusinessPlus}}/{{GAPLicenciasActuales.StockBusinessPlus}}
+    , BStandard: {{GAPLicenciasActuales.BusinessStandard}}/{{GAPLicenciasActuales.StockBusinessStandard}}
+  </span>  
+</eui-alert>
+</div>
+
   <div  class="data-explorer-bottom-button-row"> 
     
     <button  *ngIf="this.esAdminPersonas" mat-raised-button color="primary" data-imx-identifier="identities-button-create-new-identity" (click)="createNewIdentity()" class="imx-right-button">
@@ -68,4 +80,5 @@
     </button>
     
   </div>
+
   

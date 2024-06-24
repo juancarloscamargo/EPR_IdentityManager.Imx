@@ -39,11 +39,17 @@ export interface AccountSidesheetData {
 
 export class  GAPLicenciasEprinsa {
   EnterpriseStarter: number;
-  FrontLineStarter: number;
+  FrontlineStarter: number;
   BusinessStandard: number;
   BusinessPlus: number;
-  Cloud: number;
+  CloudIdentity: number;
+  StockEnterpriseStarter: number;
+  StockFrontlineStarter: number;
+  StockBusinessStandard: number;
+  StockBusinessPlus: number;
+  StockCloudIdentity: number;
 }
+
 
 export interface GAPAccountSidesheetData {
   //ObjectKey de la cuenta
