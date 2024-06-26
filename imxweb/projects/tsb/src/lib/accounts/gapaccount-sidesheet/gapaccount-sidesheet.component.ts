@@ -75,7 +75,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
 
   constructor(
     formBuilder: UntypedFormBuilder,
-    @Inject(EUI_SIDESHEET_DATA) public  sidesheetData: GAPAccountSidesheetData,
+    @Inject(EUI_SIDESHEET_DATA) public  data:{datos: GAPAccountSidesheetData},
     private readonly logger: ClassloggerService,
     private readonly busyService: EuiLoadingService,
     private readonly snackbar: SnackBarService,
@@ -102,8 +102,8 @@ export class GAPAccountSidesheetComponent implements OnInit {
 
   public ngOnInit(): void {
     this.cuentaligada = false;
-    console.log("Usuario asociado: " + this.sidesheetData.selectedGAPAccount.GetEntity().GetColumn("UID_Person").GetValue()) ;
-    if (this.sidesheetData.selectedGAPAccount.GetEntity().GetColumn("UID_Person").GetValue().length > 0  ||  this.sidesheetData.selectedGAPAccount.GetEntity().GetColumn("IsSuspended").GetValue()==true)
+    console.log("Usuario asociado: " + this.data.datos.selectedGAPAccount.GetEntity().GetColumn("UID_Person").GetValue()) ;
+    if (this.data.datos.selectedGAPAccount.GetEntity().GetColumn("UID_Person").GetValue().length > 0  ||  this.data.datos.selectedGAPAccount.GetEntity().GetColumn("IsSuspended").GetValue()==true)
       {this.cuentaligada=true;   
       }
 
@@ -143,7 +143,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
   public async reinicioconfirmado()
   {
 
-    const clave = await this.accountsService.ResetGAP(this.sidesheetData.GAPAccountId);    
+    const clave = await this.accountsService.ResetGAP(this.data.datos.GAPAccountId);    
         
         this.dialog.open(VisorpassComponent, {
           data: {
@@ -164,7 +164,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
      
       const overlayRef = this.busyService.show();
       try {
-        await this.sidesheetData.selectedGAPAccount.GetEntity().Commit(true);
+        await this.data.datos.selectedGAPAccount.GetEntity().Commit(true);
         
         this.detailsFormGroup.markAsPristine();
         this.snackbar.open({ key: '#LDS#The user account has been successfully saved.' });
@@ -194,8 +194,8 @@ export class GAPAccountSidesheetComponent implements OnInit {
     if (this.soyadmin) { cols.push('CCC_LicenciaWorkspace')};
       
     
-    this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.sidesheetData.selectedGAPAccount.GetEntity(), cols);
-     console.log("mostrando cuenta del tipo: " + this.sidesheetData.selectedGAPAccount.GetEntity().TypeName)   ;
+    this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.data.datos.selectedGAPAccount.GetEntity(), cols);
+     console.log("mostrando cuenta del tipo: " + this.data.datos.selectedGAPAccount.GetEntity().TypeName)   ;
     /*
     this.dynamicTabs = (
       await this.tabService.getFittingComponents<TabItem>('accountSidesheet', (ext) => ext.inputData.checkVisibility(this.parameters))

@@ -198,7 +198,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     
 
     const isBusy = this.busyService.beginBusy();
-    console.log("Inicio búsqueda...");
+    
   try {
     //this.filterOptions = await this.accountsService.getFilterOptions();
     
@@ -216,6 +216,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
           Value: "@"
         }
       );
+//Añado el dominio eprinsa.org a los administradores. Sólo ellos podrán crear cuentas en este dominio.
       this.dominios.push("eprinsa.org");
       }
     else {
@@ -389,7 +390,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
 
   }
 
-  private async viewAccount(data: GAPAccountSidesheetData): Promise<void> {
+  private async viewAccount(datos: GAPAccountSidesheetData): Promise<void> {
     this.logger.debug(this, `Viewing account`);
     //this.logger.trace(this, `Account selected`, data.selectedGAPAccount);
     //ES NECESARIO HACER LAS CUENTAS INTERACTIVAS PARA PODER EDITARLAS.
@@ -402,12 +403,12 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
 
     const sidesheetRef = this.sideSheet.open(GAPAccountSidesheetComponent, {
       title: 'Editor de cuentas de correo',
-      subTitle: data.selectedGAPAccount.GetEntity().GetDisplay(),
+      subTitle: datos.selectedGAPAccount.GetEntity().GetDisplay(),
       padding: '0px',
       width: 'max(600px, 60%)',
       icon: 'account',
       testId: 'edit-user-gapaccount-sidesheet',
-      data
+      data: {datos}
     });
     sidesheetRef.afterClosed().subscribe((dataRefreshRequired) => {
       if (dataRefreshRequired) {
