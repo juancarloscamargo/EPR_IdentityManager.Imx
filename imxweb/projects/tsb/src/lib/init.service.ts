@@ -50,7 +50,7 @@ import {
 } from 'qer';
 import { AccountsExtComponent } from './accounts/account-ext/accounts-ext.component';
 import { DataExplorerAccountsComponent } from './accounts/accounts.component';
-import { isTsbNameSpaceAdminBase } from './admin/tsb-permissions-helper';
+import { isTsbNameSpaceAdminBase, esAdminEPR } from './admin/tsb-permissions-helper';
 import { DataExplorerGroupsComponent } from './groups/groups.component';
 import { ReportButtonExtComponent } from './report-button-ext/report-button-ext.component';
 import { TsbApiService } from './tsb-api-client.service';
@@ -216,7 +216,7 @@ export class InitService {
         };
       },
       (preProps: string[], features: string[], projectConfig: ProjectConfig, groups: string[]) => {
-        if (!preProps.includes('ITSHOP') || !isTsbNameSpaceAdminBase(groups)) {
+        if (!preProps.includes('ITSHOP') || !esAdminEPR(features)) {
           return null;
         }
 

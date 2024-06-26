@@ -60,7 +60,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { isAuditor,  isRoleAdmin, isRoleStatistics, isStructAdmin, isStructStatistics } from '../admin/qer-permissions-helper';
+import { isAuditor,  isRoleAdmin, isRoleStatistics, isStructAdmin, isStructStatistics, isAdmEprinsa } from '../admin/qer-permissions-helper';
 import { DataExplorerRegistryService } from '../data-explorer-view/data-explorer-registry.service';
 import { MyResponsibilitiesRegistryService } from '../my-responsibilities-view/my-responsibilities-registry.service';
 import { CompareItemComponent } from './compare/compare-item.component';
@@ -225,8 +225,10 @@ export class RoleManangementModule {
   private setupMenu(): void {
     this.menuService.addMenuFactories((preProps: string[], features: string[], projectConfig: ProjectConfig, groups: string[]) => {
       // must also work if ITSHOP is disabled!
-      if (!isRoleAdmin(features) && !isRoleStatistics(features) && !isStructStatistics(features) && !isStructAdmin(features) && !isAuditor(groups)) {
-        return null;
+      //if (!isRoleAdmin(features) && !isRoleStatistics(features) && !isStructStatistics(features) && !isStructAdmin(features) && !isAuditor(groups)) {
+       //SOLO LOS ADMINISTRADORES DE EPRINSA PUEDEN ACCEDER AL DATA EXPLORER.
+       if (!isAdmEprinsa(features)) { 
+       return null;
       }
       const menu = {
         id: 'ROOT_Data',

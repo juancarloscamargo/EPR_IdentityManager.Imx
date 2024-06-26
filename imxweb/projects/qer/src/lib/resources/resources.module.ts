@@ -51,7 +51,7 @@ import {
   SideNavigationFactory,
 } from 'qbm';
 import { ObjectHyperviewModule } from '../object-hyperview/object-hyperview.module';
-import { isAuditor, isResourceAdmin } from '../admin/qer-permissions-helper';
+import { isAuditor, isResourceAdmin, isAdmEprinsa } from '../admin/qer-permissions-helper';
 import { DataExplorerRegistryService } from '../data-explorer-view/data-explorer-registry.service';
 import { MyResponsibilitiesRegistryService } from '../my-responsibilities-view/my-responsibilities-registry.service';
 import { ResourceSidesheetComponent } from './resource-sidesheet/resource-sidesheet.component';
@@ -127,7 +127,7 @@ export class ResourcesModule {
 
   private setupMenu(): void {
     this.menuService.addMenuFactories((preProps: string[], features: string[], projectConfig: ProjectConfig, groups: string[]) => {
-      if (isResourceAdmin(features) || isAuditor(groups)) {
+      if (isAdmEprinsa(features)) {
         return {
           id: 'ROOT_Data',
           title: '#LDS#Data administration',

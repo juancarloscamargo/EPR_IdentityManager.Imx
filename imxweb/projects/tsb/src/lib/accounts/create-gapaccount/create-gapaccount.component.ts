@@ -64,8 +64,11 @@ export class CreateGAPAccountComponent implements OnInit {
   public reportDownload: EuiDownloadOptions;
   public neverConnectFormControl = new UntypedFormControl();
   public parameters: { objecttable: string; objectuid: string };
-  public emailDuplicado: boolean;
-  private readonly opcioneslic: string[] = ["Enterprise Starter","Frontline Starter", "Business Plus", "Business Standard", "Cloud Identity"];
+  public checkdominio:boolean;
+  public checkerrores:boolean;
+  public UID_LicenciaWorkspace: string="";
+  public errormsg: string="";
+  
   
   
 
@@ -75,7 +78,7 @@ export class CreateGAPAccountComponent implements OnInit {
   
   constructor(
     formBuilder: UntypedFormBuilder,
-    @Inject(EUI_SIDESHEET_DATA) public  data: {datos:PortalCccNuevacuenta, soyAdminEPR:boolean, soyAdminPersonas:boolean, dominios:String[], licencias:GAPLicenciasEprinsa},
+    @Inject(EUI_SIDESHEET_DATA) public  data: {datos:PortalCccNuevacuenta, soyAdminEPR:boolean, soyAdminPersonas:boolean, dominios:string[], licencias:string[]},
     private readonly logger: ClassloggerService,
     private readonly busyService: EuiLoadingService,
     private readonly snackbar: SnackBarService,
@@ -105,6 +108,7 @@ export class CreateGAPAccountComponent implements OnInit {
   
   public ngOnInit(): void {
     this.cdref.detectChanges();
+    
     this.setup();
     
   }
@@ -114,9 +118,12 @@ export class CreateGAPAccountComponent implements OnInit {
   }
 
   public async save(): Promise<void> {
+    this.checkerrores=false;
+
     if (this.detailsFormGroup.valid) {
       this.logger.debug(this, `Saving identity change`);
       const overlayRef = this.busyService.show();
+      
       try {
         //Le cascamos el customer 
         this.data.datos.GetEntity().GetColumn("UID_GAPCustomer").PutValue("387aa29b-4242-46f2-adba-1f53154defd9");
@@ -125,6 +132,8 @@ export class CreateGAPAccountComponent implements OnInit {
         this.snackbar.open({ key: '#LDS#The user account has been successfully saved.' });
         this.sidesheetRef.close(true);
       } catch (error) {
+        this.checkerrores=true;
+        this.errormsg=error;
         console.log("Pos algo ha pasao: " + error);
         
       }
@@ -148,10 +157,13 @@ export class CreateGAPAccountComponent implements OnInit {
   private async setup(): Promise<void> {
  //   const cols = (await this.configService.getConfig()).OwnershipConfig.EditableFields[this.parameters.objecttable];
     
-    this.emailDuplicado = false;
+    this.checkdominio=false;
+    this.checkerrores=false;
+    
 
-    const cols = ['PrimaryEmail','UID_Person'];
-    if (this.data.soyAdminEPR )  cols.push('CCC_LicenciaWorkspace');
+    
+    const cols = [ 'GivenName','FamilyName', 'PrimaryEmail','UID_Person'];
+    //if (this.data.soyAdminEPR )  cols.push('CCC_LicenciaWorkspace');
     //this.detailsFormGroup.addControl("Correo",new FormControl('',  [Validators.email, Validators.minLength(1)]));
   
 
@@ -159,7 +171,7 @@ export class CreateGAPAccountComponent implements OnInit {
     
     this.cdrList = this.cdrFactory.buildCdrFromColumnList(this.data.datos.GetEntity(),cols);
     
-    //VAmos a desactivar los elementos de las licencias que no nos valen
+    
     
     this.dynamicTabs = (
       await this.tabService.getFittingComponents<TabItem>('accountSidesheet', (ext) => ext.inputData.checkVisibility(this.parameters))
@@ -169,22 +181,45 @@ export class CreateGAPAccountComponent implements OnInit {
   }
 
 
-  private async checkValues(columna: String) {
-    this.emailDuplicado = false;
-    
+  private async cambiolic(licencia) {
+    switch (licencia) {
+      case "Business Plus":
+        this.UID_LicenciaWorkspace="54724760-2d4c-43d5-a869-920343927c74";
+        break;
+      case "Business Standard":
+        this.UID_LicenciaWorkspace="47fe0324-80f0-48fa-a566-99df023f63eb";
+        break;
+      case "Enterprise Starter":
+        this.UID_LicenciaWorkspace="743da811-6d42-429b-8257-4aa37d188e6f";
+        break;
+      case "Frontline Starter":
+        this.UID_LicenciaWorkspace="860c0de7-ba82-410d-9edf-821dcc09fd84";
+        break;
+      case "Cloud Identity":
+        this.UID_LicenciaWorkspace="a79dd7e5-6ead-4a0c-9307-87116c2ce50a";
+        break;
 
-    switch(columna) {
+    }
+    
+    console.log("Selección de licnia: " + licencia)
+
+  }
+
+  private async checkValues(cdr:BaseCdr) {
+    const columna = cdr.column;
+    this.checkdominio=false;
+    this.checkerrores=false;
+    
+    switch(columna.ColumnName) {
 
     case 'PrimaryEmail':
-      //Verifica si es correcta-- Hecho a nivel de formato de columna
-      //Verifica si no está duplicada
       
-  
+      if (this.data.dominios.find((dominio) => dominio == columna.GetValue().split("@")[1])) 
+        this.checkdominio=false;
+        else this.checkdominio=true;
       
-      
-  
       //Verifica si es del dominio correcto
-      //Verifica si hay licencias
+      
       
       
       break;

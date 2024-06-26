@@ -74,7 +74,7 @@
 
   <div  class="data-explorer-bottom-button-row"> 
     
-    <button  *ngIf="this.esAdminPersonas" mat-raised-button color="primary" data-imx-identifier="identities-button-create-new-identity" (click)="createNewIdentity()" class="imx-right-button">
+    <button  *ngIf="(this.esAdminPersonas) && (this.opcioneslic.length > 0) " mat-raised-button color="primary" data-imx-identifier="identities-button-create-new-identity" (click)="createNewIdentity()" class="imx-right-button">
       <eui-icon icon="add"></eui-icon>
       <span translate>#LDS#Nueva Cuenta</span>
     </button>

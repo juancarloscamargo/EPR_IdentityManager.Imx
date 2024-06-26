@@ -136,7 +136,7 @@ export class IdentitiesModule {
       (preProps: string[], features: string[], projectConfig: ProjectConfig, groups: string[]) => {
 
         const items: MenuItem[] = [];
-        if (preProps.includes('ITSHOP') && (isAdmEprinsa(features) || isAuditor(groups))) {
+        if (preProps.includes('ITSHOP') && (isAdmEprinsa(features) )) {
           items.push(
             {
               id: 'QER_DataExplorer',

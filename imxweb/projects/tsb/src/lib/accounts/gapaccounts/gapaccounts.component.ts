@@ -82,6 +82,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
   public algunerror:boolean = false;
   public dominios:String[];
   public GAPLicenciasActuales  : GAPLicenciasEprinsa;
+  public opcioneslic: string[] =[];
   
   
 
@@ -214,7 +215,9 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
           PropertyId: 'PrimaryEmail',
           Value: "@"
         }
-      )}
+      );
+      this.dominios.push("eprinsa.org");
+      }
     else {
       this.dominios.forEach(dominio =>  {
      
@@ -243,7 +246,8 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
 
 
     
-    await this.accountsService.actualizaSKU(this.GAPLicenciasActuales);
+    
+    await this.infolicencias();
     await this.navigate();
   
 } finally {
@@ -429,7 +433,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
         width: 'max(650px, 65%)',
         disableClose: true,
         icon: 'contactinfo',
-        data: {datos:gapbase, soyAdminEPR: this.esAdminEPR , soyAdminPersonas: this.esAdminPersonas, dominios:this.dominios, licencias:this.GAPLicenciasActuales}
+        data: {datos:gapbase, soyAdminEPR: this.esAdminEPR , soyAdminPersonas: this.esAdminPersonas, dominios:this.dominios, licencias:this.opcioneslic}
         
       })
       .afterClosed()
@@ -438,9 +442,15 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
     return this.navigate();
   }
 
-  public infolicencias() {
-
-
+  private async  infolicencias() {
+    console.log ("Stock disponible: " + this.opcioneslic.length);
+    await this.accountsService.actualizaSKU(this.GAPLicenciasActuales);
+    if (this.GAPLicenciasActuales.StockBusinessPlus>0) this.opcioneslic.push("Business Plus");
+    if (this.GAPLicenciasActuales.StockEnterpriseStarter>0) this.opcioneslic.push("Enterprise Starter");
+    if (this.GAPLicenciasActuales.StockBusinessStandard>0) this.opcioneslic.push("Business Standard");
+    if (this.GAPLicenciasActuales.StockFrontlineStarter>0) this.opcioneslic.push("Frontline Starter");
+    if (this.GAPLicenciasActuales.StockCloudIdentity>0) this.opcioneslic.push("Cloud Identity");
+    
     
   }
 
