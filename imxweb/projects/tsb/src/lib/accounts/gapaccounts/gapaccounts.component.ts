@@ -372,7 +372,8 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
         dataSource: data,
         entitySchema: this.entitySchemaGAPAccount,
         navigationState: this.navigationState,
-        viewConfig: this.viewConfig
+        viewConfig: this.viewConfig,
+      
       };
       this.tableName = data.tableName;
       this.logger.debug(this, `Head at ${data.Data.length + this.navigationState.StartIndex} of ${data.totalCount} item(s)`);
@@ -408,7 +409,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
       width: 'max(600px, 60%)',
       icon: 'account',
       testId: 'edit-user-gapaccount-sidesheet',
-      data: {datos}
+      data: {datos, licencias:this.opcioneslic}
     });
     sidesheetRef.afterClosed().subscribe((dataRefreshRequired) => {
       if (dataRefreshRequired) {

@@ -16,7 +16,8 @@
           <div data-imx-identifier="identities-tabledata-display">{{ item.GetEntity().GetDisplay() }}</div>
           <div subtitle data-imx-identifier="identities-tabledata-description">{{
             item.DefaultEmailAddress.Column.GetDisplayValue() }}</div>
-        </ng-template>
+       </ng-template>
+        
       </imx-data-table-column>
       
       
@@ -44,22 +45,9 @@
   </div>
 </mat-card>
 <div class="data-explorer-bottom-button-row">
-  <button mat-button [matMenuTriggerFor]="menu" data-imx-identifier="identities-button-actions" *ngIf="isManagerForPersons || isAuditor">
-    <eui-icon icon="ellipsisvertical"></eui-icon>
-    {{'#LDS#Actions' | translate}}
-  </button>
   <button *ngIf="isPersonAdmin || isManagerForPersons" mat-raised-button color="primary" data-imx-identifier="identities-button-create-new-identity" (click)="createNewIdentity()" class="imx-right-button">
     <eui-icon icon="add"></eui-icon>
-    <span translate>#LDS#Create identity</span>
+    <span>Nuevo usuario</span>
   </button>
-  <mat-menu #menu="matMenu">
-    <button *ngIf="isManagerForPersons && !isAdmin" mat-menu-item data-imx-identifier="identities-menu-item-download-report" (click)="personsManagedReport()">
-      {{'#LDS#Download report on identities you are directly responsible for' | translate}}
-    </button>
-    <!-- Created this way because of the accessibility -->
-    <ng-container *ngFor="let extension of extensions; let index">
-      <button mat-menu-item (click)="showDynamicReport(extension)">{{extension?.inputData?.caption | translate}}</button>
-    </ng-container>
-  </mat-menu>
 </div>
 <ng-template #dynamicReport></ng-template>

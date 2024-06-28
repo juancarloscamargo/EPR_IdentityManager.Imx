@@ -64,7 +64,9 @@ export class MyResponsibilitiesViewComponent implements OnInit {
     const config: QerProjectConfig & ProjectConfig = await this.projectConfig.getConfig();
     this.navItems = this.myResponsibilitiesRegistryService
       .getNavItems(systemInfo.PreProps, features, config)
-      .filter((elem) => elem.name === 'identities' || elem.name === 'devices'  || elem.name === 'GAPUser' || userConfig.Ownerships.find(own => own.TableName === elem.name)?.Count > 0);
+      //.filter((elem) => elem.name === 'identities' || elem.name === 'devices'  || elem.name === 'GAPUser' || userConfig.Ownerships.find(own => own.TableName === elem.name)?.Count > 0);
+      //ELIMINAMOS POR EL MOMENTO LA ENTRADA DE DISPOSITIVOS Y DEJAMOS SÓLO LA DE DPTOS. PARA TODO EL MUNDO.
+      .filter((elem) => elem.name === 'identities'  || elem.name === 'GAPUser' || userConfig.Ownerships.find(own => own.TableName === elem.name && elem.name=='Departments')?.Count > 0);
     this.cdref.detectChanges();
   }
 }

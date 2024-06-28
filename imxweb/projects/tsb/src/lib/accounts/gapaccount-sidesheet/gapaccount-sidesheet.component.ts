@@ -75,7 +75,7 @@ export class GAPAccountSidesheetComponent implements OnInit {
 
   constructor(
     formBuilder: UntypedFormBuilder,
-    @Inject(EUI_SIDESHEET_DATA) public  data:{datos: GAPAccountSidesheetData},
+    @Inject(EUI_SIDESHEET_DATA) public  data:{datos: GAPAccountSidesheetData, licencias:String[]},
     private readonly logger: ClassloggerService,
     private readonly busyService: EuiLoadingService,
     private readonly snackbar: SnackBarService,

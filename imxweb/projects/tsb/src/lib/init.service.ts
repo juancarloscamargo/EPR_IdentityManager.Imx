@@ -55,6 +55,7 @@ import { DataExplorerGroupsComponent } from './groups/groups.component';
 import { ReportButtonExtComponent } from './report-button-ext/report-button-ext.component';
 import { TsbApiService } from './tsb-api-client.service';
 import { GAPApiService } from './gap-api-client.service';
+import { isAdminGAP } from './admin/tsb-permissions-helper';
 
 import { GroupMembershipsExtComponent } from './groups/group-memberships-ext/group-memberships-ext.component';
 import { ProjectConfig } from 'imx-api-qbm';
@@ -75,6 +76,7 @@ export class InitService {
     private readonly menuService: MenuService,
     private readonly extService: ExtService,
     private readonly cacheService: CacheService,
+    
     private readonly myResponsibilitiesRegistryService: MyResponsibilitiesRegistryService,
     private readonly permissions: QerPermissionsService
   ) {}
@@ -165,6 +167,7 @@ export class InitService {
       icon: 'usergroup',
       contextId: HELP_CONTEXTUAL.MyResponsibilitiesGroups
     }));
+    if (isAdminGAP) {
     this.myResponsibilitiesRegistryService.registerFactory((preProps: string[], features: string[]) => ({
       instance: DataExplorerGapaccountsComponent,
       sortOrder: 99,
@@ -173,6 +176,7 @@ export class InitService {
       icon: 'google',
       contextId: HELP_CONTEXTUAL.MyResponsibilitiesGroups
     }));
+    }
   }
 
   private async loadUnsTypes(): Promise<IRequestableEntitlementType[]> {

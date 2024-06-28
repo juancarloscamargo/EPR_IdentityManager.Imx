@@ -1386,7 +1386,7 @@ export class DataSourceToolbarComponent implements OnChanges, OnInit, OnDestroy 
   public async showFilterWizard(): Promise<void> {
     const settingSave = this.storeCurrentFilterValues();
     const sidesheetRef = this.sidesheet.open(FilterWizardComponent, {
-      title: await this.translate.get('#LDS#Heading Filter Data').toPromise(),
+      title: await this.translate.get('Filtros').toPromise(),
       icon: 'filter',
       width: '800px',
       padding: '0px',

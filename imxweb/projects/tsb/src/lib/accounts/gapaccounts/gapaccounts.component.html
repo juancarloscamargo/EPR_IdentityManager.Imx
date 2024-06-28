@@ -7,7 +7,8 @@
   </div>
     <imx-data-source-toolbar #dst
       [settings]="dstSettings"
-      [options]="['search', 'sort']"
+      [options]="['search']"
+      [disableFilterWizard]="true"
       [busyService]="busyService"
       [searchBoxText]="'#LDS#Search' | translate"
       (navigationStateChanged)="onNavigationStateChanged($event)"
@@ -38,7 +39,7 @@
           
           <imx-data-table-generic-column columnName="CCC_LicenciaWorkspace" columnLabel="Licencia Asignada">
             <ng-template let-item>
-              <div  [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().entityData.Columns.CCC_LicenciaWorkspace.Value}}</div>
+              <div  [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().entityData.Columns.CCC_LicenciaWorkspace.Value}}</div>        
             </ng-template>
           </imx-data-table-generic-column>
           
@@ -50,7 +51,10 @@
           
           <imx-data-table-generic-column width="500px" columnName="CCC_UltimaConexion" columnLabel="Ultimo acceso">
             <ng-template let-item>
-              <div [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().entityData.Columns.CCC_UltimaConexion.Value | date: 'dd-MM-yyyy'}}</div>
+              <div *ngIf="(item.GetEntity().entityData.Columns.CCC_UltimaConexion.Value | date: 'dd-MM-yyyy' ) != '01-01-1970'" [style.max-width]="'500px'" class="imx-ellipse-column">{{item.GetEntity().entityData.Columns.CCC_UltimaConexion.Value | date: 'dd-MM-yyyy'}}</div>
+              <div *ngIf="(item.GetEntity().entityData.Columns.CCC_UltimaConexion.Value | date: 'dd-MM-yyyy' ) == '01-01-1970'">
+                <eui-badge color="red" size="medium">No ha conectado nunca</eui-badge>
+              </div>
             </ng-template>
           </imx-data-table-generic-column>
         </imx-data-table>

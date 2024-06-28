@@ -115,6 +115,7 @@ export class AccountsService {
     return this.miapi.typedClient.PortalCccNuevacuenta.Get(navigationState);
   }
 
+  
 
   public exportAccounts(navigationState: CollectionLoadParameters): DataSourceToolbarExportMethod {
     const factory = new V2ApiClientMethodFactory();
@@ -207,7 +208,9 @@ export class AccountsService {
   return await this.permisosgap.esAdminEPR();
  }
  
- 
+ public async esAdminGAP():Promise<boolean>{
+  return await this.permisosgap.isAdminGAP();
+ }
   
 
  
