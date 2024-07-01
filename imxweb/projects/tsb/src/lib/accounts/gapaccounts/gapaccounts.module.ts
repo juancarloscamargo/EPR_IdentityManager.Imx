@@ -48,7 +48,7 @@ import { ObjectHyperviewModule } from 'qer';
 
 const routes: Routes = [
   {
-    path: 'gap/cuentas',
+    path: 'correo_e/cuentas',
     component: DataExplorerGapaccountsComponent,
     canActivate: [RouteGuardService],
     resolve: [RouteGuardService],

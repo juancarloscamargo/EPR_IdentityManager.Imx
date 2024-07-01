@@ -43,6 +43,10 @@ import { esAdminEPR, isAdminGAP } from './admin/tsb-permissions-helper';
 
 import { TsbNamespaceAdminGuardService } from './guards/tsb-namespace-admin-guard.service';
 import { ReportButtonExtModule } from './report-button-ext/report-button-ext.module';
+import { DataExplorerAccountsComponent } from './accounts/accounts.component';
+import {CorreoEComponent } from  '../lib/accounts/correo-e.component';
+import { CorreoEModule } from '../lib/accounts/correo-e.module';
+
 
 const routes: Routes = [
   {
@@ -60,8 +64,8 @@ const routes: Routes = [
     resolve: [RouteGuardService]
   },
   {
-    path: 'GAPUser',
-    component: DataExplorerGapaccountsComponent,
+    path: 'Correoe',
+    component: CorreoEComponent,
     canActivate: [RouteGuardService],
     resolve: [RouteGuardService]
   }

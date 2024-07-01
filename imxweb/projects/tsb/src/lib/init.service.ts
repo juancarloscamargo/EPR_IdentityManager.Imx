@@ -215,7 +215,7 @@ export class InitService {
         items: [
           {
             id: 'TSB_Correo_Electronico',
-            navigationCommands: { commands: ['GAPUser'] },
+            navigationCommands: { commands: ['Correoe'] },
             title: 'Correo-e',
             sorting: '30-20',
           },

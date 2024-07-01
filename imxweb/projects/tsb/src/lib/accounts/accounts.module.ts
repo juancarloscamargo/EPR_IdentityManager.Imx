@@ -51,6 +51,7 @@ import { CreateGAPAccountComponent } from './create-gapaccount/create-gapaccount
 import { VisorpassComponent } from './gapaccount-sidesheet/visorpass.component';
 
 
+
 @NgModule({
   declarations: [
     DataExplorerAccountsComponent,
@@ -60,7 +61,8 @@ import { VisorpassComponent } from './gapaccount-sidesheet/visorpass.component';
     DataExplorerAccountsComponent,
     GAPAccountSidesheetComponent,
     CreateGAPAccountComponent,
-    VisorpassComponent
+    VisorpassComponent,
+  
   ],
   imports: [
     DataFiltersModule,
