@@ -30,13 +30,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, Routes } from '@angular/router';
 import { EuiCoreModule, EuiMaterialModule } from '@elemental-ui/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
-import { DataSourceToolbarModule, DataTableModule, CdrModule, LdsReplaceModule, DataTreeModule, ExtModule, DynamicTabsModule, BusyIndicatorModule, HelpContextualModule } from 'qbm';
+import { DataSourceToolbarModule, DataTableModule, CdrModule, LdsReplaceModule, DataTreeModule, ExtModule, DynamicTabsModule, BusyIndicatorModule, HelpContextualModule,RouteGuardService } from 'qbm';
 import { DataExplorerGapaccountsComponent } from './gapaccounts.component';
 import { AccountSidesheetComponent } from '../../accounts/account-sidesheet/account-sidesheet.component';
 import { DataFiltersModule } from '../../data-filters/data-filters.module';
@@ -46,6 +46,14 @@ import { AccountsExtComponent } from '.././account-ext/accounts-ext.component';
 import { TargetSystemReportComponent } from '.././target-system-report/target-system-report.component';
 import { ObjectHyperviewModule } from 'qer';
 
+const routes: Routes = [
+  {
+    path: 'gap/cuentas',
+    component: DataExplorerGapaccountsComponent,
+    canActivate: [RouteGuardService],
+    resolve: [RouteGuardService],
+  },
+];
 
 
 @NgModule({

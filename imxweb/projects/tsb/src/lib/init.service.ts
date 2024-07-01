@@ -167,6 +167,9 @@ export class InitService {
       icon: 'usergroup',
       contextId: HELP_CONTEXTUAL.MyResponsibilitiesGroups
     }));
+
+
+    /*
     if (isAdminGAP) {
     this.myResponsibilitiesRegistryService.registerFactory((preProps: string[], features: string[]) => ({
       instance: DataExplorerGapaccountsComponent,
@@ -176,7 +179,7 @@ export class InitService {
       icon: 'google',
       contextId: HELP_CONTEXTUAL.MyResponsibilitiesGroups
     }));
-    }
+    }*/
   }
 
   private async loadUnsTypes(): Promise<IRequestableEntitlementType[]> {
@@ -199,7 +202,25 @@ export class InitService {
   }
 
   private setupMenu(): void {
-    this.menuService.addMenuFactories(
+    this.menuService.addMenuFactories(      
+        (preProps: string[], features: string[], projectConfig: ProjectConfig, groups: string[]) => {
+          if (!esAdminEPR(features)) {
+            return null;
+          }
+  
+        return  {
+        id: 'ROOT_Responsibilities',
+        title: '#LDS#Responsibilities',
+        sorting: '30',
+        items: [
+          {
+            id: 'TSB_Correo_Electronico',
+            navigationCommands: { commands: ['GAPUser'] },
+            title: 'Correo-e',
+            sorting: '30-20',
+          },
+        ],
+      }},
       (preProps: string[], __: string[]) => {
         if (!preProps.includes('ITSHOP')) {
           return null;
@@ -238,6 +259,8 @@ export class InitService {
           ],
         };
       }
+      
+
     );
   }
 }

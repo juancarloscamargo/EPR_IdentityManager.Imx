@@ -31,13 +31,16 @@ import { MatListModule } from '@angular/material/list';
 import { Routes, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { CdrModule, HELP_CONTEXTUAL, RouteGuardService, TileModule } from 'qbm';
+import { CdrModule, HELP_CONTEXTUAL, RouteGuardService, TileModule, MenuService, MenuItem} from 'qbm';
 import { BusinessownerOverviewTileModule, BusinessownerAddonTileModule } from 'qer';
 import { ClaimGroupComponent } from './claim-group/claim-group.component';
 import { InitService } from './init.service';
 import { AccountsModule } from './accounts/accounts.module';
+import { DataExplorerGapaccountsComponent } from './accounts/gapaccounts/gapaccounts.component';
 import { DataExplorerGroupsComponent } from './groups/groups.component';
 import { GroupsModule } from './groups/groups.module';
+import { esAdminEPR, isAdminGAP } from './admin/tsb-permissions-helper';
+
 import { TsbNamespaceAdminGuardService } from './guards/tsb-namespace-admin-guard.service';
 import { ReportButtonExtModule } from './report-button-ext/report-button-ext.module';
 
@@ -53,6 +56,12 @@ const routes: Routes = [
   {
     path: 'resp/UNSGroup',
     component: DataExplorerGroupsComponent,
+    canActivate: [RouteGuardService],
+    resolve: [RouteGuardService]
+  },
+  {
+    path: 'GAPUser',
+    component: DataExplorerGapaccountsComponent,
     canActivate: [RouteGuardService],
     resolve: [RouteGuardService]
   }
@@ -80,10 +89,19 @@ const routes: Routes = [
   ]
 })
 export class TsbConfigModule {
-  constructor(private readonly initializer: InitService) {
+  constructor(
+    private readonly initializer: InitService,
+    private readonly menuService: MenuService
+    
+
+  ) {
     console.log('🔥 TSB loaded with claimgroup');
     this.initializer.onInit(routes);
+  
 
     console.log('▶️ TSB initialized');
   }
+
+
+  
 }
