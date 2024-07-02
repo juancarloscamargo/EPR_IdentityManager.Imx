@@ -25,7 +25,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Route, Router } from '@angular/router';
+import { Route, Router , Routes} from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { UnsConfig } from 'imx-api-tsb';
@@ -38,6 +38,7 @@ import {
   HELP_CONTEXTUAL,
   ISessionState,
   MenuService,
+  RouteGuardService,
   TabItem
 } from 'qbm';
 import {
@@ -60,6 +61,12 @@ import { isAdminGAP } from './admin/tsb-permissions-helper';
 import { GroupMembershipsExtComponent } from './groups/group-memberships-ext/group-memberships-ext.component';
 import { ProjectConfig } from 'imx-api-qbm';
 import { DataExplorerGapaccountsComponent } from './accounts/gapaccounts/gapaccounts.component';
+import { CorreoEComponent } from './accounts/correo-e.component';
+
+const routes: Routes = [
+  
+  
+];
 
 @Injectable({ providedIn: 'root' })
 export class InitService {
@@ -123,7 +130,7 @@ export class InitService {
      } as TabItem);
 
 
-    this.addRoutes(routes);
+    //this.addRoutes(routes);
     this.setupMenu();
 
     this.entlTypeService.Register(() => this.loadUnsTypes());
@@ -203,7 +210,7 @@ export class InitService {
 
   private setupMenu(): void {
     this.menuService.addMenuFactories(      
-        (preProps: string[], features: string[], projectConfig: ProjectConfig, groups: string[]) => {
+        /*(preProps: string[], features: string[], projectConfig: ProjectConfig, groups: string[]) => {
           if (!esAdminEPR(features)) {
             return null;
           }
@@ -215,12 +222,12 @@ export class InitService {
         items: [
           {
             id: 'TSB_Correo_Electronico',
-            navigationCommands: { commands: ['Correoe'] },
+            route:'gap/Correoe',
             title: 'Correo-e',
             sorting: '30-20',
           },
         ],
-      }},
+      }},*/
       (preProps: string[], __: string[]) => {
         if (!preProps.includes('ITSHOP')) {
           return null;

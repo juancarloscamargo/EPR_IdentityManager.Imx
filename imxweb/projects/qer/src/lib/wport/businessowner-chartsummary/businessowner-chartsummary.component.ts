@@ -164,7 +164,7 @@ export class BusinessOwnerChartSummaryComponent implements OnInit {
 
   // Estos dos loads sólo cargan identidades de las que el operador es responsable.
   private async loadDirectReports(): Promise<void> {
-    if (await this.qerPermissions.isPersonManager()) {
+    if (await this.qerPermissions.isPersonManager() && false )  {
       this.reports = (
         await this.qerClient.typedClient.PortalPersonReports.Get({
           OnlyDirect: false, // direct reports only
@@ -176,7 +176,7 @@ export class BusinessOwnerChartSummaryComponent implements OnInit {
   }
 
   private async loadIndirectOrDirectReports(): Promise<void> {
-    if (await this.qerPermissions.isPersonManager()) {
+    if (await this.qerPermissions.isPersonManager() )  {
       this.allReportsCount = (await this.qerClient.typedClient.PortalPersonReports.Get({
         PageSize: -1
       })).totalCount;

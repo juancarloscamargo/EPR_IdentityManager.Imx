@@ -36,7 +36,7 @@ export {CCCApiService } from './lib/ccc-api-client.service';
 export { AccountsModule } from './lib/accounts/accounts.module';
 
 export { GapaccountsModule } from './lib/accounts/gapaccounts/gapaccounts.module';
-export { CorreoEModule } from './lib/accounts/correo-e.module';
+
 export { DataExplorerAccountsComponent } from './lib/accounts/accounts.component';
 export { DataExplorerGapaccountsComponent } from './lib/accounts/gapaccounts/gapaccounts.component';
 export { DataFiltersModule } from './lib/data-filters/data-filters.module';
@@ -57,3 +57,4 @@ export { GroupSidesheetData } from './lib/groups/groups.models';
 export { ChildSystemEntitlementsComponent } from './lib/groups/group-sidesheet/child-system-entitlements/child-system-entitlements.component';
 export { AccountsExtComponent } from './lib/accounts/account-ext/accounts-ext.component';
 export { CorreoEComponent } from './lib/accounts/correo-e.component';
+export { CorreoEModule } from './lib/accounts/correo-e.module';

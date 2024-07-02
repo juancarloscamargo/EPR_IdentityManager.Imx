@@ -7,17 +7,19 @@ import { TranslateModule } from '@ngx-translate/core';
 
 
 import { ClassloggerService, MenuService, RouteGuardService, SideNavigationViewModule } from 'qbm';
+
 import { CorreoEComponent } from './correo-e.component';
+
 
 const routes: Routes = [
   {
-    path: 'correo_e',
+    path: 'Correoe',
     component: CorreoEComponent,
     canActivate: [RouteGuardService],
     resolve: [RouteGuardService],
   },
   {
-    path: 'correo_e/:tab',
+    path: 'Correoe/:tab',
     component: CorreoEComponent,
     canActivate: [RouteGuardService],
     resolve: [RouteGuardService],
@@ -28,7 +30,6 @@ const routes: Routes = [
 @NgModule({
   declarations: [CorreoEComponent],
   imports: [CommonModule, EuiCoreModule, EuiMaterialModule, MatTooltipModule, TranslateModule, SideNavigationViewModule],
-  exports: [CorreoEComponent]
   //providers: [MyResponsibilitiesRegistryService],
 })
 export class CorreoEModule { 
@@ -43,18 +44,21 @@ export class CorreoEModule {
   }
 
   private setupMenu(): void {
+    
     this.menuService.addMenuFactories((preProps: string[], features: string[]) => ({
       id: 'ROOT_Responsibilities',
       title: '#LDS#Responsibilities',
       sorting: '30',
       items: [
         {
-          id: 'QER_My_Responsibilities',
-          navigationCommands: { commands: ['correo_e'] },
+          id: 'TSB_Correo_Electronico',
+          navigationCommands: { commands: ['Correoe'] },
           title: 'Gestión correo-e',
           sorting: '30-20',
         },
       ],
     }));
-  }
+  
+    }
+  
 }

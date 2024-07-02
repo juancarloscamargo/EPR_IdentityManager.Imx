@@ -43,9 +43,10 @@ import { esAdminEPR, isAdminGAP } from './admin/tsb-permissions-helper';
 
 import { TsbNamespaceAdminGuardService } from './guards/tsb-namespace-admin-guard.service';
 import { ReportButtonExtModule } from './report-button-ext/report-button-ext.module';
-import { DataExplorerAccountsComponent } from './accounts/accounts.component';
-import {CorreoEComponent } from  '../lib/accounts/correo-e.component';
-import { CorreoEModule } from '../lib/accounts/correo-e.module';
+import { CorreoEModule } from './accounts/correo-e.module';
+import { GapaccountsModule } from '../public_api';
+
+
 
 
 const routes: Routes = [
@@ -63,12 +64,7 @@ const routes: Routes = [
     canActivate: [RouteGuardService],
     resolve: [RouteGuardService]
   },
-  {
-    path: 'Correoe',
-    component: CorreoEComponent,
-    canActivate: [RouteGuardService],
-    resolve: [RouteGuardService]
-  }
+  
 ];
 
 @NgModule({
@@ -86,7 +82,9 @@ const routes: Routes = [
     MatListModule,
     TileModule,
     TranslateModule,
-    ReportButtonExtModule
+    ReportButtonExtModule,
+    GapaccountsModule,
+    CorreoEModule
   ],
   providers: [
     TsbNamespaceAdminGuardService

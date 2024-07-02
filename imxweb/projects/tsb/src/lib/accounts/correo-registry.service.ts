@@ -24,18 +24,24 @@
  *
  */
 
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { EuiCoreModule, EuiMaterialModule } from '@elemental-ui/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { SideNavigationViewComponent } from './side-navigation-view.component';
-import { HelpContextualModule } from '../help-contextual/help-contextual.module';
-import { LdsReplaceModule } from '../lds-replace/lds-replace.module';
+import { Injectable } from '@angular/core';
+import { ProjectConfig } from 'imx-api-qbm';
+import { SideNavigationExtension, SideNavigationFactory } from 'qbm';
 
-@NgModule({
-  declarations: [SideNavigationViewComponent],
-  imports: [CommonModule, EuiCoreModule, EuiMaterialModule, MatTooltipModule, TranslateModule, LdsReplaceModule, HelpContextualModule],
-  exports: [SideNavigationViewComponent],
+@Injectable({
+  providedIn: 'root',
 })
-export class SideNavigationViewModule {}
+export class CorreoRegistryService {
+  private items: SideNavigationFactory[] = [];
+
+  public getNavItems(preProps: string[], features: string[], projectConfig?: ProjectConfig): SideNavigationExtension[] {
+    return this.items
+      .map((factory) => factory(preProps, features, projectConfig))
+      .sort((a, b) => a.sortOrder - b.sortOrder)
+      .filter((item) => item !== undefined);
+  }
+
+  public registerFactory(...factories: SideNavigationFactory[]): void {
+    this.items.push(...factories);
+  }
+}
