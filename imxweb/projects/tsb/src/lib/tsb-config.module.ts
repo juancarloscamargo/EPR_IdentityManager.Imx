@@ -36,6 +36,7 @@ import { BusinessownerOverviewTileModule, BusinessownerAddonTileModule } from 'q
 import { ClaimGroupComponent } from './claim-group/claim-group.component';
 import { InitService } from './init.service';
 import { AccountsModule } from './accounts/accounts.module';
+
 import { DataExplorerGapaccountsComponent } from './accounts/gapaccounts/gapaccounts.component';
 import { DataExplorerGroupsComponent } from './groups/groups.component';
 import { GroupsModule } from './groups/groups.module';
@@ -43,8 +44,9 @@ import { esAdminEPR, isAdminGAP } from './admin/tsb-permissions-helper';
 
 import { TsbNamespaceAdminGuardService } from './guards/tsb-namespace-admin-guard.service';
 import { ReportButtonExtModule } from './report-button-ext/report-button-ext.module';
-import { CorreoEModule } from './accounts/correo-e.module';
-import { GapaccountsModule } from '../public_api';
+import { GapaccountsModule } from './accounts/gapaccounts/gapaccounts.module';
+
+
 
 
 
@@ -71,6 +73,7 @@ const routes: Routes = [
   declarations: [
   ],
   imports: [
+    GapaccountsModule,
     AccountsModule,
     BusinessownerAddonTileModule,
     BusinessownerOverviewTileModule,
@@ -82,9 +85,7 @@ const routes: Routes = [
     MatListModule,
     TileModule,
     TranslateModule,
-    ReportButtonExtModule,
-    GapaccountsModule,
-    CorreoEModule
+    ReportButtonExtModule
   ],
   providers: [
     TsbNamespaceAdminGuardService

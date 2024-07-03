@@ -56,5 +56,3 @@ export { GroupsReportsService as GroupsReportsService } from './lib/groups/group
 export { GroupSidesheetData } from './lib/groups/groups.models';
 export { ChildSystemEntitlementsComponent } from './lib/groups/group-sidesheet/child-system-entitlements/child-system-entitlements.component';
 export { AccountsExtComponent } from './lib/accounts/account-ext/accounts-ext.component';
-export { CorreoEComponent } from './lib/accounts/correo-e.component';
-export { CorreoEModule } from './lib/accounts/correo-e.module';

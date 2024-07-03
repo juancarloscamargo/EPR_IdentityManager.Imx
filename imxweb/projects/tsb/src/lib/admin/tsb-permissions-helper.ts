@@ -29,7 +29,7 @@ export function isTsbNameSpaceAdminBase(groups: string[]): boolean {
 }
 
 export function isAdminGAP(groups: string[]): boolean {
-  return groups.find(item => item.toUpperCase() === 'GAP_4_NAMESPACEADMIN_GSUITE') != null;
+  return groups.find(item => item  === 'Portal_UI_GAP') != null;
 }
 
 export function esOperadorSD(groups: string[]): boolean {

@@ -248,7 +248,7 @@ export class DataExplorerGapaccountsComponent implements OnInit, OnDestroy, Side
 
     
     
-    await this.infolicencias();
+    if (this.esAdminEPR) await this.infolicencias();
     await this.navigate();
   
 } finally {

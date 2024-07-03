@@ -25,7 +25,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Route, Router , Routes} from '@angular/router';
+import { Route, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { UnsConfig } from 'imx-api-tsb';
@@ -38,7 +38,6 @@ import {
   HELP_CONTEXTUAL,
   ISessionState,
   MenuService,
-  RouteGuardService,
   TabItem
 } from 'qbm';
 import {
@@ -51,22 +50,12 @@ import {
 } from 'qer';
 import { AccountsExtComponent } from './accounts/account-ext/accounts-ext.component';
 import { DataExplorerAccountsComponent } from './accounts/accounts.component';
-import { isTsbNameSpaceAdminBase, esAdminEPR } from './admin/tsb-permissions-helper';
+import { isTsbNameSpaceAdminBase } from './admin/tsb-permissions-helper';
 import { DataExplorerGroupsComponent } from './groups/groups.component';
 import { ReportButtonExtComponent } from './report-button-ext/report-button-ext.component';
 import { TsbApiService } from './tsb-api-client.service';
-import { GAPApiService } from './gap-api-client.service';
-import { isAdminGAP } from './admin/tsb-permissions-helper';
-
 import { GroupMembershipsExtComponent } from './groups/group-memberships-ext/group-memberships-ext.component';
 import { ProjectConfig } from 'imx-api-qbm';
-import { DataExplorerGapaccountsComponent } from './accounts/gapaccounts/gapaccounts.component';
-import { CorreoEComponent } from './accounts/correo-e.component';
-
-const routes: Routes = [
-  
-  
-];
 
 @Injectable({ providedIn: 'root' })
 export class InitService {
@@ -83,7 +72,6 @@ export class InitService {
     private readonly menuService: MenuService,
     private readonly extService: ExtService,
     private readonly cacheService: CacheService,
-    
     private readonly myResponsibilitiesRegistryService: MyResponsibilitiesRegistryService,
     private readonly permissions: QerPermissionsService
   ) {}
@@ -130,7 +118,7 @@ export class InitService {
      } as TabItem);
 
 
-    //this.addRoutes(routes);
+    this.addRoutes(routes);
     this.setupMenu();
 
     this.entlTypeService.Register(() => this.loadUnsTypes());
@@ -170,23 +158,10 @@ export class InitService {
       instance: DataExplorerGroupsComponent,
       sortOrder: 3,
       name: 'UNSGroup',
-      caption: 'Grupos UNS',
+      caption: '#LDS#System entitlements',
       icon: 'usergroup',
       contextId: HELP_CONTEXTUAL.MyResponsibilitiesGroups
     }));
-
-
-    /*
-    if (isAdminGAP) {
-    this.myResponsibilitiesRegistryService.registerFactory((preProps: string[], features: string[]) => ({
-      instance: DataExplorerGapaccountsComponent,
-      sortOrder: 99,
-      name: 'GAPUser',
-      caption: 'Cuentas de correo',
-      icon: 'google',
-      contextId: HELP_CONTEXTUAL.MyResponsibilitiesGroups
-    }));
-    }*/
   }
 
   private async loadUnsTypes(): Promise<IRequestableEntitlementType[]> {
@@ -209,25 +184,7 @@ export class InitService {
   }
 
   private setupMenu(): void {
-    this.menuService.addMenuFactories(      
-        /*(preProps: string[], features: string[], projectConfig: ProjectConfig, groups: string[]) => {
-          if (!esAdminEPR(features)) {
-            return null;
-          }
-  
-        return  {
-        id: 'ROOT_Responsibilities',
-        title: '#LDS#Responsibilities',
-        sorting: '30',
-        items: [
-          {
-            id: 'TSB_Correo_Electronico',
-            route:'gap/Correoe',
-            title: 'Correo-e',
-            sorting: '30-20',
-          },
-        ],
-      }},*/
+    this.menuService.addMenuFactories(
       (preProps: string[], __: string[]) => {
         if (!preProps.includes('ITSHOP')) {
           return null;
@@ -248,7 +205,7 @@ export class InitService {
         };
       },
       (preProps: string[], features: string[], projectConfig: ProjectConfig, groups: string[]) => {
-        if (!preProps.includes('ITSHOP') || !esAdminEPR(features)) {
+        if (!preProps.includes('ITSHOP') || !isTsbNameSpaceAdminBase(groups)) {
           return null;
         }
 
@@ -266,8 +223,6 @@ export class InitService {
           ],
         };
       }
-      
-
     );
   }
 }

@@ -36,7 +36,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
-import { DataSourceToolbarModule, DataTableModule, CdrModule, LdsReplaceModule, DataTreeModule, ExtModule, DynamicTabsModule, BusyIndicatorModule, HelpContextualModule,RouteGuardService, ClassloggerService } from 'qbm';
+import { DataSourceToolbarModule, DataTableModule, CdrModule, LdsReplaceModule, DataTreeModule, ExtModule, DynamicTabsModule, BusyIndicatorModule, HelpContextualModule,RouteGuardService, ClassloggerService, HELP_CONTEXTUAL } from 'qbm';
 import { DataExplorerGapaccountsComponent } from './gapaccounts.component';
 import { AccountSidesheetComponent } from '../../accounts/account-sidesheet/account-sidesheet.component';
 import { DataFiltersModule } from '../../data-filters/data-filters.module';
@@ -45,9 +45,11 @@ import { GroupsModule } from '../../groups/groups.module';
 import { AccountsExtComponent } from '.././account-ext/accounts-ext.component';
 import { TargetSystemReportComponent } from '.././target-system-report/target-system-report.component';
 import { ObjectHyperviewModule } from 'qer';
-import { CorreoRegistryService } from '../correo-registry.service';
-import { isAdminGAP } from '../../admin/tsb-permissions-helper';
+
+import { MyResponsibilitiesRegistryService } from 'qer';
+import { esAdminEPR, isAdminGAP } from '../../admin/tsb-permissions-helper';
 import { GAPAccountSidesheetComponent } from '../gapaccount-sidesheet/gapaccount-sidesheet.component';
+
 
 
 
@@ -92,7 +94,8 @@ export class GapaccountsModule {
   constructor(
     
     
-    private readonly CorreoERegistryService: CorreoRegistryService,
+    
+    private readonly MyResponsabilitiesRegistryService: MyResponsibilitiesRegistryService,
     logger: ClassloggerService
   ) {
     logger.info(this, '▶️ Módulo de gestión de cuentas de correo Workspace cargado');
@@ -102,16 +105,18 @@ export class GapaccountsModule {
   }
 
   private setupMyResponsibilitiesView(): void {
-    this.CorreoERegistryService.registerFactory((preProps: string[], groups: string[]) => {
+    this.MyResponsabilitiesRegistryService.registerFactory((preProps: string[], groups: string[]) => {
       if (!isAdminGAP(groups)) {
         return;
       }
+      console.log("Añadiendo gestión de cuentas");
       return {
         instance: DataExplorerGapaccountsComponent,
         sortOrder: 1,
-        name: 'Cuentas',
-        caption: 'Cuentas',
-        //contextId: HELP_CONTEXTUAL.MyResponsibilitiesIdentities
+        name: 'CuentasCorreo',
+        caption: 'Cuentas de correo',
+        icon: 'mailbox',
+        contextId: HELP_CONTEXTUAL.MyResponsibilitiesIdentities
       };
     });
   }
