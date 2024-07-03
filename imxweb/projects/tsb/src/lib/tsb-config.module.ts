@@ -45,6 +45,7 @@ import { esAdminEPR, isAdminGAP } from './admin/tsb-permissions-helper';
 import { TsbNamespaceAdminGuardService } from './guards/tsb-namespace-admin-guard.service';
 import { ReportButtonExtModule } from './report-button-ext/report-button-ext.module';
 import { GapaccountsModule } from './accounts/gapaccounts/gapaccounts.module';
+import { GapGroupsModule } from './groups/gap/gapgroups.module';
 
 
 
@@ -74,7 +75,7 @@ const routes: Routes = [
   ],
   imports: [
     GapaccountsModule,
-    AccountsModule,
+    
     BusinessownerAddonTileModule,
     BusinessownerOverviewTileModule,
     CdrModule,

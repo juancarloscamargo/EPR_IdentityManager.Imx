@@ -159,6 +159,9 @@ export class AccountsService {
     return this.miapi.client.portal_ccc_nuevaCuenta_datamodel_get(undefined);
   }
 
+   public async getGAPGroupDataModel(): Promise<DataModel>{
+    return this.gapClient.client.portal_targetsystem_gapgroup_datamodel_get();
+   }
 
   public async getFilterTree(parameter: AccountsFilterTreeParameters):Promise<FilterTreeData>{
     return this.tsbClient.client.portal_targetsystem_uns_account_filtertree_get(parameter);

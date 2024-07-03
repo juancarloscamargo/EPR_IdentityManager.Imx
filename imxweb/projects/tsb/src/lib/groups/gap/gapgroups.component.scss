@@ -1,0 +1,80 @@
+@import '@elemental-ui/core/src/styles/_eui_palette.scss';
+@import '../../../../../../shared/scss/common-table.scss';
+
+.data-explorer {
+  &.data-explorer--accounts {
+    > :nth-child(2) {
+      flex: 0 0 auto;
+    }
+
+    .imx-data-explorer-content {
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      flex: 1 1 auto;
+    }
+  }
+}
+
+.eui-dark-theme {
+  :host {
+    background-color: $color-gray-80;
+    .data-explorer.data-explorer--accounts .data-explorer-card-header .data-explorer-card-header-bg {
+      background-color: $color-blue-80;
+    }
+  }
+}
+
+div[subtitle] {
+  font-size: smaller;
+  color: $color-gray-40;
+}
+
+.imx-ellipse-column {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.data-explorer-bottom-button-row {
+  @include imx-button-bar();
+}
+
+.hidden {
+  display: none;
+}
+
+.eui-contrast-theme {
+  :host {
+    background-color: $color-gray-100;
+    .data-explorer.data-explorer--accounts .data-explorer-card-header .data-explorer-card-header-bg {
+      background-color: $color-gray-100;
+    }
+  }
+
+ 
+}
+
+.wrapper {
+  display: flex;
+  float: left;
+}
+
+.box {
+  width: max-content;
+  height: 20px;
+  
+  float: left;
+}
+
+.blue {
+  background: #13b4ff;
+}
+
+.purple {
+  background: #ab3fdd;
+}
+
+.wine {
+  background: #ae163e;
+}

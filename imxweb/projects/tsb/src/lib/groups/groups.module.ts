@@ -54,7 +54,7 @@ import { DataFiltersModule } from '../data-filters/data-filters.module';
 import { ProductOwnerSidesheetComponent } from './product-owner-sidesheet/product-owner-sidesheet.component';
 import { IdentityRoleMembershipsModule, ObjectHyperviewModule, OwnerControlModule, ServiceItemsEditFormModule } from 'qer';
 import { GroupMembershipsExtComponent } from './group-memberships-ext/group-memberships-ext.component';
-import { GapgroupsComponent } from './gap/gapgroups.component';
+
 
 @NgModule({
   declarations: [
@@ -64,7 +64,6 @@ import { GapgroupsComponent } from './gap/gapgroups.component';
     ChildSystemEntitlementsComponent,
     ProductOwnerSidesheetComponent,
     GroupMembershipsExtComponent,
-    GapgroupsComponent,
   ],
   imports: [
     CommonModule,
