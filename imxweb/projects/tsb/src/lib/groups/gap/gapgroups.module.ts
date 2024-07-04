@@ -37,26 +37,26 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
 import { DataSourceToolbarModule, DataTableModule, CdrModule, LdsReplaceModule, DataTreeModule, ExtModule, DynamicTabsModule, BusyIndicatorModule, HelpContextualModule,RouteGuardService, ClassloggerService, HELP_CONTEXTUAL } from 'qbm';
-import { DataExplorerGapaccountsComponent } from './gapaccounts.component';
+
 import { DataExplorerGapgroupsComponent } from './gapgroups.component';
-import { AccountSidesheetComponent } from '../../accounts/account-sidesheet/account-sidesheet.component';
+
 import { DataFiltersModule } from '../../data-filters/data-filters.module';
 import { NoDataModule } from '../../no-data/no-data.module';
 import { GroupsModule } from '../../groups/groups.module';
-import { AccountsExtComponent } from '.././account-ext/accounts-ext.component';
-import { TargetSystemReportComponent } from '.././target-system-report/target-system-report.component';
+
+
 import { ObjectHyperviewModule } from 'qer';
 
 import { MyResponsibilitiesRegistryService } from 'qer';
 import { esAdminEPR, isAdminGAP } from '../../admin/tsb-permissions-helper';
-import { GAPAccountSidesheetComponent } from '../gapaccount-sidesheet/gapaccount-sidesheet.component';
+
 
 
 
 
 @NgModule({
   declarations: [
-    DataExplorerGapaccountsComponent
+    DataExplorerGapgroupsComponent
     
     
   ],
@@ -86,10 +86,7 @@ import { GAPAccountSidesheetComponent } from '../gapaccount-sidesheet/gapaccount
     ExtModule,
     DynamicTabsModule,
     HelpContextualModule
-  ],
-  exports: [
-    DataExplorerGapaccountsComponent
-  ],
+  ]
 })
 export class GapGroupsModule {
   constructor(
@@ -108,12 +105,13 @@ export class GapGroupsModule {
   private setupMyResponsibilitiesView(): void {
     this.MyResponsabilitiesRegistryService.registerFactory((preProps: string[], groups: string[]) => {
       if (!isAdminGAP(groups)) {
+        console.log("parece que no habrá grupos por aquí");
         return;
       }
       
       return {
         instance: DataExplorerGapgroupsComponent,
-        sortOrder: 1,
+        sortOrder: 3,
         name: 'GruposCorreo',
         caption: 'Grupos de correo',
         icon: 'mailbox',

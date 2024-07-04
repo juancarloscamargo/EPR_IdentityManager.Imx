@@ -75,7 +75,7 @@ const routes: Routes = [
   ],
   imports: [
     GapaccountsModule,
-    
+    GapGroupsModule,
     BusinessownerAddonTileModule,
     BusinessownerOverviewTileModule,
     CdrModule,
